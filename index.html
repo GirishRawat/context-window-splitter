@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LLM Compile - Phase 1 Visualization</title>
+    <!-- Google Fonts for modern typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script type="module" crossorigin src="./assets/index-CHxvn6xe.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-DZ_CsY0h.css">
+  </head>
+  <body>
+    <header class="glass-header">
+      <div class="logo">
+        <svg xmlns="http://www.w3.org/-2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cpu"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/></svg>
+        <h1>LLMCompile Pipeline</h1>
+      </div>
+      <div class="header-badges" style="display: flex; gap: 0.5rem;">
+        <div class="badge">Phase 1: Parse & Extract</div>
+        <div id="engine-badge" class="badge secondary">Detecting Engine...</div>
+      </div>
+    </header>
+
+    <main class="container">
+      <!-- Left Column: Input -->
+      <section class="panel input-panel glass-panel">
+        <div class="panel-header">
+          <h2>Input: Unoptimized LLVM IR</h2>
+          <button id="parse-btn" class="primary-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+            Parse & Extract
+          </button>
+        </div>
+        <textarea id="ir-input" class="code-editor" spellcheck="false" placeholder="Paste your LLVM IR here...">; ModuleID = 'sample'
+source_filename = "sample.c"
+target datalayout = "e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
+
+@counter = global i32 0, align 4
+
+declare i32 @external(i32)
+
+define i32 @add(i32 %a, i32 %b) {
+entry:
+  %r = add i32 %a, %b
+  ret i32 %r
+}
+
+define i32 @use(i32 %x) {
+entry:
+  %t = call i32 @add(i32 %x, i32 1)
+  %e = call i32 @external(i32 %t)
+  ret i32 %e
+}</textarea>
+        <div id="error-message" class="error-msg hidden"></div>
+      </section>
+
+      <!-- Right Column: Output -->
+      <section class="panel output-panel">
+        
+        <!-- Preamble Section -->
+        <div class="glass-panel result-card preamble-card hidden" id="preamble-container">
+          <div class="card-header">
+            <h3>Shared Preamble</h3>
+            <span class="tag">Module Context</span>
+          </div>
+          <p class="card-desc">This block contains shared module context (metadata, globals, external declarations) and is prepended to every function.</p>
+          <pre><code id="preamble-output" class="language-llvm"></code></pre>
+        </div>
+
+        <!-- Functions Section -->
+        <div id="functions-container" class="functions-grid">
+          <!-- Dynamically generated function cards will appear here -->
+        </div>
+        
+        <!-- Empty State -->
+        <div id="empty-state" class="empty-state">
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-code-2"><path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/></svg>
+          <p>Click "Parse & Extract" to visualize the extraction process.</p>
+        </div>
+
+      </section>
+    </main>
+  </body>
+</html>

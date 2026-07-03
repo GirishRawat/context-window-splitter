@@ -238,6 +238,8 @@ Design decisions made building M1 (do not re-litigate without cause):
 1. **M0 - toolchain spike.** Build Z3 + LLVM-from-source + Alive2 and pin versions. Unblocks a real green Phase 5 run and M2. Highest-risk dependency; needs a well-resourced machine.
 2. **M2 - trust the gate for real.** With the toolchain present, add hand-written good/bad transforms (dropped side effect, introduced poison, changed return value) and assert correct accept/reject. Must pass before the LLM is connected.
 3. **M4 - real `phases/p3_route.py`.** Replace the identity stub: stateless single-turn prompts, deterministic output sanitisation (strip markdown fences/prose) but no semantic "repair"; then asyncio+LiteLLM concurrency; routing tiers last. `p3_route.py` is the ONLY module allowed async code.
+   - **Model Selection Strategy**: If a routing tier has multiple models configured, Phase 3 deterministically selects the *first* model in the list for that run.
+   - **Prompting Strategy**: Zero-shot, strict instruction to act as an LLVM IR optimizer. The prompt explicitly commands the model to return ONLY a valid `define ... }` block without any conversational preamble, chain-of-thought, or markdown explanations.
 4. **M5 - `eval/harness.py`.** Per function: instruction count before/after, verdict, model, latency → dissertation tables.
 
 ### Rules of engagement for agents

@@ -18,8 +18,11 @@
       </div>
 
       <nav class="phase-nav">
-        <button class="phase-tab active" data-view="phase1">
-          
+        <button class="phase-tab active" data-view="overview">
+          Overview
+        </button>
+        <button class="phase-tab" data-view="phase1">
+
           Phase 1 &middot; Parse
         </button>
         <button class="phase-tab" data-view="phase2">
@@ -41,8 +44,142 @@
       </div>
     </header>
 
+    <!-- ===================== Overview: Pipeline Architecture ===================== -->
+    <main id="view-overview" class="view overview-view active">
+      <div class="overview-inner">
+
+        <section class="overview-hero">
+          <h2>The six-phase compilation pipeline</h2>
+          <p class="overview-thesis">
+            LLM-optimized LLVM IR, made <strong>valid by construction</strong>: every function in the
+            output is either a <em>formally-proven refinement</em> of the original, or the untouched
+            <code>-O0</code> original itself. All probabilistic risk lives in Phase 3 and is fully
+            contained by the deterministic verification gate around it.
+          </p>
+          <div class="overview-legend">
+            <span class="legend-item"><span class="swatch swatch-det"></span> Deterministic</span>
+            <span class="legend-item"><span class="swatch swatch-prob"></span> Probabilistic (the only one)</span>
+            <span class="legend-item"><span class="swatch swatch-gate"></span> Verification gate</span>
+          </div>
+        </section>
+
+        <ol class="pipeline-flow">
+
+          <li class="phase-node det">
+            <div class="phase-node-num">1</div>
+            <div class="phase-node-body">
+              <div class="phase-node-head">
+                <h3>Parsing &amp; Extraction</h3>
+                <span class="nature-tag">Deterministic</span>
+              </div>
+              <p class="phase-node-desc">Ingests <code>-O0</code> IR, verifies it, and extracts every function definition into a standalone, independently-assemblable unit (shared preamble + sibling declarations + body).</p>
+              <div class="phase-node-meta">
+                <span class="status-chip done">Implemented</span>
+                <span class="io-note">→ <code>FunctionRecord.original_ir</code></span>
+                <span class="io-note viz">Live view: Phase 1 tab</span>
+              </div>
+            </div>
+          </li>
+
+          <li class="phase-node det">
+            <div class="phase-node-num">2</div>
+            <div class="phase-node-body">
+              <div class="phase-node-head">
+                <h3>Triage &amp; Profiling</h3>
+                <span class="nature-tag">Deterministic</span>
+              </div>
+              <p class="phase-node-desc">Scores cyclomatic complexity and token count per function. Below-threshold (too simple) functions are triaged out — they skip optimization and pass straight through unchanged.</p>
+              <div class="phase-node-meta">
+                <span class="status-chip done">Implemented</span>
+                <span class="io-note">→ <code>complexity</code>, <code>token_count</code>, <code>triaged_out</code></span>
+                <span class="io-note viz">Live view: Phase 2 tab</span>
+              </div>
+            </div>
+          </li>
+
+          <li class="phase-node prob">
+            <div class="phase-node-num">3</div>
+            <div class="phase-node-body">
+              <div class="phase-node-head">
+                <h3>LLM Execution &amp; Routing</h3>
+                <span class="nature-tag prob">Probabilistic</span>
+              </div>
+              <p class="phase-node-desc">Routes each non-triaged function to a model by complexity/token tier and runs it as a stateless, single-turn text-in / text-out transformation. No memory, no feedback loops, no tool use.</p>
+              <div class="phase-node-meta">
+                <span class="status-chip stub">Identity stub (M1)</span>
+                <span class="io-note">→ <code>llm_output</code> (a <code>define</code> block)</span>
+                <span class="io-note next">Real LiteLLM routing: M4</span>
+              </div>
+            </div>
+          </li>
+
+          <li class="phase-node det">
+            <div class="phase-node-num">4</div>
+            <div class="phase-node-body">
+              <div class="phase-node-head">
+                <h3>Candidate Reconstruction</h3>
+                <span class="nature-tag">Deterministic</span>
+              </div>
+              <p class="phase-node-desc">Substitutes the candidate body back into the function's own standalone context — keeping the same preamble and sibling declarations — so the gate compares like against like.</p>
+              <div class="phase-node-meta">
+                <span class="status-chip done">Implemented</span>
+                <span class="io-note">→ <code>candidate_ir</code></span>
+              </div>
+            </div>
+          </li>
+
+          <li class="phase-node det gate">
+            <div class="phase-node-num">5</div>
+            <div class="phase-node-body">
+              <div class="phase-node-head">
+                <h3>Verification Gate</h3>
+                <span class="nature-tag">Deterministic · Gate</span>
+              </div>
+              <p class="phase-node-desc"><code>llvm-as</code> syntax check, then an <code>alive-tv</code> (Alive2/Z3) refinement proof: source = original, target = candidate. <strong>PASSED only if proven</strong>; a timeout is never a pass. This is the single point that guarantees correctness.</p>
+              <div class="phase-node-meta">
+                <span class="status-chip done">Implemented</span>
+                <span class="status-chip needs">Needs M0 toolchain to run</span>
+                <span class="io-note">→ <code>verdict</code>, <code>counterexample</code></span>
+                <span class="io-note viz">Live view: Phase 5 tab</span>
+              </div>
+            </div>
+          </li>
+
+          <li class="phase-node det">
+            <div class="phase-node-num">6</div>
+            <div class="phase-node-body">
+              <div class="phase-node-head">
+                <h3>Fallback Assembly</h3>
+                <span class="nature-tag">Deterministic</span>
+              </div>
+              <p class="phase-node-desc"><code>PASSED</code> → the proven optimization is locked in. Anything else (rejected, unsupported, syntax-fail, triaged out) → the untouched original is reinserted from memory. Then the final module is assembled.</p>
+              <div class="phase-node-meta">
+                <span class="status-chip done">Implemented</span>
+                <span class="io-note">→ <code>final_ir</code>, <code>final_module_ir</code></span>
+                <span class="io-note next">Compile-to-executable: deferred (needs clang)</span>
+              </div>
+            </div>
+          </li>
+
+        </ol>
+
+        <section class="overview-status">
+          <h3>Where the build is now</h3>
+          <p>
+            <strong>Milestone 1 (walking skeleton) is complete</strong> — the full 1→6 spine runs deterministically
+            end-to-end with Phase 3 as an identity transform, proving all plumbing with zero API calls.
+            Because Phase 5 needs the external <code>llvm-as</code> + <code>alive-tv</code> toolchain (Milestone 0),
+            a real run currently fails <em>closed</em>: every function falls back to its original, so the output is
+            behaviourally identical to an unoptimised build — the correct, safe outcome. <strong>Next up: M0</strong>,
+            building the Z3 / LLVM / Alive2 toolchain so the gate can prove refinements for real.
+          </p>
+        </section>
+
+      </div>
+    </main>
+
     <!-- ===================== Phase 1: Parse & Extract ===================== -->
-    <main id="view-phase1" class="container view active">
+    <main id="view-phase1" class="container view">
       <!-- Left Column: Input -->
       <section class="panel input-panel glass-panel">
         <div class="panel-header">

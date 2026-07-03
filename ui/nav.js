@@ -21,5 +21,5 @@ export function initNav() {
   });
 
   const initial = window.location.hash.replace('#', '');
-  activate(tabs.some(t => t.dataset.view === initial) ? initial : 'phase1');
+  activate(tabs.some(t => t.dataset.view === initial) ? initial : 'overview');
 }

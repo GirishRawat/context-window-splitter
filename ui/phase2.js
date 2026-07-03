@@ -78,11 +78,19 @@ export function initPhase2() {
     card.className = 'glass-panel result-card triage-card';
     card.style.animationDelay = `${(index + 1) * 0.05}s`;
 
+    // Triaged-out functions skip Phase 3 entirely, so they are never routed to
+    // a model tier — show that instead of a (misleading) routing tier tag.
+    const routingTag = func.triaged_out
+      ? `<span class="tag">skips routing</span>`
+      : `<span class="tag tier-${tier.key}">${tier.label} routing</span>`;
+
+    // Static markup only. The function name is set via textContent below so a
+    // quoted IR name containing '<'/'>' renders literally and can't inject.
     card.innerHTML = `
       <div class="card-header">
         <h3>
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-          Function: @${func.name}
+          Function: @<span class="fn-name"></span>
         </h3>
         <span class="tag ${func.triaged_out ? '' : 'success'}">${func.triaged_out ? 'TRIAGED OUT' : 'TO OPTIMIZE'}</span>
       </div>
@@ -107,10 +115,11 @@ export function initPhase2() {
             <span class="metric-label">Token Count</span>
             <span class="metric-value">${func.token_count.toLocaleString()}</span>
           </div>
-          <span class="tag tier-${tier.key}">${tier.label} routing</span>
+          ${routingTag}
         </div>
       </div>
     `;
+    card.querySelector('.fn-name').textContent = func.name;
     functionsContainer.appendChild(card);
   }
 

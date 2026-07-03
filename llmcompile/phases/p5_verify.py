@@ -16,6 +16,7 @@ import logging
 
 from llmcompile.models import ParsedModule, Verdict
 from llmcompile.config import PipelineConfig, get_config
+from llmcompile.phases.p1_parse import replace_function_body
 from llmcompile.verification.alive import check_syntax, verify_refinement
 
 logger = logging.getLogger(__name__)
@@ -48,11 +49,21 @@ def verify_module(
             continue
             
         logger.info(f"Verifying candidate for {record.name}...")
-        
+
         # 1. Syntax check
-        # We need to prepend the preamble to the llm_output to make it assemblable
-        candidate_ir = f"{parsed.preamble}\n\n{record.llm_output}"
-        
+        # Build the candidate by swapping only the function body into this
+        # function's own standalone IR, so it keeps the same preamble AND sibling
+        # declarations as the source. (Prepending just the module preamble would
+        # drop sibling declares and spuriously fail any function calling a sibling.)
+        try:
+            candidate_ir = replace_function_body(
+                record.original_ir, record.name, record.llm_output
+            )
+        except ValueError as exc:
+            logger.warning(f"[{record.name}] could not reconstruct candidate: {exc}")
+            record.verdict = Verdict.SYNTAX_FAIL
+            continue
+
         syntax_ok = check_syntax(candidate_ir, config.verification)
         if not syntax_ok:
             logger.warning(f"[{record.name}] Syntax check failed")

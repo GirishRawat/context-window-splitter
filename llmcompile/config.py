@@ -99,10 +99,16 @@ class VerificationConfig:
     # Path to alive-tv binary (from Alive2 build)
     alive_tv_path: str = "alive-tv"
 
+    # llvm-as syntax-check timeout in seconds (should be near-instant)
+    llvm_as_timeout: int = 10
+
     # alive-tv timeout in seconds
     alive_tv_timeout: int = 30
 
-    # SMT solver timeout (passed to alive-tv if supported)
+    # SMT solver timeout. Reserved: intended to be passed to alive-tv (e.g.
+    # --smt-to) once the exact flag/units are pinned against the Alive2 build.
+    # Until then the subprocess-level alive_tv_timeout is the hard guard, so we
+    # do NOT pass an unverified flag that could break every real invocation.
     smt_timeout: int = 20
 
     def __post_init__(self):

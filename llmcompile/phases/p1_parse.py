@@ -218,6 +218,39 @@ def parse_module(ir_text: str) -> ParsedModule:
     )
 
 
+def replace_function_body(standalone_ir: str, name: str, new_function_ir: str) -> str:
+    """Return ``standalone_ir`` with the ``define`` block for ``name`` swapped.
+
+    A standalone IR string (as produced for ``FunctionRecord.original_ir``) is a
+    shared preamble *plus sibling ``declare`` lines* plus exactly one ``define``
+    block. This swaps that one block for ``new_function_ir`` (e.g. an LLM
+    candidate), keeping the preamble and sibling declarations byte-for-byte.
+
+    Phase 5 uses this to build the ``alive-tv`` *target* so it is structurally
+    identical to the *source* (``original_ir``) and differs only in the function
+    body. Prepending only the module preamble would drop the sibling
+    declarations, making any function that calls a sibling fail ``llvm-as`` and
+    be spuriously rejected.
+
+    ``new_function_ir`` is expected to be a single ``define`` block for the same
+    function (no module preamble of its own); malformed candidates are caught by
+    the Phase 5 syntax check, not here.
+    """
+    preamble_lines, blocks = _split_module_text(standalone_ir)
+    block_names = [b["name"] for b in blocks]
+    if block_names != [name]:
+        raise ValueError(
+            f"expected exactly one definition of {name!r} in the standalone IR, "
+            f"found {block_names}"
+        )
+
+    prefix = "\n".join(preamble_lines).rstrip()
+    body = new_function_ir.strip()
+    if not prefix:
+        return body + "\n"
+    return prefix + "\n\n" + body + "\n"
+
+
 def parse_module_file(path: str) -> ParsedModule:
     """Convenience wrapper: read a ``.ll`` file and parse it."""
     with open(path, "r", encoding="utf-8") as fh:

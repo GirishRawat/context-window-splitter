@@ -37,7 +37,7 @@ def check_syntax(ir_text: str, config: VerificationConfig) -> bool:
                 [config.llvm_as_path, "-disable-output", f.name],
                 capture_output=True,
                 text=True,
-                timeout=10,  # syntax check should be practically instant
+                timeout=config.llvm_as_timeout,
                 check=False
             )
             return result.returncode == 0
@@ -46,7 +46,7 @@ def check_syntax(ir_text: str, config: VerificationConfig) -> bool:
             logger.error(f"Syntax check failed: {config.llvm_as_path} not found")
             return False
         except subprocess.TimeoutExpired:
-            logger.error(f"Syntax check timed out after 10s")
+            logger.error(f"Syntax check timed out after {config.llvm_as_timeout}s")
             return False
         except Exception as e:
             logger.error(f"Syntax check failed unexpectedly: {e}")
@@ -91,17 +91,19 @@ def verify_refinement(original_ir: str, candidate_ir: str, config: VerificationC
             )
             
             output = result.stdout + "\n" + result.stderr
-            
-            # Parse standard Alive2 output strings
-            if "Transformation seems to be correct!" in output:
-                return Verdict.PASSED, None
-                
-            elif "Transformation doesn't verify!" in output:
-                # The counterexample is usually the rest of the output
-                # Let's clean it up slightly by returning the full output so 
-                # the user/developer can see the SAT model.
+
+            # Parse standard Alive2 output strings. Check the FAILURE marker
+            # first: the README requires treating anything other than a proven
+            # refinement as a failure, so if an output ever carries both markers
+            # (batch runs, future phrasing) we must not misclassify it as PASSED.
+            if "doesn't verify!" in output:
+                # Return the full output so the developer can see the SAT model
+                # / counterexample.
                 return Verdict.REJECTED, output.strip()
-                
+
+            elif "Transformation seems to be correct!" in output:
+                return Verdict.PASSED, None
+
             else:
                 # Alive2 timed out internally, crashed, unsupported instruction, etc.
                 logger.warning(f"alive-tv undecided or unsupported. Output:\n{output[:500]}")

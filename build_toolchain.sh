@@ -22,7 +22,8 @@ else
 fi
 
 # Define workspace directory for tools
-TOOLCHAIN_DIR="$(pwd)/toolchain"
+# We use $HOME/llvm_toolchain to avoid space-in-path compilation issues with LLVM/CMake
+TOOLCHAIN_DIR="$HOME/llvm_toolchain"
 mkdir -p "$TOOLCHAIN_DIR"
 cd "$TOOLCHAIN_DIR"
 

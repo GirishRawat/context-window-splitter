@@ -112,6 +112,15 @@ class VerificationConfig:
     smt_timeout: int = 20
 
     def __post_init__(self):
+        # Default fallback paths for JupyterHub build if they exist on the host
+        jovyan_llvm_as = "/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as"
+        jovyan_alive_tv = "/home/jovyan/llvm_toolchain/alive2/build/alive-tv"
+
+        if os.path.exists(jovyan_llvm_as) and self.llvm_as_path == "llvm-as":
+            self.llvm_as_path = jovyan_llvm_as
+        if os.path.exists(jovyan_alive_tv) and self.alive_tv_path == "alive-tv":
+            self.alive_tv_path = jovyan_alive_tv
+
         # Allow override from environment
         self.llvm_as_path = os.getenv("LLVM_AS_PATH", self.llvm_as_path)
         self.alive_tv_path = os.getenv("ALIVE_TV_PATH", self.alive_tv_path)

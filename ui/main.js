@@ -2,6 +2,7 @@ import { initNav } from './nav.js';
 import { detectBackend } from './backend.js';
 import { initPhase1 } from './phase1.js';
 import { initPhase2 } from './phase2.js';
+import { initPhase3 } from './phase3.js';
 import { initPhase5 } from './phase5.js';
 
 function initTheme() {
@@ -36,6 +37,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   initNav();
   initPhase1();
   initPhase2();
+  initPhase3();
   initPhase5();
   await detectBackend();
 });

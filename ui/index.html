@@ -29,6 +29,10 @@
           
           Phase 2 &middot; Triage
         </button>
+        <button class="phase-tab" data-view="phase3">
+          
+          Phase 3 &middot; Route
+        </button>
         <button class="phase-tab" data-view="phase5">
           
           Phase 5 &middot; Verify
@@ -320,6 +324,94 @@ entry:
         <div id="triage-empty-state" class="empty-state">
           
           <p>Click "Analyze & Triage" to visualize complexity scoring and routing tiers.</p>
+        </div>
+
+      </section>
+    </main>
+
+    <!-- ===================== Phase 3: LLM Execution & Routing ===================== -->
+    <main id="view-phase3" class="container view">
+      <!-- Left Column: Input -->
+      <section class="panel input-panel glass-panel">
+        <div class="panel-header">
+          <h2>Input: Extracted LLVM IR</h2>
+          <div style="display: flex; gap: 0.5rem;">
+            <button id="phase3-example-btn" class="secondary-btn">Try Another Example</button>
+            <button id="route-btn" class="primary-btn">
+              
+              Route & Execute LLM
+            </button>
+          </div>
+        </div>
+        <textarea id="route-ir-input" class="code-editor" spellcheck="false" placeholder="Paste your LLVM IR here...">; ModuleID = 'sample'
+source_filename = "sample.c"
+target datalayout = "e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
+
+@counter = global i32 0, align 4
+
+declare i32 @external(i32)
+
+define i32 @add(i32 %a, i32 %b) {
+entry:
+  %r = add i32 %a, %b
+  ret i32 %r
+}
+
+define i32 @max(i32 %a, i32 %b) {
+entry:
+  %cmp = icmp sgt i32 %a, %b
+  br i1 %cmp, label %then, label %else
+then:
+  ret i32 %a
+else:
+  ret i32 %b
+}
+
+define i32 @use(i32 %x) {
+entry:
+  %t = call i32 @add(i32 %x, i32 1)
+  %e = call i32 @external(i32 %t)
+  ret i32 %e
+}</textarea>
+        <div class="triage-controls">
+          <label for="route-threshold-input">Complexity threshold (Triage)</label>
+          <input type="range" id="route-threshold-input" min="1" max="15" value="2" />
+          <span id="route-threshold-value" class="threshold-value">2</span>
+        </div>
+        <div class="triage-controls" style="margin-top: 1rem;">
+          <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+            <input type="checkbox" id="mock-llm-checkbox" checked />
+            Mock LLM Execution (fallback for missing API keys)
+          </label>
+        </div>
+        <div id="route-error-message" class="error-msg hidden"></div>
+      </section>
+
+      <!-- Right Column: Output -->
+      <section class="panel output-panel">
+
+        <!-- Summary Section -->
+        <div class="glass-panel result-card summary-card hidden" id="route-summary">
+          <div class="card-header">
+            <h3>Routing Summary</h3>
+            <span class="tag">Phase 3 Output</span>
+          </div>
+          <div class="summary-bar">
+            <div class="summary-bar-fill" id="route-summary-fill" style="width: 0%"></div>
+          </div>
+          <p class="card-desc summary-text" id="route-summary-text"></p>
+        </div>
+
+        <!-- Functions Section -->
+        <div id="route-functions-container" class="functions-grid">
+          <!-- Dynamically generated function cards will appear here -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="route-empty-state" class="empty-state">
+          
+          <p>Click "Route & Execute LLM" to visualize LLM code generation.</p>
         </div>
 
       </section>

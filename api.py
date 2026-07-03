@@ -103,6 +103,87 @@ def triage_ir(request: TriageRequest):
             error=str(e) + "\n" + traceback.format_exc(),
         )
 
+class RouteRequest(BaseModel):
+    ir_text: str
+    complexity_threshold: int = 5
+    mock_llm: bool = True
+
+class FunctionRouteOut(BaseModel):
+    name: str
+    original_ir: str
+    complexity: int
+    token_count: int
+    triaged_out: bool
+    assigned_model: str | None
+    llm_output: str | None
+
+class RouteResponse(BaseModel):
+    preamble: str
+    functions: list[FunctionRouteOut]
+    error: str | None = None
+
+@app.post("/api/route", response_model=RouteResponse)
+def route_ir(request: RouteRequest):
+    try:
+        from llmcompile.phases.p3_route import route_module
+        import os
+        from unittest.mock import patch, MagicMock
+        
+        parsed = parse_module(request.ir_text)
+        config = PipelineConfig(
+            triage=TriageConfig(complexity_threshold=request.complexity_threshold)
+        )
+        triage_module(parsed, config)
+        
+        # Decide if we mock
+        has_keys = "OPENAI_API_KEY" in os.environ or "ANTHROPIC_API_KEY" in os.environ
+        should_mock = request.mock_llm or not has_keys
+        
+        if should_mock:
+            with patch('llmcompile.phases.p3_route.litellm') as mock_litellm:
+                async def fake_completion(*args, **kwargs):
+                    mock_response = MagicMock()
+                    mock_response.choices = [MagicMock()]
+                    # Generate a dummy LLM output for visualization
+                    orig = kwargs.get("messages", [])[1].get("content", "")
+                    body = orig.split("Optimize this LLVM IR function:\n\n")[-1]
+                    
+                    if "add i32" in body:
+                        body = body.replace("add i32", "shl i32")
+                    else:
+                        body = body.replace("{\n", "{\n  ; optimized by mocked LLM\n")
+                    
+                    mock_response.choices[0].message.content = body
+                    return mock_response
+                    
+                mock_litellm.acompletion = fake_completion
+                route_module(parsed, config)
+        else:
+            route_module(parsed, config)
+
+        functions = [
+            FunctionRouteOut(
+                name=fn.name,
+                original_ir=fn.original_ir,
+                complexity=fn.complexity,
+                token_count=fn.token_count,
+                triaged_out=fn.triaged_out,
+                assigned_model=fn.assigned_model,
+                llm_output=fn.llm_output,
+            )
+            for fn in parsed.functions
+        ]
+        return RouteResponse(
+            preamble=parsed.preamble,
+            functions=functions
+        )
+    except Exception as e:
+        return RouteResponse(
+            preamble="",
+            functions=[],
+            error=str(e) + "\n" + traceback.format_exc()
+        )
+
 class VerifyRequest(BaseModel):
     original_ir: str
     candidate_ir: str

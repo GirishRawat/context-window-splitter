@@ -37,6 +37,7 @@ mkdir -p build && cd build
 
 echo "Configuring LLVM with RTTI=ON and EH=ON (Required for Alive2)..."
 cmake -GNinja \
+  -DLLVM_ENABLE_WERROR=OFF \
   -DLLVM_ENABLE_RTTI=ON \
   -DLLVM_ENABLE_EH=ON \
   -DBUILD_SHARED_LIBS=ON \

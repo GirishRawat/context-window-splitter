@@ -102,3 +102,38 @@ def triage_ir(request: TriageRequest):
             threshold=request.complexity_threshold,
             error=str(e) + "\n" + traceback.format_exc(),
         )
+
+class VerifyRequest(BaseModel):
+    original_ir: str
+    candidate_ir: str
+
+class VerifyResponse(BaseModel):
+    verdict: str
+    counterexample: str | None = None
+    error: str | None = None
+
+@app.post("/api/verify", response_model=VerifyResponse)
+def verify_ir(request: VerifyRequest):
+    try:
+        from llmcompile.verification.alive import check_syntax, verify_refinement
+        from llmcompile.config import VerificationConfig
+        from llmcompile.models import Verdict
+        
+        config = VerificationConfig()
+        
+        # 1. Syntax check
+        if not check_syntax(request.candidate_ir, config):
+            return VerifyResponse(verdict=Verdict.SYNTAX_FAIL.value)
+            
+        # 2. Semantic refinement check
+        verdict, cex = verify_refinement(request.original_ir, request.candidate_ir, config)
+        
+        return VerifyResponse(
+            verdict=verdict.value,
+            counterexample=cex
+        )
+    except Exception as e:
+        return VerifyResponse(
+            verdict="unsupported",
+            error=str(e) + "\n" + traceback.format_exc()
+        )

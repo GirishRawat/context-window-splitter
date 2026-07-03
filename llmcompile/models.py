@@ -46,14 +46,17 @@ class FunctionRecord:
 
     # --- Set in Phase 3 ---
     assigned_model: str | None = None
-    llm_output: str | None = None          # raw candidate IR from the model
+    llm_output: str | None = None          # raw candidate function `define` block from the model
+
+    # --- Set in Phase 4 ---
+    candidate_ir: str | None = None        # standalone candidate IR (preamble + sibling declares + candidate body); the alive-tv target Phase 5 verifies
 
     # --- Set in Phase 5 ---
     verdict: Verdict = Verdict.PENDING
     counterexample: str | None = None      # populated on REJECTED
 
     # --- Set in Phase 6 ---
-    final_ir: str | None = None            # optimised IR if PASSED, else original_ir
+    final_ir: str | None = None            # final function `define` block: candidate body if PASSED, else the original body
 
 
 @dataclass
@@ -72,6 +75,7 @@ class ParsedModule:
     preamble: str                                   # module-level context shared by every extracted function
     functions: list[FunctionRecord] = field(default_factory=list)
     module_ref: Any = None                          # llvmlite.binding.ModuleRef, retained in memory
+    final_module_ir: str | None = None              # Phase 6: assembled final module (preamble + every function's final_ir)
 
     def definitions(self) -> list[FunctionRecord]:
         """Functions that are real definitions (everything in ``functions``;

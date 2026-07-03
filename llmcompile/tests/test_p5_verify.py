@@ -14,7 +14,6 @@ from llmcompile.models import FunctionRecord, ParsedModule, Verdict
 from llmcompile.config import PipelineConfig, VerificationConfig
 from llmcompile.verification.alive import check_syntax, verify_refinement
 from llmcompile.phases.p5_verify import verify_module
-from llmcompile.phases.p1_parse import parse_module, replace_function_body
 
 @pytest.fixture
 def mock_config():
@@ -120,20 +119,24 @@ def _define(name: str, marker: str = "") -> str:
 
 @pytest.fixture
 def sample_parsed_module():
+    # Phase 5 consumes candidate_ir (built by Phase 4), so the fixture sets it
+    # directly rather than relying on reconstruction.
     f1 = FunctionRecord(name="f1", original_ir=_define("f1"))
     f1.llm_output = _define("f1", "f1_opt")
+    f1.candidate_ir = _define("f1", "f1_opt")
 
     f2 = FunctionRecord(name="f2", original_ir=_define("f2"))
     f2.llm_output = _define("f2", "f2_opt")
+    f2.candidate_ir = _define("f2", "f2_opt")
 
     f_triaged = FunctionRecord(name="f_triaged", original_ir=_define("f_triaged"))
     f_triaged.triaged_out = True
-    # phase 3 doesn't assign llm_output to triaged functions
-    f_triaged.llm_output = None
+    # phase 3/4 don't produce a candidate for triaged functions
+    f_triaged.candidate_ir = None
 
     f_no_output = FunctionRecord(name="f_no_output", original_ir=_define("f_no_output"))
-    # triaged_out is False but somehow llm_output is None (e.g. LLM API failed)
-    f_no_output.llm_output = None
+    # triaged_out is False but no candidate (e.g. LLM API failed upstream)
+    f_no_output.candidate_ir = None
 
     return ParsedModule(
         source_ir="source",
@@ -177,57 +180,6 @@ def test_verify_module_pipeline_integration(mock_verify_refinement, mock_check_s
     
     # verify_refinement should only have been called once (for f1)
     mock_verify_refinement.assert_called_once()
-
-
-# ---------------------------------------------------------------------------
-# Regression tests for candidate reconstruction (Finding #1)
-# ---------------------------------------------------------------------------
-
-def test_candidate_reconstruction_keeps_sibling_declarations():
-    """The alive-tv target must keep the sibling declarations the source has,
-    otherwise any function that calls a sibling fails llvm-as and is spuriously
-    rejected. Prepending only the module preamble would drop them."""
-    ir = (
-        "define i32 @add(i32 %a, i32 %b) {\n"
-        "entry:\n"
-        "  %r = add i32 %a, %b\n"
-        "  ret i32 %r\n"
-        "}\n"
-        "define i32 @use(i32 %x) {\n"
-        "entry:\n"
-        "  %t = call i32 @add(i32 %x, i32 1)\n"
-        "  ret i32 %t\n"
-        "}\n"
-    )
-    parsed = parse_module(ir)
-    use = next(f for f in parsed.functions if f.name == "use")
-
-    # sanity: the source (original_ir) already carries the sibling declaration
-    assert "declare i32 @add" in use.original_ir
-
-    # an "optimized" candidate for @use that still calls the sibling @add
-    candidate_body = (
-        "define i32 @use(i32 %x) {\n"
-        "entry:\n"
-        "  %t = call i32 @add(i32 %x, i32 1)\n"
-        "  ret i32 %t\n"
-        "}"
-    )
-    candidate = replace_function_body(use.original_ir, "use", candidate_body)
-
-    # the sibling declaration must survive the reconstruction...
-    assert "declare i32 @add" in candidate
-    # ...and the candidate must be independently assemblable (no Alive2 needed)
-    import llvmlite.binding as llvm
-    m = llvm.parse_assembly(candidate)
-    m.verify()
-
-
-def test_candidate_reconstruction_rejects_wrong_function():
-    parsed = parse_module("define i32 @f() {\nentry:\n  ret i32 0\n}")
-    f = parsed.functions[0]
-    with pytest.raises(ValueError):
-        replace_function_body(f.original_ir, "nonexistent", "define i32 @f() { ret i32 0 }")
 
 
 # ---------------------------------------------------------------------------

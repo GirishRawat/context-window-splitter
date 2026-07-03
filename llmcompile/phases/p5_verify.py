@@ -1,13 +1,14 @@
 """Phase 5 — Verification Gate (deterministic).
 
-Applies formal verification to LLM candidates.
-For each function that wasn't triaged out and has an llm_output:
+The gate — nothing else. It consumes the standalone ``candidate_ir`` that
+Phase 4 built and, for each candidate:
 1. Syntax check via `llvm-as` -> Verdict.SYNTAX_FAIL
 2. Refinement proof via `alive-tv` (Alive2/Z3) -> Verdict.PASSED / REJECTED / UNSUPPORTED
 
 Updates `FunctionRecord.verdict` and `FunctionRecord.counterexample` in-place.
-Functions that are `triaged_out` remain PENDING (or skip verification) and will
-naturally fall back to the original IR in Phase 6.
+Functions with no ``candidate_ir`` (triaged out, no LLM output, or a candidate
+Phase 4 could not reconstruct) remain PENDING and fall back to the original IR
+in Phase 6. Reconstruction lives in Phase 4; this phase performs no rebuilding.
 """
 
 from __future__ import annotations
@@ -16,7 +17,6 @@ import logging
 
 from llmcompile.models import ParsedModule, Verdict
 from llmcompile.config import PipelineConfig, get_config
-from llmcompile.phases.p1_parse import replace_function_body
 from llmcompile.verification.alive import check_syntax, verify_refinement
 
 logger = logging.getLogger(__name__)
@@ -32,48 +32,32 @@ def verify_module(
     - ``counterexample``: Proof of failure if REJECTED
     
     Args:
-        parsed: The ParsedModule from Phase 1 (with Phase 3 llm_output populated)
+        parsed: The ParsedModule after Phase 4 reconstruction (candidate_ir set)
         config: Pipeline configuration (uses DEFAULT_CONFIG if None)
     """
     if config is None:
         config = get_config()
-        
+
     for record in parsed.functions:
-        if record.triaged_out:
-            logger.debug(f"Skipping verification for {record.name} (triaged out)")
+        if record.candidate_ir is None:
+            # Triaged out, no LLM output, or Phase 4 could not reconstruct a
+            # candidate. Leave verdict PENDING so Phase 6 uses original_ir.
+            logger.debug(f"Skipping verification for {record.name} (no candidate)")
             continue
-            
-        if record.llm_output is None:
-            logger.debug(f"Skipping verification for {record.name} (no LLM output)")
-            # Leaves verdict as PENDING so Phase 6 uses original_ir
-            continue
-            
+
         logger.info(f"Verifying candidate for {record.name}...")
 
-        # 1. Syntax check
-        # Build the candidate by swapping only the function body into this
-        # function's own standalone IR, so it keeps the same preamble AND sibling
-        # declarations as the source. (Prepending just the module preamble would
-        # drop sibling declares and spuriously fail any function calling a sibling.)
-        try:
-            candidate_ir = replace_function_body(
-                record.original_ir, record.name, record.llm_output
-            )
-        except ValueError as exc:
-            logger.warning(f"[{record.name}] could not reconstruct candidate: {exc}")
-            record.verdict = Verdict.SYNTAX_FAIL
-            continue
-
-        syntax_ok = check_syntax(candidate_ir, config.verification)
+        # 1. Syntax check (cheap filter before the expensive SMT proof).
+        syntax_ok = check_syntax(record.candidate_ir, config.verification)
         if not syntax_ok:
             logger.warning(f"[{record.name}] Syntax check failed")
             record.verdict = Verdict.SYNTAX_FAIL
             continue
-            
-        # 2. Refinement proof
+
+        # 2. Refinement proof: source = original, target = candidate.
         verdict, counterexample = verify_refinement(
             record.original_ir,
-            candidate_ir,
+            record.candidate_ir,
             config.verification
         )
         

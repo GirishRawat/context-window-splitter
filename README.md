@@ -67,23 +67,31 @@ These define the system's identity. Do not violate them to make a task easier.
 ├── llmcompile/
 │   ├── __init__.py
 │   ├── models.py                  ✅ IMPLEMENTED - FunctionRecord, ParsedModule, Verdict
-│   ├── orchestrator.py            ⬜ not yet built - synchronous state machine, phases 1→6
-│   ├── config.py                  ⬜ not yet built - thresholds, routing table, tool paths, timeouts
+│   ├── orchestrator.py            ✅ IMPLEMENTED (M1) - synchronous state machine, phases 1→6
+│   ├── config.py                  ✅ IMPLEMENTED - thresholds, routing table, tool paths, timeouts
 │   ├── phases/
 │   │   ├── __init__.py
 │   │   ├── p1_parse.py            ✅ IMPLEMENTED - see §9 for design details
-│   │   ├── p2_triage.py           ⬜ next up - cyclomatic complexity + token count
-│   │   ├── p3_route.py            ⬜ asyncio + LiteLLM dispatch (the ONLY async module)
-│   │   ├── p4_reconstruct.py      ⬜ mechanical substitution, temp file
-│   │   ├── p5_verify.py           ⬜ llvm-as then alive-tv via subprocess
-│   │   └── p6_assemble.py         ⬜ fallback selection + final compile
+│   │   ├── p2_triage.py           ✅ IMPLEMENTED - cyclomatic complexity + token count
+│   │   ├── p3_route.py            ✅ IDENTITY STUB (M1) - real asyncio+LiteLLM dispatch is M4
+│   │   ├── p4_reconstruct.py      ✅ IMPLEMENTED (M1) - per-function standalone candidate_ir
+│   │   ├── p5_verify.py           ✅ IMPLEMENTED - llvm-as then alive-tv (needs M0 toolchain to run)
+│   │   └── p6_assemble.py         ✅ IMPLEMENTED (M1) - fallback selection + module assembly (compile-to-exe deferred)
 │   ├── verification/
-│   │   └── alive.py               ⬜ subprocess wrappers; parse UNSAT/SAT/unsupported + counterexample
+│   │   └── alive.py               ✅ IMPLEMENTED - subprocess wrappers; parse correct/doesn't-verify + counterexample
 │   ├── eval/
 │   │   └── harness.py             ⬜ corpus runner + per-function metrics
 │   └── tests/
-│       └── test_p1_parse.py       ✅ IMPLEMENTED - 8 tests incl. independent-assemblability proof
+│       ├── test_p1_parse.py       ✅ 7 tests incl. independent-assemblability proof
+│       ├── test_p2_triage.py      ✅ 12 tests - complexity/token/triage/determinism
+│       ├── test_p3_route.py       ✅ identity stub + determinism
+│       ├── test_p4_reconstruct.py ✅ candidate rebuild keeps sibling declares + assembles
+│       ├── test_p5_verify.py      ✅ mocked llvm-as/alive-tv; verdict mapping; arg order
+│       ├── test_p6_assemble.py    ✅ PASSED locks in, everything else falls back
+│       └── test_orchestrator.py   ✅ end-to-end (mocked-pass + toolchain-absent fallback)
 ```
+
+Web visualizations for Phases 1 and 2 live under `ui/` (Vite + FastAPI in `api.py`, with a pure-JS fallback for static hosting).
 
 The orchestrator stays synchronous; only `p3_route.py` is async internally (`asyncio.gather` over records). This keeps "deterministic state machine with one contained probabilistic phase" literally true at the code-structure level.
 
@@ -209,18 +217,28 @@ Design decisions already made (do not re-litigate without cause):
 
 **`llmcompile/tests/test_p1_parse.py`** - 8 tests over a representative module (global + foreign declare + two definitions with a sibling call). Key assertions: only definitions become records; sibling calls are declared not inlined; every extracted function independently re-parses and re-verifies; invalid IR raises.
 
-### Known limitations (deliberate, deferred to M3)
+**Phases 2-6 + orchestrator (M1 walking skeleton)** - the full deterministic spine now runs end-to-end. `orchestrator.compile_module(ir_text, config)` executes parse → triage → route → reconstruct → verify → assemble and returns the `ParsedModule` with `final_module_ir` set.
 
-- `_signature_to_declaration` is best-effort; exotic function signatures may mishandle. The lossless `module_ref` in `ParsedModule` is the fallback source of truth if the text approach hits a wall.
-- **Debug metadata (`-g`) is the main edge case**: it creates module-level nodes referencing functions by name, complicating standalone extraction. Current guidance: compile the corpus at `-O0` **without** `-g`. Handle `-g` properly in M3 if needed.
-- Complexity/token fields exist on `FunctionRecord` but nothing populates them yet (that is Phase 2).
+Design decisions made building M1 (do not re-litigate without cause):
+
+6. **Phase 3 `llm_output` contract = a single `define` block** for the same function (no preamble, no full module). Phase 4 re-wraps it into a standalone `candidate_ir`; Phase 6 substitutes it into the final module. The M1 identity stub sets `llm_output = extract_function_body(original_ir, name)`.
+7. **Reconstruction lives in Phase 4, not Phase 5.** `p4_reconstruct` builds `candidate_ir` by swapping *only* the body into the function's own `original_ir` (via `replace_function_body`), so source and target handed to `alive-tv` are identical except the body — same preamble **and sibling declarations**. (An earlier version prepended only the module preamble, dropping sibling declares and spuriously failing any function that calls a sibling.) `p5_verify` is now purely the gate: it consumes `candidate_ir` and runs the tools.
+8. **New carrier fields:** `FunctionRecord.candidate_ir` (Phase 4) and `ParsedModule.final_module_ir` (Phase 6). `final_ir` holds the chosen `define` block (candidate body if PASSED, else original body).
+9. **`alive.py` checks the failure marker before the success marker** so a mixed output can never be misclassified as PASSED. `llvm_as_timeout` is configurable; `smt_timeout` is reserved until the exact `alive-tv` flag/units are pinned against the M0 build (guessing a flag would error every real run into UNSUPPORTED).
+
+### Known limitations (deliberate)
+
+- `_signature_to_declaration` is best-effort; exotic function signatures may mishandle. The lossless `module_ref` in `ParsedModule` is the fallback source of truth if the text approach hits a wall. *(M3)*
+- **Debug metadata (`-g`)** creates module-level nodes referencing functions by name, complicating standalone extraction. Compile the corpus at `-O0` **without** `-g` for now. *(M3)*
+- **Phase 5 cannot actually PASS without the M0 toolchain** (`llvm-as` + `alive-tv`). Absent them, syntax checks fail closed → every function falls back to its original → `final_module_ir` is behaviourally the unoptimised input. This is the correct fail-safe M1 outcome, and it is what the orchestrator tests exercise via mocked verification (pass path) and a bogus tool path (fallback path).
+- **Phase 6 assembles the final module text but does not compile it to an executable** — that needs a system `clang`/`llc` (an M0-class dependency) and is deferred.
 
 ### What to build next (in order)
 
-1. **`phases/p2_triage.py`** - cyclomatic complexity from the CFG via `module_ref` (per function: sum over blocks of (successor edges) − blocks + 2, or equivalently decision points + 1) and token counting with the tokenizer Phase 3 routing will key on. Populate `complexity`, `token_count`, `triaged_out` (threshold from `config.py` - build a minimal `config.py` alongside).
-2. **`verification/alive.py` + `phases/p5_verify.py`** - before Phase 3, per M2. Subprocess wrappers with configurable timeout; parse alive-tv stdout into `PASSED` / `REJECTED` (+counterexample text) / `UNSUPPORTED`. Timeout maps to `UNSUPPORTED`, never `PASSED`.
-3. **`orchestrator.py` + identity-transform walking skeleton** (M1) - synchronous, phases in order, Phase 3 stubbed as identity.
-4. **`phases/p3_route.py`** - last. Stateless single-turn prompts; deterministic output sanitisation (strip markdown fences/prose) is allowed, semantic "repair" is not; bounded concurrency.
+1. **M0 - toolchain spike.** Build Z3 + LLVM-from-source + Alive2 and pin versions. Unblocks a real green Phase 5 run and M2. Highest-risk dependency; needs a well-resourced machine.
+2. **M2 - trust the gate for real.** With the toolchain present, add hand-written good/bad transforms (dropped side effect, introduced poison, changed return value) and assert correct accept/reject. Must pass before the LLM is connected.
+3. **M4 - real `phases/p3_route.py`.** Replace the identity stub: stateless single-turn prompts, deterministic output sanitisation (strip markdown fences/prose) but no semantic "repair"; then asyncio+LiteLLM concurrency; routing tiers last. `p3_route.py` is the ONLY module allowed async code.
+4. **M5 - `eval/harness.py`.** Per function: instruction count before/after, verdict, model, latency → dissertation tables.
 
 ### Rules of engagement for agents
 

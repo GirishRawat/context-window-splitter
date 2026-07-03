@@ -251,6 +251,22 @@ def replace_function_body(standalone_ir: str, name: str, new_function_ir: str) -
     return prefix + "\n\n" + body + "\n"
 
 
+def extract_function_body(standalone_ir: str, name: str) -> str:
+    """Return just the ``define`` block for ``name`` from a standalone IR string.
+
+    The inverse view of :func:`replace_function_body`: it pulls the single
+    function definition out of its preamble/sibling-declaration context. Phase 3
+    (identity transform) and Phase 6 (fallback) use it to obtain the bare
+    ``define`` block without the surrounding module context.
+    """
+    _, blocks = _split_module_text(standalone_ir)
+    for block in blocks:
+        if block["name"] == name:
+            return block["text"]
+    found = [b["name"] for b in blocks]
+    raise ValueError(f"no definition of {name!r} found in the given IR (found {found})")
+
+
 def parse_module_file(path: str) -> ParsedModule:
     """Convenience wrapper: read a ``.ll`` file and parse it."""
     with open(path, "r", encoding="utf-8") as fh:

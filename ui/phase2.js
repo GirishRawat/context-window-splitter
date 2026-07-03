@@ -150,7 +150,7 @@ export function initPhase2() {
     card.innerHTML = `
       <div class="card-header">
         <h3>
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          
           Function: @<span class="fn-name"></span>
         </h3>
         <span class="tag ${func.triaged_out ? '' : 'success'}">${func.triaged_out ? 'TRIAGED OUT' : 'TO OPTIMIZE'}</span>
@@ -204,7 +204,7 @@ export function initPhase2() {
     if (!irText.trim()) return;
     const threshold = parseInt(thresholdInput.value, 10) || 5;
 
-    triageBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-loader-2" style="animation: spin 1s linear infinite;"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Analyzing...`;
+    triageBtn.innerHTML = ` Analyzing...`;
     triageBtn.disabled = true;
     errorMsg.classList.add('hidden');
     emptyState.classList.add('hidden');
@@ -253,7 +253,7 @@ export function initPhase2() {
       errorMsg.classList.remove('hidden');
       emptyState.classList.remove('hidden');
     } finally {
-      triageBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg> Analyze & Triage`;
+      triageBtn.innerHTML = ` Analyze & Triage`;
       triageBtn.disabled = false;
     }
   });

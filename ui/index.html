@@ -13,30 +13,27 @@
   <body>
     <header class="glass-header">
       <div class="logo">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cpu"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/></svg>
+        
         <h1>LLMCompile Pipeline</h1>
       </div>
 
       <nav class="phase-nav">
         <button class="phase-tab active" data-view="phase1">
-          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></svg>
+          
           Phase 1 &middot; Parse
         </button>
         <button class="phase-tab" data-view="phase2">
-          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          
           Phase 2 &middot; Triage
         </button>
         <button class="phase-tab" data-view="phase5">
-          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg>
+          
           Phase 5 &middot; Verify
         </button>
       </nav>
 
       <div class="header-badges" style="display: flex; gap: 0.5rem; align-items: center;">
-        <button id="theme-toggle" class="secondary-btn" style="padding: 0.35rem 0.5rem; border-radius: 999px; height: 26px; border: none;" title="Toggle Light/Dark Mode">
-          <svg id="theme-icon-moon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
-          <svg id="theme-icon-sun" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
-        </button>
+        <button id="theme-toggle" class="secondary-btn" title="Toggle Light/Dark Mode">Toggle Theme</button>
         <div id="engine-badge" class="badge secondary">Detecting Engine...</div>
       </div>
     </header>
@@ -50,7 +47,7 @@
           <div style="display: flex; gap: 0.5rem;">
             <button id="phase1-example-btn" class="secondary-btn">Try Another Example</button>
             <button id="parse-btn" class="primary-btn">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              
               Parse & Extract
             </button>
           </div>
@@ -99,7 +96,7 @@ entry:
 
         <!-- Empty State -->
         <div id="empty-state" class="empty-state">
-          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-code-2"><path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/></svg>
+          
           <p>Click "Parse & Extract" to visualize the extraction process.</p>
         </div>
 
@@ -115,7 +112,7 @@ entry:
           <div style="display: flex; gap: 0.5rem;">
             <button id="phase2-example-btn" class="secondary-btn">Try Another Example</button>
             <button id="triage-btn" class="primary-btn">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+              
               Analyze & Triage
             </button>
           </div>
@@ -181,7 +178,7 @@ entry:
 
         <!-- Empty State -->
         <div id="triage-empty-state" class="empty-state">
-          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          
           <p>Click "Analyze & Triage" to visualize complexity scoring and routing tiers.</p>
         </div>
 
@@ -197,7 +194,7 @@ entry:
           <div style="display: flex; gap: 0.5rem;">
             <button id="phase5-example-btn" class="secondary-btn">Try Another Example</button>
             <button id="verify-btn" class="primary-btn">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+              
               Verify Refinement
             </button>
           </div>
@@ -233,7 +230,7 @@ entry:
 
         <!-- Empty State -->
         <div id="verify-empty-state" class="empty-state">
-          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+          
           <p>Click "Verify Refinement" to run llvm-as and alive-tv.</p>
         </div>
       </section>

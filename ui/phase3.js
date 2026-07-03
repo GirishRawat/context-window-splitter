@@ -52,6 +52,38 @@ entry:
   %t = call i32 @add(i32 %x, i32 1)
   %e = call i32 @external(i32 %t)
   ret i32 %e
+}`,
+    `; ModuleID = 'sample_loop'
+target datalayout = "e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
+
+define i32 @sum(i32 %n) {
+entry:
+  br label %loop
+loop:
+  %i = phi i32 [ 0, %entry ], [ %i.next, %loop ]
+  %s = phi i32 [ 0, %entry ], [ %s.next, %loop ]
+  %i.next = add i32 %i, 1
+  %s.next = add i32 %s, %i
+  %cmp = icmp slt i32 %i.next, %n
+  br i1 %cmp, label %loop, label %exit
+exit:
+  ret i32 %s.next
+}`,
+    `; ModuleID = 'sample_math'
+target datalayout = "e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
+
+define i32 @shift_mul(i32 %a) {
+entry:
+  %mul = mul i32 %a, 4
+  ret i32 %mul
+}
+
+define i32 @div_power_of_two(i32 %a) {
+entry:
+  %div = sdiv i32 %a, 8
+  ret i32 %div
 }`
   ];
 

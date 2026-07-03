@@ -44,7 +44,7 @@ cmake -GNinja \
   -DLLVM_TARGETS_TO_BUILD=X86 \
   -DLLVM_ENABLE_ASSERTIONS=ON \
   -DLLVM_ENABLE_PROJECTS="llvm;clang" \
-  ../llvm
+  ..
 
 echo "Compiling LLVM (This will take a while!)..."
 ninja

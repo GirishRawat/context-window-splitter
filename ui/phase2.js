@@ -51,11 +51,72 @@ function triageModuleJS(irText, threshold) {
   return { preamble, functions: triaged, threshold };
 }
 
+const EXAMPLES = [
+  `; ModuleID = 'sample'
+source_filename = "sample.c"
+target datalayout = "e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
+
+@counter = global i32 0, align 4
+
+declare i32 @external(i32)
+
+define i32 @add(i32 %a, i32 %b) {
+entry:
+  %r = add i32 %a, %b
+  ret i32 %r
+}
+
+define i32 @use(i32 %x) {
+entry:
+  %t = call i32 @add(i32 %x, i32 1)
+  %e = call i32 @external(i32 %t)
+  ret i32 %e
+}`,
+  `; ModuleID = 'sample_max'
+target datalayout = "e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
+
+define i32 @max(i32 %a, i32 %b) {
+entry:
+  %cmp = icmp sgt i32 %a, %b
+  br i1 %cmp, label %then, label %else
+then:
+  ret i32 %a
+else:
+  ret i32 %b
+}`,
+  `; ModuleID = 'sample_loop'
+target datalayout = "e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
+
+define i32 @sum(i32 %n) {
+entry:
+  br label %loop
+loop:
+  %i = phi i32 [ 0, %entry ], [ %i.next, %loop ]
+  %s = phi i32 [ 0, %entry ], [ %s.next, %loop ]
+  %i.next = add i32 %i, 1
+  %s.next = add i32 %s, %i
+  %cmp = icmp slt i32 %i.next, %n
+  br i1 %cmp, label %loop, label %exit
+exit:
+  ret i32 %s.next
+}`
+];
+
 export function initPhase2() {
   const triageBtn = document.getElementById('triage-btn');
   const irInput = document.getElementById('triage-ir-input');
   const errorMsg = document.getElementById('triage-error-message');
   const emptyState = document.getElementById('triage-empty-state');
+  const exampleBtn = document.getElementById('phase2-example-btn');
+
+  let currentIdx = 0;
+  exampleBtn.addEventListener('click', () => {
+    currentIdx = (currentIdx + 1) % EXAMPLES.length;
+    irInput.value = EXAMPLES[currentIdx];
+  });
   const thresholdInput = document.getElementById('threshold-input');
   const thresholdValue = document.getElementById('threshold-value');
 

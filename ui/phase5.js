@@ -53,6 +53,46 @@ function renderResult(data) {
   }
 }
 
+const EXAMPLES = [
+  {
+    orig: `define i32 @test(i32 %a, i32 %b) {
+entry:
+  %add = add i32 %a, %b
+  %add1 = add i32 %add, 0
+  ret i32 %add1
+}`,
+    cand: `define i32 @test(i32 %a, i32 %b) {
+entry:
+  %add = add i32 %a, %b
+  ret i32 %add
+}`
+  },
+  {
+    orig: `define i32 @add_overflow(i32 %a, i32 %b) {
+entry:
+  %add = add i32 %a, %b
+  ret i32 %add
+}`,
+    cand: `define i32 @add_overflow(i32 %a, i32 %b) {
+entry:
+  %add = add nsw i32 %a, %b
+  ret i32 %add
+}`
+  },
+  {
+    orig: `define i32 @shift_mul(i32 %a) {
+entry:
+  %mul = mul i32 %a, 4
+  ret i32 %mul
+}`,
+    cand: `define i32 @shift_mul(i32 %a) {
+entry:
+  %shl = shl i32 %a, 2
+  ret i32 %shl
+}`
+  }
+];
+
 export function initPhase5() {
   const btn = document.getElementById('verify-btn');
   const originalInput = document.getElementById('verify-original-input');
@@ -60,6 +100,14 @@ export function initPhase5() {
   const errorMsg = document.getElementById('verify-error-message');
   const emptyState = document.getElementById('verify-empty-state');
   const resultContainer = document.getElementById('verify-result-container');
+  const exampleBtn = document.getElementById('phase5-example-btn');
+
+  let currentIdx = 0;
+  exampleBtn.addEventListener('click', () => {
+    currentIdx = (currentIdx + 1) % EXAMPLES.length;
+    originalInput.value = EXAMPLES[currentIdx].orig;
+    candidateInput.value = EXAMPLES[currentIdx].cand;
+  });
 
   btn.addEventListener('click', async () => {
     const orig = originalInput.value;

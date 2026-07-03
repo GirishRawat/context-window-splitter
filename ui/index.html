@@ -43,10 +43,13 @@
       <section class="panel input-panel glass-panel">
         <div class="panel-header">
           <h2>Input: Unoptimized LLVM IR</h2>
-          <button id="parse-btn" class="primary-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-            Parse & Extract
-          </button>
+          <div style="display: flex; gap: 0.5rem;">
+            <button id="phase1-example-btn" class="secondary-btn">Try Another Example</button>
+            <button id="parse-btn" class="primary-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              Parse & Extract
+            </button>
+          </div>
         </div>
         <textarea id="ir-input" class="code-editor" spellcheck="false" placeholder="Paste your LLVM IR here...">; ModuleID = 'sample'
 source_filename = "sample.c"
@@ -105,10 +108,13 @@ entry:
       <section class="panel input-panel glass-panel">
         <div class="panel-header">
           <h2>Input: Extracted LLVM IR</h2>
-          <button id="triage-btn" class="primary-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-            Analyze & Triage
-          </button>
+          <div style="display: flex; gap: 0.5rem;">
+            <button id="phase2-example-btn" class="secondary-btn">Try Another Example</button>
+            <button id="triage-btn" class="primary-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+              Analyze & Triage
+            </button>
+          </div>
         </div>
         <textarea id="triage-ir-input" class="code-editor" spellcheck="false" placeholder="Paste your LLVM IR here...">; ModuleID = 'sample'
 source_filename = "sample.c"
@@ -184,10 +190,13 @@ entry:
       <section class="panel input-panel glass-panel" style="display: flex; flex-direction: column; gap: 1rem;">
         <div class="panel-header">
           <h2>Input: IR Functions</h2>
-          <button id="verify-btn" class="primary-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
-            Verify Refinement
-          </button>
+          <div style="display: flex; gap: 0.5rem;">
+            <button id="phase5-example-btn" class="secondary-btn">Try Another Example</button>
+            <button id="verify-btn" class="primary-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+              Verify Refinement
+            </button>
+          </div>
         </div>
         
         <div style="flex: 1; display: flex; flex-direction: column;">

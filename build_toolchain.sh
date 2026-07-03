@@ -14,11 +14,17 @@ echo "[1/4] Installing build dependencies..."
 if command -v apt-get >/dev/null; then
     echo "Attempting to install dependencies via apt-get..."
     sudo -n apt-get update || echo "Warning: sudo failed, skipping apt-get update. Assuming dependencies are already installed via conda/system."
-    sudo -n DEBIAN_FRONTEND=noninteractive apt-get install -y cmake ninja-build git python3 libz3-dev build-essential || echo "Warning: sudo install failed. Please ensure cmake, ninja, and z3 are installed (e.g. via conda)."
+    sudo -n DEBIAN_FRONTEND=noninteractive apt-get install -y cmake ninja-build git python3 libz3-dev build-essential re2c || echo "Warning: sudo install failed. Please ensure cmake, ninja, re2c, and z3 are installed (e.g. via conda)."
 elif command -v brew >/dev/null; then
-    brew install cmake ninja git python z3
+    brew install cmake ninja git python z3 re2c
 else
-    echo "Unsupported OS or missing package manager. Please install cmake, ninja, z3-dev manually."
+    echo "Unsupported OS or missing package manager. Please install cmake, ninja, z3-dev, re2c manually."
+fi
+
+# Fallback: if re2c is still missing and conda is available, install it via conda
+if ! command -v re2c >/dev/null && command -v conda >/dev/null; then
+    echo "re2c not found but conda is available. Installing re2c via conda-forge..."
+    conda install -y -c conda-forge re2c
 fi
 
 # Define workspace directory for tools

@@ -53,10 +53,23 @@ def process_corpus(input_dir: Path, output_csv: Path, complexity_threshold: int)
         "orig_instrs", "final_instrs", "reduction_pct"
     ]
     
-    # Initialize CSV with header
-    with open(output_csv, "w", newline="") as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-        writer.writeheader()
+    completed_files = set()
+    if output_csv.exists() and output_csv.stat().st_size > 0:
+        try:
+            with open(output_csv, "r") as csvfile:
+                reader = csv.DictReader(csvfile)
+                for row in reader:
+                    if row.get("file_name"):
+                        completed_files.add(row["file_name"])
+            logger.info(f"Resuming evaluation: found {len(completed_files)} unique files already processed in {output_csv}")
+        except Exception as e:
+            logger.warning(f"Could not read existing CSV for resumption: {e}. Starting fresh.")
+            
+    # Initialize CSV with header if not resuming or file is missing
+    if not completed_files:
+        with open(output_csv, "w", newline="") as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer.writeheader()
         
     total_evaluated = 0
     
@@ -64,6 +77,10 @@ def process_corpus(input_dir: Path, output_csv: Path, complexity_threshold: int)
     logger.info(f"Found {len(ll_files)} .ll files in {input_dir}")
     
     for ll_file in ll_files:
+        if ll_file.name in completed_files:
+            logger.info(f"Skipping {ll_file.name} (already processed)")
+            continue
+            
         logger.info(f"Processing {ll_file.name}...")
         
         try:

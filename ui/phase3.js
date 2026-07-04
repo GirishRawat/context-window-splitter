@@ -180,8 +180,19 @@ entry:
     if (func.llm_output) {
       codeBlock = `
         <div style="margin-top: 1rem;">
-          <h4 style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 0.5rem;">LLM Output</h4>
-          <pre><code class="language-llvm">${func.llm_output}</code></pre>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+            <h4 style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin: 0;">LLM Output</h4>
+            <div class="ir-toggle-container">
+              <span class="toggle-label optimized-label active">Optimized</span>
+              <label class="switch">
+                <input type="checkbox" class="ir-toggle">
+                <span class="slider"></span>
+              </label>
+              <span class="toggle-label original-label">Original</span>
+            </div>
+          </div>
+          <pre class="ir-optimized-pre"><code class="language-llvm">${func.llm_output}</code></pre>
+          <pre class="ir-original-pre hidden"><code class="language-llvm">${func.original_ir}</code></pre>
         </div>
       `;
     }
@@ -201,6 +212,32 @@ entry:
       ${codeBlock}
     `;
     card.querySelector('.fn-name').textContent = func.name;
+
+    // Add event listener for the toggle if it exists
+    const toggle = card.querySelector('.ir-toggle');
+    if (toggle) {
+      const optimizedPre = card.querySelector('.ir-optimized-pre');
+      const originalPre = card.querySelector('.ir-original-pre');
+      const optimizedLabel = card.querySelector('.optimized-label');
+      const originalLabel = card.querySelector('.original-label');
+      
+      toggle.addEventListener('change', (e) => {
+        if (e.target.checked) {
+          // Show Original
+          optimizedPre.classList.add('hidden');
+          originalPre.classList.remove('hidden');
+          optimizedLabel.classList.remove('active');
+          originalLabel.classList.add('active');
+        } else {
+          // Show Optimized
+          originalPre.classList.add('hidden');
+          optimizedPre.classList.remove('hidden');
+          originalLabel.classList.remove('active');
+          optimizedLabel.classList.add('active');
+        }
+      });
+    }
+
     functionsContainer.appendChild(card);
   }
 

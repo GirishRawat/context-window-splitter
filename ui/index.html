@@ -445,9 +445,9 @@ entry:
         
         <div style="flex: 1; display: flex; flex-direction: column;">
           <h3 style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem;">Original IR (Source)</h3>
-          <textarea id="verify-original-input" class="code-editor" style="flex: 1; min-height: 200px;" spellcheck="false" placeholder="Paste the original unoptimized LLVM IR function here...">define i32 @test(i32 %a, i32 %b) {
+          <textarea id="verify-original-input" class="code-editor" style="flex: 1; min-height: 200px;" spellcheck="false" placeholder="Paste the original unoptimized LLVM IR function here...">define i32 @test(i32 %a) {
 entry:
-  %add = add i32 %a, %b
+  %add = add i32 0, %a
   %add1 = add i32 %add, 0
   ret i32 %add1
 }</textarea>
@@ -455,10 +455,9 @@ entry:
 
         <div style="flex: 1; display: flex; flex-direction: column;">
           <h3 style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem;">Candidate IR (LLM Output)</h3>
-          <textarea id="verify-candidate-input" class="code-editor" style="flex: 1; min-height: 200px;" spellcheck="false" placeholder="Paste the optimized candidate LLVM IR function here...">define i32 @test(i32 %a, i32 %b) {
+          <textarea id="verify-candidate-input" class="code-editor" style="flex: 1; min-height: 200px;" spellcheck="false" placeholder="Paste the optimized candidate LLVM IR function here...">define i32 @test(i32 %a) {
 entry:
-  %add = add i32 %a, %b
-  ret i32 %add
+  ret i32 %a
 }</textarea>
         </div>
 

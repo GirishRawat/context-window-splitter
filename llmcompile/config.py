@@ -150,6 +150,20 @@ class VerificationConfig:
         if os.path.exists(jovyan_alive_tv) and self.alive_tv_path == "alive-tv":
             self.alive_tv_path = jovyan_alive_tv
 
+        # Read from toolchain_versions.lock if it exists (for local Mac builds)
+        lock_path = os.path.expanduser("~/llvm_toolchain/toolchain_versions.lock")
+        if os.path.exists(lock_path):
+            try:
+                with open(lock_path, "r") as f:
+                    for line in f:
+                        line = line.strip()
+                        if line.startswith("llvm_as_path="):
+                            self.llvm_as_path = os.path.expandvars(line.split("=", 1)[1])
+                        elif line.startswith("alive_tv_path="):
+                            self.alive_tv_path = os.path.expandvars(line.split("=", 1)[1])
+            except Exception:
+                pass
+
         # Allow override from environment
         self.llvm_as_path = os.getenv("LLVM_AS_PATH", self.llvm_as_path)
         self.alive_tv_path = os.getenv("ALIVE_TV_PATH", self.alive_tv_path)

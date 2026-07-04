@@ -258,24 +258,8 @@ def verify_ir(request: VerifyRequest):
         orig_clean = request.original_ir.strip()
         cand_clean = request.candidate_ir.strip()
         
-        # Mock examples for interactive visualization when alive2/llvm-as are not locally installed
-        if "define i32 @test" in orig_clean and "ret i32 %add" in cand_clean:
-            return VerifyResponse(verdict="passed")
-        elif "define i32 @add_overflow" in orig_clean and "nsw" in cand_clean:
-            cex_output = (
-                "Transformation doesn't verify!\n"
-                "ERROR: Source is more defined than target for @add_overflow\n\n"
-                "Example:\n"
-                "i32 %a = 2147483647 (0x7fffffff)\n"
-                "i32 %b = 1 (0x00000001)\n\n"
-                "Source value: -2147483648 (0x80000000)\n"
-                "Target value: undef (due to nsw overflow poison)"
-            )
-            return VerifyResponse(verdict="rejected", counterexample=cex_output)
-        elif "define i32 @shift_mul" in orig_clean and "shl i32 %a, 2" in cand_clean:
-            return VerifyResponse(verdict="passed")
-            
         config = VerificationConfig()
+
         
         # 1. Syntax check
         if not check_syntax(request.candidate_ir, config):

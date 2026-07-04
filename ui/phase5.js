@@ -11,19 +11,19 @@ function renderResult(data) {
 
   if (verdict === 'passed') {
     tagClass = 'success';
-    icon = ``;
+    icon = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #4ade80"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`;
     desc = 'llvm-as syntax check passed and alive-tv formally proved the candidate is a sound refinement of the original.';
   } else if (verdict === 'rejected') {
     tagClass = 'error';
-    icon = ``;
+    icon = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #f87171"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>`;
     desc = 'alive-tv found a counterexample. The candidate introduces undefined behavior, alters side effects, or changes the return value.';
   } else if (verdict === 'syntax_fail') {
     tagClass = 'error';
-    icon = ``;
+    icon = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #f87171"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`;
     desc = 'The LLM generated invalid LLVM IR that failed the basic llvm-as syntax check.';
   } else {
     tagClass = 'warning';
-    icon = ``;
+    icon = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #eab308"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>`;
     desc = 'Verification timed out or the tools are not installed locally. Safety guardrail falls back to original IR.';
   }
 
@@ -55,27 +55,26 @@ function renderResult(data) {
 
 const EXAMPLES = [
   {
-    orig: `define i32 @test(i32 %a, i32 %b) {
+    orig: `define i32 @test(i32 %a) {
 entry:
-  %add = add i32 %a, %b
+  %add = add i32 0, %a
   %add1 = add i32 %add, 0
   ret i32 %add1
 }`,
-    cand: `define i32 @test(i32 %a, i32 %b) {
+    cand: `define i32 @test(i32 %a) {
 entry:
-  %add = add i32 %a, %b
-  ret i32 %add
+  ret i32 %a
 }`
   },
   {
-    orig: `define i32 @add_overflow(i32 %a, i32 %b) {
+    orig: `define i32 @add_overflow(i32 %a) {
 entry:
-  %add = add i32 %a, %b
+  %add = add i32 %a, 1
   ret i32 %add
 }`,
-    cand: `define i32 @add_overflow(i32 %a, i32 %b) {
+    cand: `define i32 @add_overflow(i32 %a) {
 entry:
-  %add = add nsw i32 %a, %b
+  %add = add nsw i32 %a, 1
   ret i32 %add
 }`
   },

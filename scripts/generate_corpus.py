@@ -141,6 +141,7 @@ def main():
             ll_text = f.read()
         ll_text = ll_text.replace("uwtable(sync)", "uwtable")
         ll_text = re.sub(r"!llvm\.module\.flags = .*?\n", "", ll_text)
+        ll_text = re.sub(r"\bmemory\([^)]*\)", "", ll_text)
         with open(out_file, "w") as f:
             f.write(ll_text)
             

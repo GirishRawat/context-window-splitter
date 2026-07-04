@@ -1,5 +1,45 @@
 import { BACKEND_BASE, backendState, markFallback, BackendEngineError } from './backend.js';
 
+// Ollama status state
+let ollamaStatus = { running: false, models: [], error: null };
+
+async function checkOllamaStatus() {
+  const indicator = document.getElementById('ollama-status-indicator');
+  const modelInfo = document.getElementById('ollama-model-info');
+  
+  if (!indicator) return;
+  
+  try {
+    const res = await fetch(`${BACKEND_BASE}/api/ollama/status`);
+    const data = await res.json();
+    ollamaStatus = data;
+    
+    if (data.running && data.models.length > 0) {
+      const modelNames = data.models.map(m => m.name).join(', ');
+      indicator.innerHTML = `<span class="ollama-dot ollama-dot-ok"></span> Ollama Connected`;
+      indicator.className = 'ollama-indicator ollama-ok';
+      modelInfo.textContent = modelNames;
+      modelInfo.classList.remove('hidden');
+    } else if (data.running) {
+      indicator.innerHTML = `<span class="ollama-dot ollama-dot-warn"></span> Ollama Running (no models pulled)`;
+      indicator.className = 'ollama-indicator ollama-warn';
+      modelInfo.textContent = 'Run: ollama pull qwen2.5-coder:3b';
+      modelInfo.classList.remove('hidden');
+    } else {
+      indicator.innerHTML = `<span class="ollama-dot ollama-dot-off"></span> Ollama Offline`;
+      indicator.className = 'ollama-indicator ollama-off';
+      modelInfo.textContent = 'Start Ollama or enable mock mode';
+      modelInfo.classList.remove('hidden');
+    }
+  } catch {
+    // Backend itself is offline
+    indicator.innerHTML = `<span class="ollama-dot ollama-dot-off"></span> Backend Offline`;
+    indicator.className = 'ollama-indicator ollama-off';
+    modelInfo.textContent = 'Start the Python API first';
+    modelInfo.classList.remove('hidden');
+  }
+}
+
 export function initPhase3() {
   const routeBtn = document.getElementById('route-btn');
   const irInput = document.getElementById('route-ir-input');
@@ -7,6 +47,8 @@ export function initPhase3() {
   const thresholdInput = document.getElementById('route-threshold-input');
   const thresholdValue = document.getElementById('route-threshold-value');
   const mockLlmCheckbox = document.getElementById('mock-llm-checkbox');
+  const advancedToggle = document.getElementById('phase3-advanced-toggle');
+  const advancedSection = document.getElementById('phase3-advanced-section');
   const errorMsg = document.getElementById('route-error-message');
   
   const functionsContainer = document.getElementById('route-functions-container');
@@ -16,6 +58,18 @@ export function initPhase3() {
   const summaryText = document.getElementById('route-summary-text');
 
   if (!routeBtn) return;
+
+  // Check Ollama status on load
+  checkOllamaStatus();
+
+  // Advanced section toggle
+  if (advancedToggle && advancedSection) {
+    advancedToggle.addEventListener('click', () => {
+      advancedSection.classList.toggle('hidden');
+      const icon = advancedToggle.querySelector('.toggle-icon');
+      if (icon) icon.textContent = advancedSection.classList.contains('hidden') ? '▸' : '▾';
+    });
+  }
 
   thresholdInput.addEventListener('input', (e) => {
     thresholdValue.textContent = e.target.value;
@@ -177,8 +231,11 @@ entry:
     functionsContainer.innerHTML = '';
     summaryCard.classList.add('hidden');
 
+    const useMock = mockLlmCheckbox ? mockLlmCheckbox.checked : false;
     const originalText = routeBtn.innerHTML;
-    routeBtn.innerHTML = '<span class="spinner"></span> Routing...';
+    routeBtn.innerHTML = useMock
+      ? '<span class="spinner"></span> Routing (mock)...'
+      : '<span class="spinner"></span> Routing via Ollama...';
     routeBtn.disabled = true;
 
     try {
@@ -192,7 +249,7 @@ entry:
         body: JSON.stringify({
           ir_text: irText,
           complexity_threshold: parseInt(thresholdInput.value, 10),
-          mock_llm: mockLlmCheckbox.checked
+          mock_llm: useMock
         })
       });
 
@@ -207,6 +264,9 @@ entry:
 
       data.functions.forEach(renderFunctionCard);
       renderSummary(data.functions, thresholdInput.value);
+
+      // Refresh Ollama status after a successful route
+      checkOllamaStatus();
 
     } catch (err) {
       if (err instanceof BackendEngineError) {

@@ -3,7 +3,7 @@
 All thresholds, model names, tool paths, timeouts, and routing logic are
 centralized here. No hard-coded constants in phase modules.
 
-Credentials (API keys) should come from environment variables, never committed.
+Local inference via Ollama — no API keys or cloud costs required.
 """
 
 from __future__ import annotations
@@ -39,6 +39,30 @@ class TriageConfig:
 
 
 # ---------------------------------------------------------------------------
+# Ollama (local inference) configuration
+# ---------------------------------------------------------------------------
+
+@dataclass
+class OllamaConfig:
+    """Configuration for the local Ollama inference server.
+
+    Ollama runs models locally on-device. It exposes an OpenAI-compatible API
+    that LiteLLM can target using the ``ollama_chat/`` model prefix.
+    See: https://ollama.com/
+    """
+
+    # Base URL of the Ollama server (default local install)
+    base_url: str = "http://localhost:11434"
+
+    # Whether to auto-pull missing models when referenced (requires internet)
+    pull_on_start: bool = False
+
+    def __post_init__(self):
+        # Allow override from environment
+        self.base_url = os.getenv("OLLAMA_BASE_URL", self.base_url)
+
+
+# ---------------------------------------------------------------------------
 # Phase 3: LLM routing configuration
 # ---------------------------------------------------------------------------
 
@@ -46,41 +70,46 @@ class TriageConfig:
 class ModelTier:
     """Configuration for a model tier."""
     name: str
-    models: list[str]  # Model identifiers for LiteLLM
-    max_concurrent: int = 10  # Concurrency limit per tier
+    models: list[str]  # Model identifiers for LiteLLM (use ollama_chat/ prefix)
+    max_concurrent: int = 2  # Concurrency limit per tier (low for local inference)
     timeout_seconds: int = 120
 
 
 @dataclass
 class LLMRoutingConfig:
-    """Phase 3 LLM routing configuration."""
+    """Phase 3 LLM routing configuration.
+
+    All models use the ``ollama_chat/`` prefix for LiteLLM's Ollama provider.
+    Concurrency is kept low because local GPU inference is sequential.
+    Timeouts are generous because local models are slower than cloud APIs.
+    """
 
     # Model tiers by name (matches TriageConfig tier names)
     tiers: Dict[str, ModelTier] = None
 
     # Global concurrency limit across all tiers
-    global_max_concurrent: int = 50
+    global_max_concurrent: int = 4
 
     def __post_init__(self):
         if self.tiers is None:
             self.tiers = {
                 "fast": ModelTier(
                     name="fast",
-                    models=["qwen/qwen-3b"],  # Example - adjust based on availability
-                    max_concurrent=20,
-                    timeout_seconds=60
+                    models=["ollama_chat/qwen2.5-coder:3b"],
+                    max_concurrent=2,
+                    timeout_seconds=120
                 ),
                 "mid": ModelTier(
                     name="mid",
-                    models=["meta-llama/Llama-3-8b", "qwen/qwen-7b"],
-                    max_concurrent=15,
-                    timeout_seconds=90
+                    models=["ollama_chat/qwen2.5-coder:7b"],
+                    max_concurrent=1,
+                    timeout_seconds=180
                 ),
                 "frontier": ModelTier(
                     name="frontier",
-                    models=["gpt-4o", "claude-3-5-sonnet-20241022", "qwen/qwen-32b"],
-                    max_concurrent=5,
-                    timeout_seconds=180
+                    models=["ollama_chat/qwen2.5-coder:7b"],
+                    max_concurrent=1,
+                    timeout_seconds=300
                 )
             }
 
@@ -137,6 +166,7 @@ class PipelineConfig:
     triage: TriageConfig = None
     llm_routing: LLMRoutingConfig = None
     verification: VerificationConfig = None
+    ollama: OllamaConfig = None
 
     # Logging level
     log_level: str = "INFO"
@@ -151,6 +181,8 @@ class PipelineConfig:
             self.llm_routing = LLMRoutingConfig()
         if self.verification is None:
             self.verification = VerificationConfig()
+        if self.ollama is None:
+            self.ollama = OllamaConfig()
 
 
 # ---------------------------------------------------------------------------

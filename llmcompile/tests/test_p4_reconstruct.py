@@ -88,10 +88,37 @@ def test_extract_function_body_unknown_raises():
 # ---------------------------------------------------------------------------
 
 def _run_through_reconstruct(ir: str, threshold: int = 1) -> dict:
+    from unittest.mock import patch, MagicMock
+    from llmcompile.config import LLMRoutingConfig, ModelTier
+
+    config = PipelineConfig(
+        triage=TriageConfig(complexity_threshold=threshold),
+        # Use non-ollama model names so health check is not triggered
+        llm_routing=LLMRoutingConfig(
+            tiers={
+                "fast": ModelTier("fast", ["test-model"], max_concurrent=2),
+                "mid": ModelTier("mid", ["test-model"], max_concurrent=1),
+                "frontier": ModelTier("frontier", ["test-model"], max_concurrent=1),
+            }
+        ),
+    )
+
     parsed = parse_module(ir)
-    config = PipelineConfig(triage=TriageConfig(complexity_threshold=threshold))
     triage_module(parsed, config)
-    route_module(parsed, config)
+
+    # Mock litellm to return identity transforms
+    async def identity_completion(**kwargs):
+        user_msg = kwargs.get("messages", [{}])[1].get("content", "")
+        body = user_msg.split("Optimize this LLVM IR function:\n\n")[-1]
+        resp = MagicMock()
+        resp.choices = [MagicMock()]
+        resp.choices[0].message.content = body
+        return resp
+
+    with patch('llmcompile.phases.p3_route.litellm') as mock_litellm:
+        mock_litellm.acompletion = identity_completion
+        route_module(parsed, config)
+
     reconstruct_module(parsed, config)
     return {f.name: f for f in parsed.functions}
 

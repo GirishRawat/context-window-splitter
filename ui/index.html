@@ -108,11 +108,11 @@
                 <h3>LLM Execution &amp; Routing</h3>
                 <span class="nature-tag prob">Probabilistic</span>
               </div>
-              <p class="phase-node-desc">Routes each non-triaged function to a model by complexity/token tier and runs it as a stateless, single-turn text-in / text-out transformation. No memory, no feedback loops, no tool use.</p>
+              <p class="phase-node-desc">Routes each non-triaged function to a local Ollama model by complexity/token tier and runs it as a stateless, single-turn text-in / text-out transformation. No memory, no feedback loops, no tool use. Zero API cost — all inference runs on-device.</p>
               <div class="phase-node-meta">
-                <span class="status-chip stub">Identity stub (M1)</span>
+                <span class="status-chip done">Ollama Integration</span>
                 <span class="io-note">→ <code>llm_output</code> (a <code>define</code> block)</span>
-                <span class="io-note next">Real LiteLLM routing: M4</span>
+                <span class="io-note">Model: <code>qwen2.5-coder</code> (3b / 7b)</span>
               </div>
             </div>
           </li>
@@ -379,11 +379,22 @@ entry:
           <input type="range" id="route-threshold-input" min="1" max="15" value="2" />
           <span id="route-threshold-value" class="threshold-value">2</span>
         </div>
-        <div class="triage-controls" style="margin-top: 1rem;">
-          <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-            <input type="checkbox" id="mock-llm-checkbox" checked />
-            Mock LLM Execution (fallback for missing API keys)
-          </label>
+        <div class="ollama-status-bar">
+          <div id="ollama-status-indicator" class="ollama-indicator ollama-off">
+            <span class="ollama-dot ollama-dot-off"></span> Checking Ollama...
+          </div>
+          <span id="ollama-model-info" class="ollama-model-info hidden"></span>
+        </div>
+        <div class="triage-controls" style="margin-top: 0.5rem;">
+          <button id="phase3-advanced-toggle" class="secondary-btn" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">
+            <span class="toggle-icon">▸</span> Advanced
+          </button>
+          <div id="phase3-advanced-section" class="hidden" style="margin-top: 0.5rem;">
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.85rem;">
+              <input type="checkbox" id="mock-llm-checkbox" />
+              Use mock LLM (for demos without Ollama)
+            </label>
+          </div>
         </div>
         <div id="route-error-message" class="error-msg hidden"></div>
       </section>

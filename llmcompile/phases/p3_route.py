@@ -1,8 +1,8 @@
 """Phase 3 — LLM Execution & Routing.
 
 This is the *only* phase permitted to be probabilistic and async (see README
-§2). Replaces the Milestone 1 identity stub with real LLM integration using
-LiteLLM and asyncio concurrency.
+§2). Uses Ollama for local inference via LiteLLM's ``ollama_chat/`` provider
+prefix — zero API costs, all computation on-device.
 
 Contract established here (relied on by Phases 4-6):
 
@@ -21,12 +21,17 @@ import logging
 import re
 from typing import Any
 
-# Ensure litellm is imported. If it fails, Phase 3 will loudly fail when run,
-# which is correct since it's an M4 dependency.
+# Ensure litellm is imported. If it fails, Phase 3 will loudly fail when run.
 try:
     import litellm
 except ImportError:
     litellm = None
+
+# httpx is used for the lightweight Ollama health check (also a litellm dep).
+try:
+    import httpx
+except ImportError:
+    httpx = None
 
 from llmcompile.models import ParsedModule, FunctionRecord
 from llmcompile.config import PipelineConfig, get_config
@@ -63,11 +68,49 @@ def sanitize_llm_output(raw_text: str) -> str | None:
     return None
 
 
+async def _check_ollama_health(base_url: str) -> bool:
+    """Ping the Ollama server to check if it is running and reachable.
+
+    Returns True if Ollama responds, False otherwise. Uses httpx for a
+    lightweight async check; falls back to a basic urllib check if httpx
+    is unavailable.
+    """
+    tags_url = f"{base_url}/api/tags"
+
+    if httpx is not None:
+        try:
+            async with httpx.AsyncClient(timeout=5.0) as client:
+                resp = await client.get(tags_url)
+                if resp.status_code == 200:
+                    data = resp.json()
+                    model_names = [m.get("name", "?") for m in data.get("models", [])]
+                    logger.info(f"Ollama is running. Available models: {model_names}")
+                    return True
+                else:
+                    logger.warning(f"Ollama responded with status {resp.status_code}")
+                    return False
+        except Exception as e:
+            logger.warning(f"Ollama health check failed: {e}")
+            return False
+    else:
+        # Fallback: synchronous urllib probe (httpx missing is unusual since
+        # it's a litellm dependency, but handle it gracefully).
+        import urllib.request
+        try:
+            req = urllib.request.Request(tags_url, method="GET")
+            with urllib.request.urlopen(req, timeout=5) as resp:
+                return resp.status == 200
+        except Exception as e:
+            logger.warning(f"Ollama health check failed (urllib fallback): {e}")
+            return False
+
+
 async def _optimize_function(
     record: FunctionRecord,
     model_name: str,
     timeout_seconds: int,
     semaphore: asyncio.Semaphore,
+    config: PipelineConfig,
 ) -> None:
     """Execute the LLM call for a single function under a concurrency semaphore."""
     if litellm is None:
@@ -86,18 +129,25 @@ async def _optimize_function(
     
     user_prompt = f"Optimize this LLVM IR function:\n\n{record.original_ir}"
 
+    # Build kwargs for litellm.acompletion. Pass api_base for Ollama models.
+    completion_kwargs = dict(
+        model=model_name,
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt},
+        ],
+        temperature=0.0,  # Deterministic (greedy) decoding
+        timeout=timeout_seconds,
+    )
+
+    # Ollama models use the ollama_chat/ or ollama/ prefix in LiteLLM.
+    if model_name.startswith("ollama"):
+        completion_kwargs["api_base"] = config.ollama.base_url
+
     async with semaphore:
         logger.debug(f"[{record.name}] Sending to {model_name}...")
         try:
-            response = await litellm.acompletion(
-                model=model_name,
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_prompt},
-                ],
-                temperature=0.0, # Deterministic (greedy) decoding
-                timeout=timeout_seconds,
-            )
+            response = await litellm.acompletion(**completion_kwargs)
             raw_output = response.choices[0].message.content
             sanitized = sanitize_llm_output(raw_output)
             
@@ -115,6 +165,29 @@ async def _optimize_function(
 
 async def _route_module_async(parsed: ParsedModule, config: PipelineConfig) -> None:
     """Async core of Phase 3."""
+
+    # --- Ollama health check ---
+    # If any configured model uses Ollama, verify the server is reachable
+    # before dispatching calls. This prevents confusing timeout errors.
+    uses_ollama = any(
+        model.startswith("ollama")
+        for tier in config.llm_routing.tiers.values()
+        for model in tier.models
+    )
+
+    if uses_ollama:
+        ollama_ok = await _check_ollama_health(config.ollama.base_url)
+        if not ollama_ok:
+            logger.error(
+                f"Ollama server at {config.ollama.base_url} is not reachable. "
+                "All functions will fall back to their original IR. "
+                "Start Ollama with: ollama serve"
+            )
+            for record in parsed.functions:
+                if not record.triaged_out:
+                    record.llm_output = None
+            return
+
     tasks = []
     
     # We create a semaphore per tier based on max_concurrent
@@ -153,6 +226,7 @@ async def _route_module_async(parsed: ParsedModule, config: PipelineConfig) -> N
                 model_name=model_name,
                 timeout_seconds=tier_config.timeout_seconds,
                 semaphore=semaphores[assigned_tier_name],
+                config=config,
             )
         )
         tasks.append(task)
@@ -167,6 +241,8 @@ def route_module(parsed: ParsedModule, config: PipelineConfig | None = None) -> 
     Mutates ``parsed.functions`` in place, setting ``assigned_model`` and
     ``llm_output`` for every function that was not triaged out. Maintains a 
     synchronous exterior API to keep the orchestrator deterministic.
+
+    Uses Ollama for local inference by default — no API keys required.
 
     Args:
         parsed: The ParsedModule from Phase 1, after Phase 2 triage.

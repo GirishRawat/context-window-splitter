@@ -160,10 +160,86 @@ def test_llm_timeout_or_error_falls_back():
         # Mock an exception during API call
         mock_litellm.acompletion = AsyncMock(side_effect=Exception("API Timeout"))
         
-        route_module(parsed, config)
+        # Mock health check to pass so we actually reach the LLM calls
+        with patch('llmcompile.phases.p3_route._check_ollama_health', return_value=True):
+            route_module(parsed, config)
         
         fns = {f.name: f for f in parsed.functions}
         # Model should be assigned
         assert fns["add"].assigned_model == "fast-model-1"
         # But output should be gracefully set to None
         assert fns["add"].llm_output is None
+
+
+# ---------------------------------------------------------------------------
+# Ollama-Specific Tests
+# ---------------------------------------------------------------------------
+
+def test_ollama_model_prefix_passes_api_base():
+    """Verify that models with the ollama prefix get api_base injected."""
+    config = PipelineConfig(
+        triage=TriageConfig(
+            complexity_threshold=1,
+            token_tier_boundaries={"fast": (0, 9999), "mid": (9999, 19999), "frontier": (19999, 99999)}
+        ),
+        llm_routing=LLMRoutingConfig(
+            tiers={
+                "fast": ModelTier("fast", ["ollama_chat/qwen2.5-coder:3b"]),
+                "mid": ModelTier("mid", ["ollama_chat/qwen2.5-coder:7b"]),
+                "frontier": ModelTier("frontier", ["ollama_chat/qwen2.5-coder:7b"]),
+            }
+        )
+    )
+    
+    parsed = parse_module(SAMPLE_IR)
+    triage_module(parsed, config)
+    
+    mock_response = MagicMock()
+    mock_response.choices = [MagicMock()]
+    mock_response.choices[0].message.content = "define i32 @dummy() {\n  ret i32 0\n}"
+    
+    with patch('llmcompile.phases.p3_route.litellm') as mock_litellm:
+        mock_litellm.acompletion = AsyncMock(return_value=mock_response)
+        
+        with patch('llmcompile.phases.p3_route._check_ollama_health', return_value=True):
+            route_module(parsed, config)
+        
+        # Check that api_base was passed in the acompletion calls
+        for call in mock_litellm.acompletion.call_args_list:
+            kwargs = call.kwargs if call.kwargs else {}
+            # api_base should be the default Ollama URL
+            assert "api_base" in kwargs, f"api_base not passed for Ollama model call"
+            assert kwargs["api_base"] == "http://localhost:11434"
+
+
+def test_ollama_health_check_failure_falls_back():
+    """When Ollama is unreachable, all functions should get llm_output=None."""
+    config = PipelineConfig(
+        triage=TriageConfig(complexity_threshold=1),
+        llm_routing=LLMRoutingConfig(
+            tiers={
+                "fast": ModelTier("fast", ["ollama_chat/qwen2.5-coder:3b"]),
+                "mid": ModelTier("mid", ["ollama_chat/qwen2.5-coder:7b"]),
+                "frontier": ModelTier("frontier", ["ollama_chat/qwen2.5-coder:7b"]),
+            }
+        )
+    )
+    
+    parsed = parse_module(SAMPLE_IR)
+    triage_module(parsed, config)
+    
+    with patch('llmcompile.phases.p3_route.litellm') as mock_litellm:
+        mock_litellm.acompletion = AsyncMock()
+        
+        # Mock health check to FAIL
+        with patch('llmcompile.phases.p3_route._check_ollama_health', return_value=False):
+            route_module(parsed, config)
+        
+        # LLM should never have been called
+        mock_litellm.acompletion.assert_not_called()
+        
+        # All non-triaged functions should have llm_output = None
+        for fn in parsed.functions:
+            if not fn.triaged_out:
+                assert fn.llm_output is None, f"{fn.name} should have None llm_output when Ollama is down"
+

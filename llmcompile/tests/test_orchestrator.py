@@ -51,9 +51,18 @@ SAMPLE_IR = (
 
 
 def _cfg(threshold=1, **verif):
+    from llmcompile.config import LLMRoutingConfig, ModelTier
     return PipelineConfig(
         triage=TriageConfig(complexity_threshold=threshold),
         verification=VerificationConfig(**verif) if verif else None,
+        # Use non-ollama model names so the health check is not triggered
+        llm_routing=LLMRoutingConfig(
+            tiers={
+                "fast": ModelTier("fast", ["test-model"], max_concurrent=2),
+                "mid": ModelTier("mid", ["test-model"], max_concurrent=1),
+                "frontier": ModelTier("frontier", ["test-model"], max_concurrent=1),
+            }
+        ),
     )
 
 
@@ -64,7 +73,35 @@ def _cfg(threshold=1, **verif):
 @patch("llmcompile.phases.p5_verify.verify_refinement", return_value=(Verdict.PASSED, None))
 @patch("llmcompile.phases.p5_verify.check_syntax", return_value=True)
 def test_end_to_end_all_pass_is_identity(mock_syntax, mock_verify):
-    parsed = compile_module(SAMPLE_IR, _cfg(threshold=1))
+    # test-model names don't start with "ollama" so health check is skipped,
+    # but litellm.acompletion will be called. Mock it to return an identity transform.
+    from unittest.mock import AsyncMock, MagicMock
+    def _make_identity_response(original_ir, name):
+        body = extract_function_body(original_ir, name)
+        resp = MagicMock()
+        resp.choices = [MagicMock()]
+        resp.choices[0].message.content = body
+        return resp
+
+    config = _cfg(threshold=1)
+    from llmcompile.phases.p1_parse import parse_module as _pm
+    pre_parsed = _pm(SAMPLE_IR)
+    from llmcompile.phases.p2_triage import triage_module as _tm
+    _tm(pre_parsed, config)
+
+    with patch('llmcompile.phases.p3_route.litellm') as mock_litellm:
+        async def identity_completion(**kwargs):
+            user_msg = kwargs.get("messages", [{}])[1].get("content", "")
+            # The user prompt is "Optimize this LLVM IR function:\n\n<original_ir>"
+            # Return the original IR as-is (identity transform)
+            body = user_msg.split("Optimize this LLVM IR function:\n\n")[-1]
+            resp = MagicMock()
+            resp.choices = [MagicMock()]
+            resp.choices[0].message.content = body
+            return resp
+
+        mock_litellm.acompletion = identity_completion
+        parsed = compile_module(SAMPLE_IR, config)
 
     # every function routed, reconstructed, verified PASSED
     for r in parsed.functions:
@@ -85,7 +122,19 @@ def test_end_to_end_all_pass_is_identity(mock_syntax, mock_verify):
 @patch("llmcompile.phases.p5_verify.check_syntax", return_value=True)
 def test_end_to_end_triage_mix(mock_syntax, mock_verify):
     # threshold 2: @add & @use (complexity 1) triaged out, @branchy (2) optimized
-    parsed = compile_module(SAMPLE_IR, _cfg(threshold=2))
+    from unittest.mock import AsyncMock, MagicMock
+    async def identity_completion(**kwargs):
+        user_msg = kwargs.get("messages", [{}])[1].get("content", "")
+        # Return the function body from the user prompt
+        body = user_msg.split("Optimize this LLVM IR function:\n\n")[-1]
+        resp = MagicMock()
+        resp.choices = [MagicMock()]
+        resp.choices[0].message.content = body
+        return resp
+
+    with patch('llmcompile.phases.p3_route.litellm') as mock_litellm:
+        mock_litellm.acompletion = identity_completion
+        parsed = compile_module(SAMPLE_IR, _cfg(threshold=2))
     fns = {f.name: f for f in parsed.functions}
 
     assert fns["add"].triaged_out and fns["add"].verdict == Verdict.PENDING
@@ -105,12 +154,24 @@ def test_end_to_end_triage_mix(mock_syntax, mock_verify):
 # ---------------------------------------------------------------------------
 
 def test_end_to_end_toolchain_absent_falls_back():
+    from unittest.mock import AsyncMock, MagicMock
     config = _cfg(
         threshold=1,
         llvm_as_path="__no_such_llvm_as__",
         alive_tv_path="__no_such_alive_tv__",
     )
-    parsed = compile_module(SAMPLE_IR, config)
+
+    async def identity_completion(**kwargs):
+        user_msg = kwargs.get("messages", [{}])[1].get("content", "")
+        body = user_msg.split("Optimize this LLVM IR function:\n\n")[-1]
+        resp = MagicMock()
+        resp.choices = [MagicMock()]
+        resp.choices[0].message.content = body
+        return resp
+
+    with patch('llmcompile.phases.p3_route.litellm') as mock_litellm:
+        mock_litellm.acompletion = identity_completion
+        parsed = compile_module(SAMPLE_IR, config)
 
     for r in parsed.functions:
         # llvm-as missing -> syntax check fails closed

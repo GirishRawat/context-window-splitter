@@ -52,6 +52,7 @@ def _ensure_llvm_initialized() -> None:
     llvm.initialize()
     llvm.initialize_native_target()
     llvm.initialize_native_asmprinter()
+    llvm.set_option("llvmlite", "-opaque-pointers")
     _INITIALIZED = True
 
 

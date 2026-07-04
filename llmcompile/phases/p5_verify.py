@@ -14,6 +14,7 @@ in Phase 6. Reconstruction lives in Phase 4; this phase performs no rebuilding.
 from __future__ import annotations
 
 import logging
+import time
 
 from llmcompile.models import ParsedModule, Verdict
 from llmcompile.config import PipelineConfig, get_config
@@ -55,11 +56,13 @@ def verify_module(
             continue
 
         # 2. Refinement proof: source = original, target = candidate.
+        t0 = time.perf_counter()
         verdict, counterexample = verify_refinement(
             record.original_ir,
             record.candidate_ir,
             config.verification
         )
+        record.verification_latency_seconds = time.perf_counter() - t0
         
         record.verdict = verdict
         record.counterexample = counterexample

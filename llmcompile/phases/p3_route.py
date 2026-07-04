@@ -19,6 +19,7 @@ from __future__ import annotations
 import asyncio
 import logging
 import re
+import time
 from typing import Any
 
 # Ensure litellm is imported. If it fails, Phase 3 will loudly fail when run.
@@ -137,6 +138,7 @@ async def _optimize_function(
             {"role": "user", "content": user_prompt},
         ],
         temperature=0.0,  # Deterministic (greedy) decoding
+        seed=42,          # Fixed random seed for reproducibility
         timeout=timeout_seconds,
     )
 
@@ -147,7 +149,9 @@ async def _optimize_function(
     async with semaphore:
         logger.debug(f"[{record.name}] Sending to {model_name}...")
         try:
+            t0 = time.perf_counter()
             response = await litellm.acompletion(**completion_kwargs)
+            record.llm_latency_seconds = time.perf_counter() - t0
             raw_output = response.choices[0].message.content
             sanitized = sanitize_llm_output(raw_output)
             

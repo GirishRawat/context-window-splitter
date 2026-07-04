@@ -1,0 +1,5 @@
+file_name,function_name,complexity,tokens,triaged_out,model,llm_latency_s,verification_latency_s,verdict,orig_instrs,final_instrs,reduction_pct
+array_sum.ll,sum_array,2,805,False,ollama_chat/qwen2.5-coder:3b,14.974,,syntax_fail,28,28,0.0
+bitwise.ll,bit_tricks,1,524,False,ollama_chat/qwen2.5-coder:3b,2.261,0.103,rejected,14,14,0.0
+math_ops.ll,compute_sum,1,647,False,ollama_chat/qwen2.5-coder:3b,9.63,0.063,rejected,19,19,0.0
+math_ops.ll,complex_condition,3,649,False,ollama_chat/qwen2.5-coder:3b,7.502,,syntax_fail,16,16,0.0

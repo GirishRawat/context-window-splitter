@@ -47,6 +47,7 @@ class FunctionRecord:
     # --- Set in Phase 3 ---
     assigned_model: str | None = None
     llm_output: str | None = None          # raw candidate function `define` block from the model
+    llm_latency_seconds: float | None = None # wall-clock inference time
 
     # --- Set in Phase 4 ---
     candidate_ir: str | None = None        # standalone candidate IR (preamble + sibling declares + candidate body); the alive-tv target Phase 5 verifies
@@ -54,6 +55,7 @@ class FunctionRecord:
     # --- Set in Phase 5 ---
     verdict: Verdict = Verdict.PENDING
     counterexample: str | None = None      # populated on REJECTED
+    verification_latency_seconds: float | None = None # wall-clock time spent in Alive2 proof
 
     # --- Set in Phase 6 ---
     final_ir: str | None = None            # final function `define` block: candidate body if PASSED, else the original body

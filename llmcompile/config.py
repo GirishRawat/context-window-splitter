@@ -141,13 +141,20 @@ class VerificationConfig:
     smt_timeout: int = 20
 
     def __post_init__(self):
+        # Auto-detection only fills in paths left at their default sentinel.
+        # An explicitly-provided path (constructor arg) is authoritative and is
+        # never overridden — this keeps tests hermetic and lets callers pin a
+        # specific toolchain regardless of what happens to be on the host.
+        llvm_as_is_default = self.llvm_as_path == "llvm-as"
+        alive_tv_is_default = self.alive_tv_path == "alive-tv"
+
         # Default fallback paths for JupyterHub build if they exist on the host
         jovyan_llvm_as = "/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as"
         jovyan_alive_tv = "/home/jovyan/llvm_toolchain/alive2/build/alive-tv"
 
-        if os.path.exists(jovyan_llvm_as) and self.llvm_as_path == "llvm-as":
+        if llvm_as_is_default and os.path.exists(jovyan_llvm_as):
             self.llvm_as_path = jovyan_llvm_as
-        if os.path.exists(jovyan_alive_tv) and self.alive_tv_path == "alive-tv":
+        if alive_tv_is_default and os.path.exists(jovyan_alive_tv):
             self.alive_tv_path = jovyan_alive_tv
 
         # Read from toolchain_versions.lock if it exists (for local Mac builds)
@@ -157,16 +164,18 @@ class VerificationConfig:
                 with open(lock_path, "r") as f:
                     for line in f:
                         line = line.strip()
-                        if line.startswith("llvm_as_path="):
+                        if llvm_as_is_default and line.startswith("llvm_as_path="):
                             self.llvm_as_path = os.path.expandvars(line.split("=", 1)[1])
-                        elif line.startswith("alive_tv_path="):
+                        elif alive_tv_is_default and line.startswith("alive_tv_path="):
                             self.alive_tv_path = os.path.expandvars(line.split("=", 1)[1])
             except Exception:
                 pass
 
-        # Allow override from environment
-        self.llvm_as_path = os.getenv("LLVM_AS_PATH", self.llvm_as_path)
-        self.alive_tv_path = os.getenv("ALIVE_TV_PATH", self.alive_tv_path)
+        # Environment variables override only default (non-explicit) paths.
+        if llvm_as_is_default:
+            self.llvm_as_path = os.getenv("LLVM_AS_PATH", self.llvm_as_path)
+        if alive_tv_is_default:
+            self.alive_tv_path = os.getenv("ALIVE_TV_PATH", self.alive_tv_path)
 
 
 # ---------------------------------------------------------------------------

@@ -138,7 +138,7 @@ async def _optimize_function(
             {"role": "user", "content": user_prompt},
         ],
         temperature=0.0,  # Deterministic (greedy) decoding
-        seed=42,          # Fixed random seed for reproducibility
+        seed=config.random_seed, # Fixed random seed for reproducibility
         timeout=timeout_seconds,
     )
 

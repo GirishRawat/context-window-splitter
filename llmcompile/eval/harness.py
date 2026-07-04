@@ -6,7 +6,7 @@ import os
 import sys
 import time
 import subprocess
-from datetime import datetime, UTC
+from datetime import datetime, timezone
 from pathlib import Path
 
 import llvmlite.binding as llvm
@@ -122,8 +122,8 @@ def process_corpus(input_dir: Path, output_csv: Path, complexity_threshold: int)
     # Write Metadata sidecar
     meta_path = output_csv.with_suffix('.meta.json')
     meta_data = {
-        "timestamp": datetime.now(UTC).isoformat().replace('+00:00', 'Z'),
-        "random_seed": 42,  # Hardcoded in p3_route.py for liteLLM
+        "timestamp": datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z'),
+        "random_seed": config.random_seed,  # Read from config
         "models_configured": {
             tier: tc.models for tier, tc in config.llm_routing.tiers.items()
         },

@@ -47,7 +47,18 @@ def process_corpus(input_dir: Path, output_csv: Path, complexity_threshold: int)
     llvm.initialize_native_asmprinter()
     llvm.set_option("llvmlite", "-opaque-pointers")
     
-    results = []
+    fieldnames = [
+        "file_name", "function_name", "complexity", "tokens", "triaged_out", 
+        "model", "llm_latency_s", "verification_latency_s", "verdict", 
+        "orig_instrs", "final_instrs", "reduction_pct"
+    ]
+    
+    # Initialize CSV with header
+    with open(output_csv, "w", newline="") as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+        
+    total_evaluated = 0
     
     ll_files = list(input_dir.glob("*.ll"))
     logger.info(f"Found {len(ll_files)} .ll files in {input_dir}")
@@ -90,23 +101,36 @@ def process_corpus(input_dir: Path, output_csv: Path, complexity_threshold: int)
                     "final_instrs": final_inst,
                     "reduction_pct": round(reduction_pct, 2)
                 }
-                results.append(row)
+                
+                with open(output_csv, "a", newline="") as csvfile:
+                    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+                    writer.writerow(row)
+                total_evaluated += 1
                 
         except Exception as e:
             logger.error(f"Failed to process {ll_file.name}: {e}")
-            # Could append an error row here if desired, but skipping is safer for clean data
+            # Write a failure row to preserve dataset denominator
+            error_row = {
+                "file_name": ll_file.name,
+                "function_name": "unknown_failed_module",
+                "complexity": None,
+                "tokens": None,
+                "triaged_out": False,
+                "model": "error",
+                "llm_latency_s": None,
+                "verification_latency_s": None,
+                "verdict": "error",
+                "orig_instrs": 0,
+                "final_instrs": 0,
+                "reduction_pct": 0.0
+            }
+            with open(output_csv, "a", newline="") as csvfile:
+                writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+                writer.writerow(error_row)
+            total_evaluated += 1
             continue
             
-    # Write CSV
-    if results:
-        fieldnames = list(results[0].keys())
-        with open(output_csv, "w", newline="") as csvfile:
-            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-            writer.writeheader()
-            writer.writerows(results)
-        logger.info(f"Wrote {len(results)} rows to {output_csv}")
-    else:
-        logger.warning("No results to write.")
+    logger.info(f"Wrote {total_evaluated} rows to {output_csv}")
         
     # Gather Ollama digests
     digests = {}
@@ -133,7 +157,7 @@ def process_corpus(input_dir: Path, output_csv: Path, complexity_threshold: int)
             "alive_tv": config.verification.alive_tv_path
         },
         "total_files_processed": len(ll_files),
-        "total_functions_evaluated": len(results)
+        "total_functions_evaluated": total_evaluated
     }
     with open(meta_path, "w") as f:
         json.dump(meta_data, f, indent=2)

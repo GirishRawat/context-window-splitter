@@ -53,8 +53,9 @@ def sanitize_llm_output(raw_text: str) -> str | None:
     
     # Strategy 1: strict regex for a block starting with define and ending with }
     # Relaxed to not require `}` to be at the start of a line, to handle 
-    # hallucinated stops from models.
-    match = re.search(r"(define\s+.*?\})", raw_text, re.DOTALL)
+    # hallucinated stops from models. Uses greedy matching (.*) to avoid stopping
+    # prematurely at inline braces (e.g. `load { i32, i32 }`).
+    match = re.search(r"(define\s+.*\})", raw_text, re.DOTALL)
     if match:
         return match.group(1).strip()
         

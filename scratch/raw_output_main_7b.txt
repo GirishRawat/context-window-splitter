@@ -1,0 +1,52 @@
+```llvm
+define i32 @main(i32 noundef %argc, ptr noundef %argv) #0 {
+entry:
+  %retval = alloca i32, align 4
+  store i32 0, ptr %retval, align 4
+  store i32 %argc, ptr %argc.addr, align 4
+  store ptr %argv, ptr %argv.addr, align 8
+  br label %for.cond
+
+for.cond:                                         ; preds = %for.inc41, %entry
+  %0 = load ptr, ptr %argv.addr, align 8
+  %arrayidx = getelementptr inbounds ptr, ptr %0, i64 0
+  %1 = load ptr, ptr %arrayidx, align 8
+  %tobool = icmp ne ptr %1, null
+  br i1 %tobool, label %land.lhs.true, label %for.end
+
+land.lhs.true:                                    ; preds = %for.cond
+  %2 = load ptr, ptr %argv.addr, align 8
+  %arrayidx1 = getelementptr inbounds ptr, ptr %2, i64 0
+  %3 = load ptr, ptr %arrayidx1, align 8
+  %arrayidx2 = getelementptr inbounds i8, ptr %3, i64 0
+  %4 = load i8, ptr %arrayidx2, align 1
+  %conv = sext i8 %4 to i32
+  %cmp = icmp eq i32 %conv, 45
+  br label %land.rhs
+
+land.rhs:                                         ; preds = %land.lhs.true
+  %5 = load ptr, ptr %argv.addr, align 8
+  %arrayidx4 = getelementptr inbounds ptr, ptr %5, i64 0
+  %6 = load ptr, ptr %arrayidx4, align 8
+  %arrayidx5 = getelementptr inbounds i8, ptr %6, i64 1
+  %7 = load i8, ptr %arrayidx5, align 1
+  %conv6 = sext i8 %7 to i32
+  %tobool7 = icmp ne i32 %conv6, 0
+  br label %for.end
+
+for.end:                                          ; preds = %land.rhs, %land.lhs.true, %for.cond
+  store i32 0, ptr %brk_, align 4
+  br label %for.inc
+
+for.inc:                                          ; preds = %for.end
+  %8 = load ptr, ptr %argv.addr, align 8
+  %arrayidx39 = getelementptr inbounds ptr, ptr %8, i64 0
+  %9 = load ptr, ptr %arrayidx39, align 8
+  %incdec.ptr40 = getelementptr inbounds i8, ptr %9, i32 1
+  store ptr %incdec.ptr40, ptr %arrayidx39, align 8
+  br label %for.cond, !llvm.loop !6
+
+for.end:                                          ; preds = %for.inc
+  ret i32 0
+}
+```

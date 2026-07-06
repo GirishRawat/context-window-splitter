@@ -1,0 +1,3 @@
+file_name,function_name,complexity,tokens,triaged_out,model,llm_latency_s,verification_latency_s,verdict,orig_instrs,final_instrs,reduction_pct
+dirname.ll,main,11,3252,False,ollama_chat/qwen2.5-coder:3b,27.21,,syntax_fail,134,134,0.0
+dirname.ll,usage,1,721,True,,,,pending,3,3,0.0

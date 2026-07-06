@@ -1,0 +1,27 @@
+{
+  "timestamp": "2026-07-05T05:02:23.064914Z",
+  "random_seed": 42,
+  "models_configured": {
+    "fast": [
+      "ollama_chat/qwen2.5-coder:3b"
+    ],
+    "mid": [
+      "ollama_chat/qwen2.5-coder:7b"
+    ],
+    "frontier": [
+      "ollama_chat/qwen2.5-coder:7b"
+    ]
+  },
+  "ollama_digests": {
+    "qwen2.5-coder:7b": "dae161e27b0e",
+    "qwen2.5-coder:3b": "f72c60cabf62",
+    "qwen2:7b": "dd314f039b9d",
+    "deepseek-r1:1.5b": "e0979632db5a"
+  },
+  "toolchain_paths": {
+    "llvm_as": "/Users/girishrawat/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as",
+    "alive_tv": "/Users/girishrawat/llvm_toolchain/alive2/build/alive-tv"
+  },
+  "total_files_processed": 79,
+  "total_functions_evaluated": 165
+}

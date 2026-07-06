@@ -52,7 +52,9 @@ def sanitize_llm_output(raw_text: str) -> str | None:
     # LLMs often wrap in ```llvm ... ``` or add "Here is the code:".
     
     # Strategy 1: strict regex for a block starting with define and ending with }
-    match = re.search(r"(define\s+.*?^})", raw_text, re.DOTALL | re.MULTILINE)
+    # Relaxed to not require `}` to be at the start of a line, to handle 
+    # hallucinated stops from models.
+    match = re.search(r"(define\s+.*?\})", raw_text, re.DOTALL)
     if match:
         return match.group(1).strip()
         
@@ -62,8 +64,7 @@ def sanitize_llm_output(raw_text: str) -> str | None:
     
     if start_idx != -1 and end_idx != -1 and start_idx < end_idx:
         candidate = raw_text[start_idx:end_idx+1].strip()
-        # Basic sanity check: does it look like a function body?
-        if candidate.startswith("define ") and candidate.endswith("}"):
+        if candidate.startswith("define") and candidate.endswith("}"):
             return candidate
             
     return None
@@ -153,6 +154,16 @@ async def _optimize_function(
             response = await litellm.acompletion(**completion_kwargs)
             record.llm_latency_seconds = time.perf_counter() - t0
             raw_output = response.choices[0].message.content
+            finish_reason = response.choices[0].finish_reason
+            
+            logger.info(f"[{record.name}] LLM finished with reason: '{finish_reason}', length: {len(raw_output)}")
+            
+            # Dump raw output for empirical debugging
+            import os
+            os.makedirs("scratch", exist_ok=True)
+            with open(f"scratch/raw_output_{record.name}.txt", "w") as f:
+                f.write(f"FINISH REASON: {finish_reason}\n\n{raw_output}")
+                
             sanitized = sanitize_llm_output(raw_output)
             
             if sanitized:

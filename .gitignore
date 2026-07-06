@@ -8,3 +8,5 @@ __pycache__/
 venv/
 sbase_src/
 sbase_corpus/
+scratch/
+test_corpus/

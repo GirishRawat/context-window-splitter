@@ -277,3 +277,55 @@ def verify_ir(request: VerifyRequest):
             verdict="unsupported",
             error=str(e) + "\n" + traceback.format_exc()
         )
+
+# ---------------------------------------------------------------------------
+# Phase 6: Assembly endpoint
+# ---------------------------------------------------------------------------
+
+class FunctionAssembleRecord(BaseModel):
+    name: str
+    original_ir: str
+    llm_output: str | None = None
+    verdict: str
+
+class AssembleRequest(BaseModel):
+    preamble: str
+    functions: list[FunctionAssembleRecord]
+
+class AssembleResponse(BaseModel):
+    final_module_ir: str
+    error: str | None = None
+
+@app.post("/api/assemble", response_model=AssembleResponse)
+def assemble_ir(request: AssembleRequest):
+    try:
+        from llmcompile.phases.p6_assemble import assemble_module
+        from llmcompile.models import ParsedModule, FunctionRecord, Verdict
+        
+        funcs = []
+        for fn in request.functions:
+            # Map string verdict back to enum gracefully
+            try:
+                verdict_enum = Verdict(fn.verdict)
+            except ValueError:
+                verdict_enum = Verdict.UNSUPPORTED
+                
+            record = FunctionRecord(
+                name=fn.name,
+                original_ir=fn.original_ir,
+                llm_output=fn.llm_output,
+            )
+            record.verdict = verdict_enum
+            funcs.append(record)
+            
+        parsed = ParsedModule(preamble=request.preamble, functions=funcs)
+        
+        final_ir = assemble_module(parsed)
+        return AssembleResponse(final_module_ir=final_ir)
+        
+    except Exception as e:
+        return AssembleResponse(
+            final_module_ir="",
+            error=str(e) + "\n" + traceback.format_exc()
+        )
+

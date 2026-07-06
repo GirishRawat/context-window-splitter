@@ -37,6 +37,10 @@
           
           Phase 5 &middot; Verify
         </button>
+        <button class="phase-tab" data-view="phase6">
+          
+          Phase 6 &middot; Assemble
+        </button>
       </nav>
 
       <div class="header-badges" style="display: flex; gap: 0.5rem; align-items: center;">
@@ -476,6 +480,70 @@ entry:
           <p>Click "Verify Refinement" to run llvm-as and alive-tv.</p>
         </div>
       </section>
+    </main>
+
+    <!-- ===================== Phase 6: Assemble ===================== -->
+    <main id="view-phase6" class="view phase6-view hidden">
+      <div class="split-pane">
+        <!-- Input pane -->
+        <div class="pane input-pane">
+          <div class="pane-header">
+            <h2>Input: Parsed Module &amp; Verdicts</h2>
+            <div class="header-actions">
+              <button id="assemble-btn" class="btn primary-btn">Assemble Final Module</button>
+            </div>
+          </div>
+          <div class="pane-content scrollable">
+            <p class="section-desc">Phase 6 takes the full parsed module and the verdict for each function from Phase 5, and builds the valid-by-construction final IR.</p>
+            <div class="editor-container">
+              <label>Module Preamble</label>
+              <textarea id="assemble-preamble" class="code-area" spellcheck="false" placeholder="Module preamble..."></textarea>
+            </div>
+            
+            <div class="editor-container" style="margin-top: 1rem;">
+              <label>Function 1: @test (Passed)</label>
+              <textarea id="assemble-fn1-orig" class="code-area" style="height: 100px;" spellcheck="false" placeholder="Original IR"></textarea>
+              <textarea id="assemble-fn1-cand" class="code-area" style="height: 100px; margin-top: 0.5rem; border-color: var(--success-color);" spellcheck="false" placeholder="Candidate IR"></textarea>
+              <select id="assemble-fn1-verdict" class="code-area" style="height: 30px; margin-top: 0.5rem;">
+                <option value="passed" selected>PASSED</option>
+                <option value="rejected">REJECTED</option>
+                <option value="syntax_fail">SYNTAX_FAIL</option>
+              </select>
+            </div>
+            
+            <div class="editor-container" style="margin-top: 1rem;">
+              <label>Function 2: @shift_mul (Rejected)</label>
+              <textarea id="assemble-fn2-orig" class="code-area" style="height: 100px;" spellcheck="false" placeholder="Original IR"></textarea>
+              <textarea id="assemble-fn2-cand" class="code-area" style="height: 100px; margin-top: 0.5rem; border-color: var(--error-color);" spellcheck="false" placeholder="Candidate IR"></textarea>
+              <select id="assemble-fn2-verdict" class="code-area" style="height: 30px; margin-top: 0.5rem;">
+                <option value="passed">PASSED</option>
+                <option value="rejected" selected>REJECTED</option>
+                <option value="syntax_fail">SYNTAX_FAIL</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Output pane -->
+        <div class="pane output-pane">
+          <div class="pane-header">
+            <h2>Final Assembled Module</h2>
+          </div>
+          <div class="pane-content scrollable">
+            <div id="assemble-error-message" class="error-banner hidden"></div>
+            <div id="assemble-empty-state" class="empty-state">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 1rem; opacity: 0.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+              <p>Click "Assemble Final Module" to generate the proven-correct output IR.</p>
+            </div>
+            
+            <div id="assemble-result-container" style="margin-bottom: 1rem;"></div>
+            
+            <div id="assemble-output-block" class="hidden">
+              <pre><code class="language-llvm" id="assemble-output-code"></code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
 
     <script type="module" src="/main.js"></script>

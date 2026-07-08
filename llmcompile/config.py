@@ -9,7 +9,7 @@ Local inference via Ollama — no API keys or cloud costs required.
 from __future__ import annotations
 
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Dict
 
 
@@ -179,6 +179,17 @@ class VerificationConfig:
 
 
 # ---------------------------------------------------------------------------
+# Phase 6: Final Compilation configuration
+# ---------------------------------------------------------------------------
+
+@dataclass
+class CompilationConfig:
+    """Phase 6 binary compilation configuration."""
+    clang_path: str = "clang"
+    compile_flags: list[str] = field(default_factory=lambda: ["-O0"])
+    timeout_seconds: int = 60
+
+# ---------------------------------------------------------------------------
 # Global pipeline configuration
 # ---------------------------------------------------------------------------
 
@@ -190,6 +201,7 @@ class PipelineConfig:
     llm_routing: LLMRoutingConfig = None
     verification: VerificationConfig = None
     ollama: OllamaConfig = None
+    compilation: CompilationConfig = None
 
     # Logging level
     log_level: str = "INFO"
@@ -206,6 +218,8 @@ class PipelineConfig:
             self.verification = VerificationConfig()
         if self.ollama is None:
             self.ollama = OllamaConfig()
+        if self.compilation is None:
+            self.compilation = CompilationConfig()
 
 
 # ---------------------------------------------------------------------------

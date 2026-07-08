@@ -92,3 +92,31 @@ def test_assembly_is_deterministic():
     p1, _, _ = _parsed_with_candidate()
     p2, _, _ = _parsed_with_candidate()
     assert assemble_module(p1) == assemble_module(p2)
+
+
+def test_compile_to_binary(tmp_path):
+    from llmcompile.phases.p6_assemble import compile_to_binary
+    from llmcompile.config import get_config
+    import os
+
+    # A simple valid IR with a main function to ensure compilation/linking succeeds.
+    main_ir = (
+        "target triple = \"x86_64-apple-macosx14.0.0\"\n"
+        "define i32 @main() {\n"
+        "  ret i32 0\n"
+        "}\n"
+    )
+    parsed = parse_module(main_ir)
+    assemble_module(parsed)
+
+    out_bin = tmp_path / "test_bin"
+    compile_to_binary(parsed, str(out_bin))
+    
+    # Verify the binary was created and is executable
+    assert out_bin.exists()
+    assert os.access(out_bin, os.X_OK)
+
+    import subprocess
+    result = subprocess.run([str(out_bin)], capture_output=True)
+    assert result.returncode == 0
+

@@ -20,6 +20,9 @@ input that compilation step would consume.
 from __future__ import annotations
 
 import logging
+import os
+import subprocess
+import tempfile
 
 from llmcompile.models import ParsedModule, Verdict
 from llmcompile.config import PipelineConfig, get_config
@@ -69,3 +72,55 @@ def assemble_module(parsed: ParsedModule, config: PipelineConfig | None = None) 
 
     parsed.final_module_ir = module_ir
     return module_ir
+
+
+def compile_to_binary(parsed: ParsedModule, output_path: str, config: PipelineConfig | None = None) -> None:
+    """Compile the final module IR into an executable binary using clang.
+
+    Args:
+        parsed: The ParsedModule containing `final_module_ir`.
+        output_path: Path where the binary should be written.
+        config: Pipeline configuration.
+
+    Raises:
+        ValueError: If `final_module_ir` is missing (assemble_module was not run).
+        RuntimeError: If the clang subprocess fails or times out.
+    """
+    if config is None:
+        config = get_config()
+
+    if parsed.final_module_ir is None:
+        raise ValueError("ParsedModule.final_module_ir is None. Run assemble_module first.")
+
+    comp_cfg = config.compilation
+    clang_path = comp_cfg.clang_path
+    compile_flags = comp_cfg.compile_flags
+    timeout = comp_cfg.timeout_seconds
+
+    # Write the IR to a temporary file so clang can read it
+    with tempfile.NamedTemporaryFile(suffix=".ll", mode="w", delete=False) as tmp:
+        tmp_path = tmp.name
+        tmp.write(parsed.final_module_ir)
+
+    try:
+        cmd = [clang_path] + compile_flags + [tmp_path, "-o", output_path]
+        logger.info(f"Compiling binary: {' '.join(cmd)}")
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+        )
+        if result.returncode != 0:
+            logger.error(f"Clang compilation failed: {result.stderr}")
+            raise RuntimeError(f"Compilation failed with exit code {result.returncode}:\n{result.stderr}")
+        logger.info(f"Successfully compiled binary to {output_path}")
+    except subprocess.TimeoutExpired as exc:
+        logger.error(f"Clang compilation timed out after {timeout}s")
+        raise RuntimeError(f"Compilation timed out") from exc
+    except FileNotFoundError as exc:
+        logger.error(f"Clang compiler not found at {clang_path}")
+        raise RuntimeError(f"Compiler not found: {clang_path}") from exc
+    finally:
+        if os.path.exists(tmp_path):
+            os.remove(tmp_path)

@@ -127,7 +127,8 @@ async def _optimize_function(
         "its semantic behavior. Focus on instruction reduction, loop unrolling, and "
         "simplifying control flow where mathematically safe.\n\n"
         "Output ONLY the optimized `define` block for the function. "
-        "Do not output markdown formatting, preamble, explanations, or any text other than the IR."
+        "Do not output markdown formatting, preamble, explanations, or any text other than the IR. "
+        "Your response MUST start exactly with the word 'define' and end with '}'."
     )
     
     user_prompt = f"Optimize this LLVM IR function:\n\n{record.original_ir}"
@@ -137,6 +138,8 @@ async def _optimize_function(
         model=model_name,
         messages=[
             {"role": "system", "content": system_prompt},
+            {"role": "user", "content": "Optimize this LLVM IR function:\n\ndefine i32 @add(i32 %a, i32 %b) {\n  %1 = add i32 0, %a\n  %2 = add i32 %1, %b\n  ret i32 %2\n}"},
+            {"role": "assistant", "content": "define i32 @add(i32 %a, i32 %b) {\n  %1 = add i32 %a, %b\n  ret i32 %1\n}"},
             {"role": "user", "content": user_prompt},
         ],
         temperature=0.0,  # Deterministic (greedy) decoding

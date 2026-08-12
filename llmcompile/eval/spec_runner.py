@@ -8,6 +8,7 @@ import time
 import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
+import re
 
 import llvmlite.binding as llvm
 
@@ -68,7 +69,14 @@ def process_spec_corpus(build_dir: Path, output_csv: Path, complexity_threshold:
             
         logger.info(f"Processing {bc_file.name}...")
         ll_file = bc_file.with_suffix(".ll")
-        o_file = bc_file.with_suffix(".o")
+        
+        # Find the original object file (CMake uses .c.o or .cpp.o)
+        o_file = None
+        for p in bc_file.parent.glob(f"{bc_file.stem}.*.o"):
+            o_file = p
+            break
+        if not o_file:
+            o_file = bc_file.with_suffix(".o")
         
         try:
             # 1. Disassemble .bc to .ll
@@ -79,6 +87,8 @@ def process_spec_corpus(build_dir: Path, output_csv: Path, complexity_threshold:
                 
             # Normalize IR for llvmlite 0.42.0 (LLVM 14) compatibility
             ir_text = ir_text.replace("uwtable(sync)", "uwtable")
+            ir_text = re.sub(r"memory\([^)]+\)", "", ir_text)
+            ir_text = re.sub(r"!llvm\.module\.flags.*", "", ir_text)
                 
             # 2. Run the full compilation pipeline
             t0 = time.perf_counter()

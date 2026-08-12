@@ -10,3 +10,8 @@ sbase_src/
 sbase_corpus/
 scratch/
 test_corpus/
+
+build/
+llvm-test-suite/
+test.ll
+spec_results.csv*

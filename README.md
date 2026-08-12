@@ -234,14 +234,20 @@ Design decisions made building M1 (do not re-litigate without cause):
 - **Phase 5 cannot actually PASS without the M0 toolchain** (`llvm-as` + `alive-tv`). Absent them, syntax checks fail closed → every function falls back to its original → `final_module_ir` is behaviourally the unoptimised input. This is the correct fail-safe M1 outcome, and it is what the orchestrator tests exercise via mocked verification (pass path) and a bogus tool path (fallback path).
 - **Phase 6 assembles the final module text but does not compile it to an executable** — that needs a system `clang`/`llc` (an M0-class dependency) and is deferred.
 
-### What to build next (in order)
-
-1. **M0 - toolchain spike.** Build Z3 + LLVM-from-source + Alive2 and pin versions. Unblocks a real green Phase 5 run and M2. Highest-risk dependency; needs a well-resourced machine.
-2. **M2 - trust the gate for real.** With the toolchain present, add hand-written good/bad transforms (dropped side effect, introduced poison, changed return value) and assert correct accept/reject. Must pass before the LLM is connected.
 3. **M4 - real `phases/p3_route.py`.** Replace the identity stub: stateless single-turn prompts, deterministic output sanitisation (strip markdown fences/prose) but no semantic "repair"; then asyncio+LiteLLM concurrency; routing tiers last. `p3_route.py` is the ONLY module allowed async code.
    - **Model Selection Strategy**: If a routing tier has multiple models configured, Phase 3 deterministically selects the *first* model in the list for that run.
    - **Prompting Strategy**: Zero-shot, strict instruction to act as an LLVM IR optimizer. The prompt explicitly commands the model to return ONLY a valid `define ... }` block without any conversational preamble, chain-of-thought, or markdown explanations.
 4. **M5 - `eval/harness.py`.** Per function: instruction count before/after, verdict, model, latency → dissertation tables.
+
+### Evaluation Findings (sbase Corpus)
+
+The initial capability ceiling evaluation was run on 311 functions from the Unix `sbase` corpus. The results show a clear limitation on free, local models (like `qwen2.5-coder:3b` and `7b`):
+
+![LLM Capability Ceiling Plot](analysis_plot.png)
+
+* **Simple Synthetic Code:** Achieved up to 78% formally-verified instruction reductions.
+* **Complex Real-World Code:** The models hit a capability wall on functions with cyclomatic complexity $\ge 5$ and token counts up to 4,000+. They consistently failed to generate syntactically valid LLVM IR (either hallucinating unallocated variables, breaking strict SSA casting rules, or truncating early). 
+* **The Safety Gate Works:** 100% of these unreliable outputs were caught by the extraction and syntax filter gates, securely falling back to the compiler's original `-O0` code, completely protecting the final binary from model hallucinations.
 
 ### Rules of engagement for agents
 

@@ -109,7 +109,15 @@ def _signature_to_declaration(signature_line: str) -> str:
 
     if not sig.startswith("define"):
         raise ValueError(f"expected a `define` signature, got: {signature_line!r}")
-    return "declare" + sig[len("define"):]
+    
+    sig_body = sig[len("define"):].lstrip()
+    
+    # Strip linkage specifiers that are invalid on a `declare`
+    import re
+    linkage_re = re.compile(r'^(?:internal|private|weak_odr|weak|linkonce_odr|linkonce|available_externally|appending|common)\s+')
+    sig_body = linkage_re.sub("", sig_body)
+    
+    return "declare " + sig_body
 
 
 def _split_module_text(canonical_ir: str) -> tuple[list[str], list[dict]]:

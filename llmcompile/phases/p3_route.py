@@ -36,6 +36,7 @@ except ImportError:
 
 from llmcompile.models import ParsedModule, FunctionRecord
 from llmcompile.config import PipelineConfig, get_config
+from llmcompile.phases.p1_parse import extract_function_body
 
 logger = logging.getLogger(__name__)
 
@@ -157,7 +158,19 @@ entry:
 ```"""
 
     user_prompt = f"Optimize this LLVM IR function:\n\n{record.original_ir}"
-    assistant_prefill = "```llvm\ndefine "
+
+    # Isolate this function's own define block (skips the preamble/sibling
+    # declares in original_ir, which can contain '{' of their own, e.g.
+    # `attributes #0 = { ... }` or named struct types) before locating the
+    # signature's opening brace.
+    function_block = extract_function_body(record.original_ir, record.name)
+    idx = function_block.find("{")
+    if idx != -1:
+        signature = function_block[:idx+1]
+    else:
+        signature = "define "
+
+    assistant_prefill = f"```llvm\n{signature}\n"
 
     async with semaphore:
         logger.debug(f"[{record.name}] Sending to {model_name}...")
@@ -197,9 +210,9 @@ entry:
                 raw_output = data.get("response", "")
                 finish_reason = data.get("done_reason", "stop")
                 
-                # Because we prefilled ````llvm\ndefine `, the model's output will 
-                # be everything AFTER `define `. We must prepend `define ` back to it.
-                raw_output = "define " + raw_output
+                # Because we prefilled the exact signature, the model's output will 
+                # be everything AFTER the brace. We must prepend the signature back to it.
+                raw_output = signature + "\n" + raw_output
                 
             else:
                 # For chat models (like Claude 3), use the Messages API with assistant prefill
@@ -218,7 +231,7 @@ entry:
                 raw_output = response.choices[0].message.content
                 finish_reason = getattr(response.choices[0], "finish_reason", "stop")
                 
-                raw_output = "define " + raw_output
+                raw_output = signature + "\n" + raw_output
 
             record.llm_latency_seconds = time.perf_counter() - t0
             logger.info(f"[{record.name}] LLM finished with reason: '{finish_reason}', length: {len(raw_output)}")

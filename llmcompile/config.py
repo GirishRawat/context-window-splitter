@@ -95,19 +95,19 @@ class LLMRoutingConfig:
             self.tiers = {
                 "fast": ModelTier(
                     name="fast",
-                    models=["ollama_chat/qwen2.5-coder:3b"],
+                    models=["ollama/qwen2.5-coder:3b"],
                     max_concurrent=2,
                     timeout_seconds=120
                 ),
                 "mid": ModelTier(
                     name="mid",
-                    models=["ollama_chat/qwen2.5-coder:7b"],
+                    models=["ollama/qwen2.5-coder:7b"],
                     max_concurrent=1,
                     timeout_seconds=180
                 ),
                 "frontier": ModelTier(
                     name="frontier",
-                    models=["ollama_chat/qwen2.5-coder:7b"],
+                    models=["claude-3-opus-20240229"],
                     max_concurrent=1,
                     timeout_seconds=300
                 )

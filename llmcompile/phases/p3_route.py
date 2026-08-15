@@ -127,39 +127,100 @@ async def _optimize_function(
         "its semantic behavior. Focus on instruction reduction, loop unrolling, and "
         "simplifying control flow where mathematically safe.\n\n"
         "Output ONLY the optimized `define` block for the function. "
-        "Do not output markdown formatting, preamble, explanations, or any text other than the IR. "
-        "Your response MUST start exactly with the word 'define' and end with '}'."
+        "Do not output markdown formatting, preamble, explanations, or any text other than the IR."
     )
     
+    # Strengthened one-shot example with basic blocks, phi nodes, and icmp.
+    example_user = "Optimize this LLVM IR function:\n\n" + """define i32 @max(i32 %a, i32 %b) {
+entry:
+  %cmp = icmp sgt i32 %a, %b
+  br i1 %cmp, label %if.then, label %if.else
+
+if.then:
+  br label %return
+
+if.else:
+  br label %return
+
+return:
+  %retval = phi i32 [ %a, %if.then ], [ %b, %if.else ]
+  ret i32 %retval
+}"""
+    
+    example_assistant = """```llvm
+define i32 @max(i32 %a, i32 %b) {
+entry:
+  %cmp = icmp sgt i32 %a, %b
+  %retval = select i1 %cmp, i32 %a, i32 %b
+  ret i32 %retval
+}
+```"""
+
     user_prompt = f"Optimize this LLVM IR function:\n\n{record.original_ir}"
-
-    # Build kwargs for litellm.acompletion. Pass api_base for Ollama models.
-    completion_kwargs = dict(
-        model=model_name,
-        messages=[
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": "Optimize this LLVM IR function:\n\ndefine i32 @add(i32 %a, i32 %b) {\n  %1 = add i32 0, %a\n  %2 = add i32 %1, %b\n  ret i32 %2\n}"},
-            {"role": "assistant", "content": "define i32 @add(i32 %a, i32 %b) {\n  %1 = add i32 %a, %b\n  ret i32 %1\n}"},
-            {"role": "user", "content": user_prompt},
-        ],
-        temperature=0.0,  # Deterministic (greedy) decoding
-        seed=config.random_seed, # Fixed random seed for reproducibility
-        timeout=timeout_seconds,
-    )
-
-    # Ollama models use the ollama_chat/ or ollama/ prefix in LiteLLM.
-    if model_name.startswith("ollama"):
-        completion_kwargs["api_base"] = config.ollama.base_url
+    assistant_prefill = "```llvm\ndefine "
 
     async with semaphore:
         logger.debug(f"[{record.name}] Sending to {model_name}...")
         try:
             t0 = time.perf_counter()
-            response = await litellm.acompletion(**completion_kwargs)
-            record.llm_latency_seconds = time.perf_counter() - t0
-            raw_output = response.choices[0].message.content
-            finish_reason = response.choices[0].finish_reason
             
+            if model_name.startswith("ollama/"):
+                # Use httpx for raw text completion for Ollama to force the prefill mid-sentence
+                # without any chat template interference from LiteLLM or Ollama.
+                import httpx
+                
+                # Strip the ollama/ prefix for the direct API call
+                actual_model = model_name.replace("ollama/", "")
+                
+                raw_prompt = f"<|im_start|>system\n{system_prompt}<|im_end|>\n<|im_start|>user\n{example_user}<|im_end|>\n<|im_start|>assistant\n{example_assistant}<|im_end|>\n<|im_start|>user\n{user_prompt}<|im_end|>\n<|im_start|>assistant\n{assistant_prefill}"
+                
+                payload = {
+                    "model": actual_model,
+                    "prompt": raw_prompt,
+                    "raw": True,
+                    "stream": False,
+                    "options": {
+                        "temperature": 0.0,
+                        "seed": config.random_seed
+                    }
+                }
+                
+                # Use a larger timeout for the direct HTTP request
+                async with httpx.AsyncClient(timeout=timeout_seconds) as client:
+                    resp = await client.post(
+                        f"{config.ollama.base_url}/api/generate",
+                        json=payload
+                    )
+                    resp.raise_for_status()
+                    data = resp.json()
+                    
+                raw_output = data.get("response", "")
+                finish_reason = data.get("done_reason", "stop")
+                
+                # Because we prefilled ````llvm\ndefine `, the model's output will 
+                # be everything AFTER `define `. We must prepend `define ` back to it.
+                raw_output = "define " + raw_output
+                
+            else:
+                # For chat models (like Claude 3), use the Messages API with assistant prefill
+                response = await litellm.acompletion(
+                    model=model_name,
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": example_user},
+                        {"role": "assistant", "content": example_assistant},
+                        {"role": "user", "content": user_prompt},
+                        {"role": "assistant", "content": assistant_prefill}
+                    ],
+                    temperature=0.0,
+                    timeout=timeout_seconds,
+                )
+                raw_output = response.choices[0].message.content
+                finish_reason = getattr(response.choices[0], "finish_reason", "stop")
+                
+                raw_output = "define " + raw_output
+
+            record.llm_latency_seconds = time.perf_counter() - t0
             logger.info(f"[{record.name}] LLM finished with reason: '{finish_reason}', length: {len(raw_output)}")
             
             # Dump raw output for empirical debugging

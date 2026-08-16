@@ -48,3 +48,19 @@ deriche.bc,kernel_deriche,13,11320,ollama/qwen2.5-coder:7b,222.946,0.046,passed,
 deriche.bc,kernel_deriche_StrictFP,13,11333,ollama/qwen2.5-coder:7b,240.708,,syntax_fail,546,546,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpd1bywbsz.ll:686:3: error: instruction forward referenced with type 'i32'
   %370 = sext i32 %370 to i64
   ^"
+misr.bc,main,13,5246,ollama/qwen2.5-coder:7b,93.777,0.041,passed,206,206,0.0,stop,
+misr.bc,simulate,13,6766,ollama/qwen2.5-coder:7b,134.376,1.516,unsupported,325,325,0.0,stop,
+fbench.bc,main,12,8269,ollama/qwen2.5-coder:7b,133.027,1.395,unsupported,290,290,0.0,stop,
+ludcmp.bc,init_array,12,6727,ollama/qwen2.5-coder:7b,112.77,20.681,unsupported,268,268,0.0,stop,
+ludcmp.bc,kernel_ludcmp,10,6820,ollama/qwen2.5-coder:7b,112.733,0.025,passed,278,278,0.0,stop,
+correlation.bc,kernel_correlation,11,7422,ollama/qwen2.5-coder:7b,,,pending,341,341,0.0,call_error: ,
+cholesky.bc,init_array,11,6482,ollama/qwen2.5-coder:7b,106.6,,syntax_fail,257,257,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpcykaegpu.ll:370:54: error: '%150' defined with type 'i32' but expected 'ptr'
+  %152 = getelementptr inbounds [2000 x double], ptr %150, i64 0, i64 %151
+                                                     ^"
+lu.bc,init_array,11,5862,ollama/qwen2.5-coder:7b,92.465,,syntax_fail,223,223,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpv0lba5ft.ll:251:48: error: use of undefined value '%10'
+  call void @llvm.lifetime.start.p0(i64 8, ptr %10) #9
+                                               ^"
+himenobmtxpa.bc,set_param,11,3722,ollama/qwen2.5-coder:7b,35.196,,syntax_fail,98,98,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmp9ismk8ob.ll:135:62: error: invalid use of function-local name
+  store i32 32, ptr getelementptr inbounds (%struct.Mat, ptr %0, i32 0, i32 0), align 4
+                                                             ^"
+mandel-text.bc,main,11,3824,ollama/qwen2.5-coder:7b,72.957,1.454,unsupported,192,192,0.0,stop,

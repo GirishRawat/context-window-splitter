@@ -23,10 +23,27 @@ from pathlib import Path
 
 # Priority-ordered buckets. finish_reason is checked first (a direct signal,
 # no parsing needed); the rest are regexes over llvm-as's stderr text.
+#
+# The first regeneration (qwen2.5-coder:3b, 23 syntax_fail rows) showed the
+# original plan's guessed buckets (from SYNTAX_FAILURE_DIAGNOSIS.md) covered
+# only 3/23 -- 87% fell into OTHER. Manual review of all 20 OTHER rows found
+# one dominant, distinctive real failure mode not anticipated by the plan:
+# the model cannot keep a coherent unnamed/implicit SSA value counter across
+# a long function body. This surfaces as three different llvm-as error texts
+# depending on exactly how the miscount manifests, so they get three buckets
+# below (self-reference, forward-reference, type-mismatched reuse) rather
+# than being force-fit into one -- keeping them separate is more diagnostic,
+# and a caller who wants the aggregate can sum the three. 12/20 were
+# SSA_FORWARD_REF alone, e.g. `%190 = getelementptr ..., i64 %190` -- the
+# model reuses its own about-to-be-defined number as an operand.
 _PATTERNS = [
+    ("SSA_SELF_REFERENCE", re.compile(r"may reference their own value", re.IGNORECASE)),
+    ("SSA_FORWARD_REF", re.compile(r"forward referenced", re.IGNORECASE)),
+    ("SSA_TYPE_MISMATCH", re.compile(r"defined with type .* but expected", re.IGNORECASE)),
+    ("INVALID_LABEL_REF", re.compile(r"is not a basic block", re.IGNORECASE)),
     ("UNDECLARED_REFERENCE", re.compile(r"undefined value", re.IGNORECASE)),
     ("MALFORMED_SYNTAX", re.compile(
-        r"expected type|expected instruction opcode|expected '='", re.IGNORECASE)),
+        r"expected value token|expected type|expected instruction opcode|expected '='", re.IGNORECASE)),
     ("SSA_REUSE", re.compile(r"multiple definition of", re.IGNORECASE)),
     ("STRUCTURAL", re.compile(r"expected top-level entity|unterminated", re.IGNORECASE)),
 ]

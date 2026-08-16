@@ -1,616 +1,844 @@
-INFO: Resuming evaluation: found 133 unique files already processed in new_spec_results.csv
 INFO: Found 147 .bc files in build
-INFO: Skipping not.bc (already processed)
-INFO: Skipping timeit.bc (already processed)
-INFO: Skipping fpcmp.bc (already processed)
-INFO: Skipping CMakeCCompilerId.bc (already processed)
-INFO: Skipping CMakeCXXCompilerId.bc (already processed)
-INFO: Skipping fbench.bc (already processed)
-INFO: Skipping flops-1.bc (already processed)
-INFO: Skipping richards_benchmark.bc (already processed)
-INFO: Skipping whetstone.bc (already processed)
-INFO: Skipping flops-2.bc (already processed)
-INFO: Skipping flops-3.bc (already processed)
-INFO: Skipping flops-7.bc (already processed)
-INFO: Skipping flops.bc (already processed)
-INFO: Skipping flops-6.bc (already processed)
-INFO: Skipping mandel.bc (already processed)
-INFO: Skipping flops-4.bc (already processed)
-INFO: Skipping revertBits.bc (already processed)
-INFO: Skipping evalloop.bc (already processed)
-INFO: Skipping flops-5.bc (already processed)
-INFO: Skipping dt.bc (already processed)
-INFO: Skipping himenobmtxpa.bc (already processed)
-INFO: Skipping salsa20.bc (already processed)
-INFO: Skipping lowercase.bc (already processed)
-INFO: Skipping ffbench.bc (already processed)
-INFO: Skipping ReedSolomon.bc (already processed)
-INFO: Skipping matmul_f64_4x4.bc (already processed)
-INFO: Skipping pi.bc (already processed)
-INFO: Skipping fp-convert.bc (already processed)
-INFO: Skipping aarch64-init-cpu-features.bc (already processed)
-INFO: Skipping flops-8.bc (already processed)
-INFO: Skipping mandel-2.bc (already processed)
-INFO: Skipping oourafft.bc (already processed)
-INFO: Skipping perlin.bc (already processed)
-INFO: Skipping correlation.bc (already processed)
-INFO: Skipping covariance.bc (already processed)
-INFO: Skipping seidel-2d.bc (already processed)
-INFO: Skipping adi.bc (already processed)
-INFO: Skipping jacobi-2d.bc (already processed)
-INFO: Skipping jacobi-1d.bc (already processed)
-INFO: Skipping heat-3d.bc (already processed)
-INFO: Skipping fdtd-2d.bc (already processed)
-INFO: Skipping deriche.bc (already processed)
-INFO: Skipping floyd-warshall.bc (already processed)
-INFO: Skipping nussinov.bc (already processed)
-INFO: Skipping 3mm.bc (already processed)
-INFO: Skipping bicg.bc (already processed)
-INFO: Skipping atax.bc (already processed)
-INFO: Skipping doitgen.bc (already processed)
-INFO: Skipping mvt.bc (already processed)
-INFO: Skipping 2mm.bc (already processed)
-INFO: Skipping gemm.bc (already processed)
-INFO: Skipping syrk.bc (already processed)
-INFO: Skipping gemver.bc (already processed)
-INFO: Skipping syr2k.bc (already processed)
-INFO: Skipping symm.bc (already processed)
-INFO: Skipping gesummv.bc (already processed)
-INFO: Skipping trmm.bc (already processed)
-INFO: Skipping gramschmidt.bc (already processed)
-INFO: Skipping ludcmp.bc (already processed)
-INFO: Skipping cholesky.bc (already processed)
-INFO: Skipping durbin.bc (already processed)
-INFO: Skipping trisolv.bc (already processed)
-INFO: Skipping lu.bc (already processed)
-INFO: Skipping smallpt.bc (already processed)
-INFO: Skipping strcat.bc (already processed)
-INFO: Skipping lists1.bc (already processed)
-INFO: Skipping random.bc (already processed)
-INFO: Skipping ackermann.bc (already processed)
-INFO: Skipping sieve.bc (already processed)
-INFO: Skipping heapsort.bc (already processed)
-INFO: Skipping nestedloop.bc (already processed)
-INFO: Skipping lists.bc (already processed)
-INFO: Skipping hello.bc (already processed)
-INFO: Skipping ary2.bc (already processed)
-INFO: Skipping ary3.bc (already processed)
-INFO: Skipping hash2.bc (already processed)
-INFO: Skipping methcall.bc (already processed)
-INFO: Skipping ary.bc (already processed)
-INFO: Skipping objinst.bc (already processed)
-INFO: Skipping spellcheck.bc (already processed)
-INFO: Skipping wordfreq.bc (already processed)
-INFO: Skipping moments.bc (already processed)
-INFO: Skipping fibo.bc (already processed)
-INFO: Skipping matrix.bc (already processed)
-INFO: Skipping sumcol.bc (already processed)
-INFO: Skipping wc.bc (already processed)
-INFO: Skipping reversefile.bc (already processed)
-INFO: Skipping hash.bc (already processed)
-INFO: Skipping except.bc (already processed)
-INFO: Skipping dry.bc (already processed)
-INFO: Skipping fldry.bc (already processed)
-INFO: Skipping Towers.bc (already processed)
-INFO: Skipping RealMM.bc (already processed)
-INFO: Skipping Treesort.bc (already processed)
-INFO: Skipping FloatMM.bc (already processed)
-INFO: Skipping Oscar.bc (already processed)
-INFO: Skipping Puzzle.bc (already processed)
-INFO: Skipping Queens.bc (already processed)
-INFO: Skipping Bubblesort.bc (already processed)
-INFO: Skipping IntMM.bc (already processed)
-INFO: Skipping Perm.bc (already processed)
-INFO: Skipping Quicksort.bc (already processed)
-INFO: Skipping ackermann.bc (already processed)
-INFO: Skipping heapsort.bc (already processed)
-INFO: Skipping fib2.bc (already processed)
-INFO: Skipping ary3.bc (already processed)
-INFO: Skipping random.bc (already processed)
-INFO: Skipping sieve.bc (already processed)
-INFO: Skipping strcat.bc (already processed)
-INFO: Skipping lists.bc (already processed)
-INFO: Skipping nestedloop.bc (already processed)
-INFO: Skipping hello.bc (already processed)
-INFO: Skipping matrix.bc (already processed)
-INFO: Skipping hash.bc (already processed)
-INFO: Skipping methcall.bc (already processed)
-INFO: Skipping objinst.bc (already processed)
-INFO: Skipping linpack-pc.bc (already processed)
-INFO: Skipping sphereflake.bc (already processed)
-INFO: Skipping ray.bc (already processed)
-INFO: Skipping mandel-text.bc (already processed)
-INFO: Skipping stepanov_container.bc (already processed)
-INFO: Skipping stepanov_v1p2.bc (already processed)
-INFO: Skipping bigfib.bc (already processed)
-INFO: Skipping oopack_v1p8.bc (already processed)
-INFO: Skipping misr.bc (already processed)
-INFO: Skipping chomp.bc (already processed)
-INFO: Skipping queens.bc (already processed)
-INFO: Skipping exptree.bc (already processed)
-INFO: Skipping fasta.bc (already processed)
-INFO: Skipping n-body.bc (already processed)
-INFO: Skipping spectral-norm.bc (already processed)
-INFO: Skipping nsieve-bits.bc (already processed)
-INFO: Skipping fannkuch.bc (already processed)
-INFO: Skipping puzzle.bc (already processed)
-INFO: Skipping partialsums.bc (already processed)
-INFO: Skipping recursive.bc (already processed)
-INFO: Skipping lpbench.bc (already processed)
-INFO: Skipping fftbench.bc (already processed)
-INFO: Skipping huffbench.bc (already processed)
-INFO: Skipping almabench.bc (already processed)
-INFO: Skipping spirit.bc (already processed)
-INFO: Skipping simple_types_loop_invariant.bc (already processed)
-INFO: Skipping simple_types_constant_folding.bc (already processed)
-INFO: Skipping stepanov_vector.bc (already processed)
-INFO: Skipping loop_unroll.bc (already processed)
-INFO: Skipping stepanov_abstraction.bc (already processed)
-INFO: Processing functionobjects.bc...
+INFO: Processing not.bc...
 INFO: Phase 1: parsing
 llvmlite: for the --opaque-pointers option: may only occur zero or one times!
+ERROR: Failed to process not.bc: Phase 1: input IR failed to parse/verify: LLVM IR parsing error
+<string>:1148:36: error: expected '(' in constantexpr
+  store ptr getelementptr inbounds inrange(-16, 24) ({ [5 x ptr] }, ptr @_ZTVSt12length_error, i32 0, i32 0, i32 2), ptr %5, align 8
+                                   ^
+
+INFO: Processing timeit.bc...
+INFO: Phase 1: parsing
 INFO: Phase 2: triage
 INFO: Phase 3: routing (identity stub)
 INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
 INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
 INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_Z9summarizePKciiii] LLM finished with reason: 'stop', length: 4094
-INFO: [_Z9summarizePKciiii] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_Z17summarize_simplefP7__sFILEPKc] LLM finished with reason: 'stop', length: 2149
-INFO: [_Z17summarize_simplefP7__sFILEPKc] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_Z18quicksort_functionPdS_PFbddE] LLM finished with reason: 'stop', length: 5936
-INFO: [_Z18quicksort_functionPdS_PFbddE] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_Z9quicksortIPdPFbddEEvT_S3_T0_] LLM finished with reason: 'stop', length: 5506
-INFO: [_Z9quicksortIPdPFbddEEvT_S3_T0_] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [main] LLM finished with reason: 'stop', length: 3287
+INFO: [main] LLM finished with reason: 'stop', length: 2271
 INFO: [main] Optimization returned cleanly from ollama/qwen2.5-coder:7b
 INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_Z9quicksortIPdXadL_Z19less_than_function2ddEEEvT_S1_] LLM finished with reason: 'stop', length: 4564
-INFO: [_Z9quicksortIPdXadL_Z19less_than_function2ddEEEvT_S1_] Optimization returned cleanly from ollama/qwen2.5-coder:7b
+INFO: [execute_target_process] LLM finished with reason: 'stop', length: 1694
+INFO: [execute_target_process] Optimization returned cleanly from ollama/qwen2.5-coder:7b
 INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_Z9quicksortIPd17less_than_functorEvT_S2_T0_] LLM finished with reason: 'stop', length: 4854
-INFO: [_Z9quicksortIPd17less_than_functorEvT_S2_T0_] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_Z9quicksortIPd24inline_less_than_functorEvT_S2_T0_] LLM finished with reason: 'stop', length: 4910
-INFO: [_Z9quicksortIPd24inline_less_than_functorEvT_S2_T0_] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_Z9quicksortIPdNSt3__14lessIdEEEvT_S4_T0_] LLM finished with reason: 'stop', length: 1830
-INFO: [_Z9quicksortIPdNSt3__14lessIdEEEvT_S4_T0_] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_Z9quicksortIPdEvT_S1_] LLM finished with reason: 'stop', length: 4319
-INFO: [_Z9quicksortIPdEvT_S1_] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_ZNSt3__111__introsortINS_17_ClassicAlgPolicyERPFbddEPdLb0EEEvT1_S6_T0_NS_15iterator_traitsIS6_E15difference_typeEb] LLM finished with reason: 'stop', length: 3201
-INFO: [_ZNSt3__111__introsortINS_17_ClassicAlgPolicyERPFbddEPdLb0EEEvT1_S6_T0_NS_15iterator_traitsIS6_E15difference_typeEb] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_ZNSt3__116__insertion_sortB8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEvT1_S6_T0_] LLM finished with reason: 'stop', length: 5332
-INFO: [_ZNSt3__116__insertion_sortB8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEvT1_S6_T0_] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_ZNSt3__126__insertion_sort_unguardedB8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEvT1_S6_T0_] LLM finished with reason: 'stop', length: 6196
-INFO: [_ZNSt3__126__insertion_sort_unguardedB8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEvT1_S6_T0_] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_ZNSt3__17__sort3B8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEjT1_S6_S6_T0_] LLM finished with reason: 'stop', length: 2905
-INFO: [_ZNSt3__17__sort3B8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEjT1_S6_S6_T0_] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_ZNSt3__131__partition_with_equals_on_leftB8ne190102INS_17_ClassicAlgPolicyEPdRPFbddEEET0_S6_S6_T1_] LLM finished with reason: 'stop', length: 3138
-INFO: [_ZNSt3__131__partition_with_equals_on_leftB8ne190102INS_17_ClassicAlgPolicyEPdRPFbddEEET0_S6_S6_T1_] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_ZNSt3__118__bitset_partitionB8ne190102INS_17_ClassicAlgPolicyEPdRPFbddEEENS_4pairIT0_bEES7_S7_T1_] LLM finished with reason: 'stop', length: 2650
-INFO: [_ZNSt3__118__bitset_partitionB8ne190102INS_17_ClassicAlgPolicyEPdRPFbddEEENS_4pairIT0_bEES7_S7_T1_] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_ZNSt3__132__partition_with_equals_on_rightB8ne190102INS_17_ClassicAlgPolicyEPdRPFbddEEENS_4pairIT0_bEES7_S7_T1_] LLM finished with reason: 'stop', length: 2131
-INFO: [_ZNSt3__132__partition_with_equals_on_rightB8ne190102INS_17_ClassicAlgPolicyEPdRPFbddEEENS_4pairIT0_bEES7_S7_T1_] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-ERROR: [_ZNSt3__127__insertion_sort_incompleteB8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEbT1_S6_T0_] LLM call to ollama/qwen2.5-coder:7b failed: 
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_ZNSt3__17__sort5B8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEvT1_S6_S6_S6_S6_T0_] LLM finished with reason: 'stop', length: 2660
-INFO: [_ZNSt3__17__sort5B8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEvT1_S6_S6_S6_S6_T0_] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_ZNSt3__111__sift_downB8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEvT1_OT0_NS_15iterator_traitsIS6_E15difference_typeES6_] LLM finished with reason: 'stop', length: 3771
-INFO: [_ZNSt3__111__sift_downB8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEvT1_OT0_NS_15iterator_traitsIS6_E15difference_typeES6_] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_ZNSt3__19__sift_upB8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEvT1_S6_OT0_NS_15iterator_traitsIS6_E15difference_typeE] LLM finished with reason: 'stop', length: 4172
-INFO: [_ZNSt3__19__sift_upB8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEvT1_S6_OT0_NS_15iterator_traitsIS6_E15difference_typeE] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_ZNSt3__133__bitset_partition_partial_blocksB8ne190102INS_17_ClassicAlgPolicyERPFbddEPddEEvRT1_S7_T0_RT2_RySB_] LLM finished with reason: 'stop', length: 2795
-INFO: [_ZNSt3__133__bitset_partition_partial_blocksB8ne190102INS_17_ClassicAlgPolicyERPFbddEPddEEvRT1_S7_T0_RT2_RySB_] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_ZNSt3__124__swap_bitmap_pos_withinB8ne190102INS_17_ClassicAlgPolicyEPdEEvRT0_S4_RyS5_] LLM finished with reason: 'stop', length: 1932
-INFO: [_ZNSt3__124__swap_bitmap_pos_withinB8ne190102INS_17_ClassicAlgPolicyEPdEEvRT0_S4_RyS5_] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_ZNSt3__111__introsortINS_17_ClassicAlgPolicyER17less_than_functorPdLb0EEEvT1_S5_T0_NS_15iterator_traitsIS5_E15difference_typeEb] LLM finished with reason: 'stop', length: 2660
-INFO: [_ZNSt3__111__introsortINS_17_ClassicAlgPolicyER17less_than_functorPdLb0EEEvT1_S5_T0_NS_15iterator_traitsIS5_E15difference_typeEb] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_ZNSt3__116__insertion_sortB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEvT1_S5_T0_] LLM finished with reason: 'stop', length: 6289
-INFO: [_ZNSt3__116__insertion_sortB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEvT1_S5_T0_] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_ZNSt3__126__insertion_sort_unguardedB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEvT1_S5_T0_] LLM finished with reason: 'stop', length: 2104
-INFO: [_ZNSt3__126__insertion_sort_unguardedB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEvT1_S5_T0_] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_ZNSt3__17__sort3B8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEjT1_S5_S5_T0_] LLM finished with reason: 'stop', length: 2410
-INFO: [_ZNSt3__17__sort3B8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEjT1_S5_S5_T0_] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_ZNSt3__131__partition_with_equals_on_leftB8ne190102INS_17_ClassicAlgPolicyEPdR17less_than_functorEET0_S5_S5_T1_] LLM finished with reason: 'stop', length: 2338
-INFO: [_ZNSt3__131__partition_with_equals_on_leftB8ne190102INS_17_ClassicAlgPolicyEPdR17less_than_functorEET0_S5_S5_T1_] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_ZNSt3__118__bitset_partitionB8ne190102INS_17_ClassicAlgPolicyEPdR17less_than_functorEENS_4pairIT0_bEES6_S6_T1_] LLM finished with reason: 'stop', length: 1670
-INFO: [_ZNSt3__118__bitset_partitionB8ne190102INS_17_ClassicAlgPolicyEPdR17less_than_functorEENS_4pairIT0_bEES6_S6_T1_] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_ZNSt3__132__partition_with_equals_on_rightB8ne190102INS_17_ClassicAlgPolicyEPdR17less_than_functorEENS_4pairIT0_bEES6_S6_T1_] LLM finished with reason: 'stop', length: 3762
-INFO: [_ZNSt3__132__partition_with_equals_on_rightB8ne190102INS_17_ClassicAlgPolicyEPdR17less_than_functorEENS_4pairIT0_bEES6_S6_T1_] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_ZNSt3__127__insertion_sort_incompleteB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEbT1_S5_T0_] LLM finished with reason: 'stop', length: 2288
-INFO: [_ZNSt3__127__insertion_sort_incompleteB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEbT1_S5_T0_] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_ZNSt3__17__sort5B8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEvT1_S5_S5_S5_S5_T0_] LLM finished with reason: 'stop', length: 2965
-INFO: [_ZNSt3__17__sort5B8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEvT1_S5_S5_S5_S5_T0_] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_ZNSt3__111__sift_downB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEvT1_OT0_NS_15iterator_traitsIS5_E15difference_typeES5_] LLM finished with reason: 'stop', length: 3904
-INFO: [_ZNSt3__111__sift_downB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEvT1_OT0_NS_15iterator_traitsIS5_E15difference_typeES5_] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_ZNSt3__19__sift_upB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEvT1_S5_OT0_NS_15iterator_traitsIS5_E15difference_typeE] LLM finished with reason: 'stop', length: 4752
-INFO: [_ZNSt3__19__sift_upB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEvT1_S5_OT0_NS_15iterator_traitsIS5_E15difference_typeE] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-ERROR: [_ZNSt3__133__bitset_partition_partial_blocksB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPddEEvRT1_S6_T0_RT2_RySA_] LLM call to ollama/qwen2.5-coder:7b failed: 
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_ZNSt3__111__introsortINS_17_ClassicAlgPolicyER24inline_less_than_functorPdLb0EEEvT1_S5_T0_NS_15iterator_traitsIS5_E15difference_typeEb] LLM finished with reason: 'stop', length: 1445
-INFO: [_ZNSt3__111__introsortINS_17_ClassicAlgPolicyER24inline_less_than_functorPdLb0EEEvT1_S5_T0_NS_15iterator_traitsIS5_E15difference_typeEb] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_ZNSt3__116__insertion_sortB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEvT1_S5_T0_] LLM finished with reason: 'stop', length: 6278
-INFO: [_ZNSt3__116__insertion_sortB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEvT1_S5_T0_] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_ZNSt3__126__insertion_sort_unguardedB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEvT1_S5_T0_] LLM finished with reason: 'stop', length: 2993
-INFO: [_ZNSt3__126__insertion_sort_unguardedB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEvT1_S5_T0_] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_ZNSt3__17__sort3B8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEjT1_S5_S5_T0_] LLM finished with reason: 'stop', length: 1992
-INFO: [_ZNSt3__17__sort3B8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEjT1_S5_S5_T0_] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_ZNSt3__131__partition_with_equals_on_leftB8ne190102INS_17_ClassicAlgPolicyEPdR24inline_less_than_functorEET0_S5_S5_T1_] LLM finished with reason: 'stop', length: 3250
-INFO: [_ZNSt3__131__partition_with_equals_on_leftB8ne190102INS_17_ClassicAlgPolicyEPdR24inline_less_than_functorEET0_S5_S5_T1_] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-ERROR: [_ZNSt3__118__bitset_partitionB8ne190102INS_17_ClassicAlgPolicyEPdR24inline_less_than_functorEENS_4pairIT0_bEES6_S6_T1_] LLM call to ollama/qwen2.5-coder:7b failed: 
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_ZNSt3__132__partition_with_equals_on_rightB8ne190102INS_17_ClassicAlgPolicyEPdR24inline_less_than_functorEENS_4pairIT0_bEES6_S6_T1_] LLM finished with reason: 'stop', length: 2119
-INFO: [_ZNSt3__132__partition_with_equals_on_rightB8ne190102INS_17_ClassicAlgPolicyEPdR24inline_less_than_functorEENS_4pairIT0_bEES6_S6_T1_] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-ERROR: [_ZNSt3__127__insertion_sort_incompleteB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEbT1_S5_T0_] LLM call to ollama/qwen2.5-coder:7b failed: 
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_ZNSt3__17__sort5B8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEvT1_S5_S5_S5_S5_T0_] LLM finished with reason: 'stop', length: 5675
-INFO: [_ZNSt3__17__sort5B8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEvT1_S5_S5_S5_S5_T0_] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_ZNSt3__111__sift_downB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEvT1_OT0_NS_15iterator_traitsIS5_E15difference_typeES5_] LLM finished with reason: 'stop', length: 3725
-INFO: [_ZNSt3__111__sift_downB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEvT1_OT0_NS_15iterator_traitsIS5_E15difference_typeES5_] Optimization returned cleanly from ollama/qwen2.5-coder:7b
-ERROR: [_ZNSt3__19__sift_upB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEvT1_S5_OT0_NS_15iterator_traitsIS5_E15difference_typeE] LLM call to ollama/qwen2.5-coder:7b failed: 
-INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
-INFO: [_ZNSt3__133__bitset_partition_partial_blocksB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPddEEvRT1_S6_T0_RT2_RySA_] LLM finished with reason: 'stop', length: 1990
-INFO: [_ZNSt3__133__bitset_partition_partial_blocksB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPddEEvRT1_S6_T0_RT2_RySA_] Optimization returned cleanly from ollama/qwen2.5-coder:7b
+INFO: [monitor_child_process] LLM finished with reason: 'stop', length: 3373
+INFO: [monitor_child_process] Optimization returned cleanly from ollama/qwen2.5-coder:7b
 INFO: Phase 4: reconstruction
 INFO: Phase 5: verification
-INFO: Verifying candidate for _Z9summarizePKciiii...
-WARNING: [_Z9summarizePKciiii] Syntax check failed
-INFO: Verifying candidate for _Z17summarize_simplefP7__sFILEPKc...
-WARNING: [_Z17summarize_simplefP7__sFILEPKc] Syntax check failed
-INFO: Verifying candidate for _Z18quicksort_functionPdS_PFbddE...
-WARNING: alive-tv undecided or unsupported. Output:
-ERROR: Unsupported metadata: 1
-ERROR: Could not translate '_Z18quicksort_functionPdS_PFbddE' to Alive IR
-Summary:
-  0 correct transformations
-  0 incorrect transformations
-  0 failed-to-prove transformations
-  1 Alive2 errors
-
-
-WARNING: [_Z18quicksort_functionPdS_PFbddE] UNSUPPORTED (timeout or unable to prove)
-INFO: Verifying candidate for _Z9quicksortIPdPFbddEEvT_S3_T0_...
-WARNING: [_Z9quicksortIPdPFbddEEvT_S3_T0_] Syntax check failed
 INFO: Verifying candidate for main...
 WARNING: [main] Syntax check failed
-INFO: Verifying candidate for _Z9quicksortIPdXadL_Z19less_than_function2ddEEEvT_S1_...
-WARNING: alive-tv undecided or unsupported. Output:
-ERROR: Unsupported metadata: 1
-ERROR: Could not translate '_Z9quicksortIPdXadL_Z19less_than_function2ddEEEvT_S1_' to Alive IR
-Summary:
-  0 correct transformations
-  0 incorrect transformations
-  0 failed-to-prove transformations
-  1 Alive2 errors
-
-
-WARNING: [_Z9quicksortIPdXadL_Z19less_than_function2ddEEEvT_S1_] UNSUPPORTED (timeout or unable to prove)
-INFO: Verifying candidate for _Z9quicksortIPd17less_than_functorEvT_S2_T0_...
-WARNING: alive-tv undecided or unsupported. Output:
-ERROR: Unsupported metadata: 1
-ERROR: Could not translate '_Z9quicksortIPd17less_than_functorEvT_S2_T0_' to Alive IR
-Summary:
-  0 correct transformations
-  0 incorrect transformations
-  0 failed-to-prove transformations
-  1 Alive2 errors
-
-
-WARNING: [_Z9quicksortIPd17less_than_functorEvT_S2_T0_] UNSUPPORTED (timeout or unable to prove)
-INFO: Verifying candidate for _Z9quicksortIPd24inline_less_than_functorEvT_S2_T0_...
-WARNING: alive-tv undecided or unsupported. Output:
-ERROR: Unsupported metadata: 1
-ERROR: Could not translate '_Z9quicksortIPd24inline_less_than_functorEvT_S2_T0_' to Alive IR
-Summary:
-  0 correct transformations
-  0 incorrect transformations
-  0 failed-to-prove transformations
-  1 Alive2 errors
-
-
-WARNING: [_Z9quicksortIPd24inline_less_than_functorEvT_S2_T0_] UNSUPPORTED (timeout or unable to prove)
-INFO: Verifying candidate for _Z9quicksortIPdNSt3__14lessIdEEEvT_S4_T0_...
-WARNING: [_Z9quicksortIPdNSt3__14lessIdEEEvT_S4_T0_] Syntax check failed
-INFO: Verifying candidate for _Z9quicksortIPdEvT_S1_...
-WARNING: alive-tv undecided or unsupported. Output:
-ERROR: Unsupported metadata: 1
-ERROR: Could not translate '_Z9quicksortIPdEvT_S1_' to Alive IR
-Summary:
-  0 correct transformations
-  0 incorrect transformations
-  0 failed-to-prove transformations
-  1 Alive2 errors
-
-
-WARNING: [_Z9quicksortIPdEvT_S1_] UNSUPPORTED (timeout or unable to prove)
-INFO: Verifying candidate for _ZNSt3__111__introsortINS_17_ClassicAlgPolicyERPFbddEPdLb0EEEvT1_S6_T0_NS_15iterator_traitsIS6_E15difference_typeEb...
-WARNING: [_ZNSt3__111__introsortINS_17_ClassicAlgPolicyERPFbddEPdLb0EEEvT1_S6_T0_NS_15iterator_traitsIS6_E15difference_typeEb] Syntax check failed
-INFO: Verifying candidate for _ZNSt3__116__insertion_sortB8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEvT1_S6_T0_...
-WARNING: [_ZNSt3__116__insertion_sortB8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEvT1_S6_T0_] Syntax check failed
-INFO: Verifying candidate for _ZNSt3__126__insertion_sort_unguardedB8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEvT1_S6_T0_...
-WARNING: [_ZNSt3__126__insertion_sort_unguardedB8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEvT1_S6_T0_] Syntax check failed
-INFO: Verifying candidate for _ZNSt3__17__sort3B8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEjT1_S6_S6_T0_...
-WARNING: [_ZNSt3__17__sort3B8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEjT1_S6_S6_T0_] Syntax check failed
-INFO: Verifying candidate for _ZNSt3__131__partition_with_equals_on_leftB8ne190102INS_17_ClassicAlgPolicyEPdRPFbddEEET0_S6_S6_T1_...
-WARNING: [_ZNSt3__131__partition_with_equals_on_leftB8ne190102INS_17_ClassicAlgPolicyEPdRPFbddEEET0_S6_S6_T1_] Syntax check failed
-INFO: Verifying candidate for _ZNSt3__118__bitset_partitionB8ne190102INS_17_ClassicAlgPolicyEPdRPFbddEEENS_4pairIT0_bEES7_S7_T1_...
-WARNING: [_ZNSt3__118__bitset_partitionB8ne190102INS_17_ClassicAlgPolicyEPdRPFbddEEENS_4pairIT0_bEES7_S7_T1_] Syntax check failed
-INFO: Verifying candidate for _ZNSt3__132__partition_with_equals_on_rightB8ne190102INS_17_ClassicAlgPolicyEPdRPFbddEEENS_4pairIT0_bEES7_S7_T1_...
-WARNING: [_ZNSt3__132__partition_with_equals_on_rightB8ne190102INS_17_ClassicAlgPolicyEPdRPFbddEEENS_4pairIT0_bEES7_S7_T1_] Syntax check failed
-INFO: Verifying candidate for _ZNSt3__17__sort5B8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEvT1_S6_S6_S6_S6_T0_...
-WARNING: [_ZNSt3__17__sort5B8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEvT1_S6_S6_S6_S6_T0_] Syntax check failed
-INFO: Verifying candidate for _ZNSt3__111__sift_downB8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEvT1_OT0_NS_15iterator_traitsIS6_E15difference_typeES6_...
-WARNING: [_ZNSt3__111__sift_downB8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEvT1_OT0_NS_15iterator_traitsIS6_E15difference_typeES6_] Syntax check failed
-INFO: Verifying candidate for _ZNSt3__19__sift_upB8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEvT1_S6_OT0_NS_15iterator_traitsIS6_E15difference_typeE...
-WARNING: [_ZNSt3__19__sift_upB8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEvT1_S6_OT0_NS_15iterator_traitsIS6_E15difference_typeE] Syntax check failed
-INFO: Verifying candidate for _ZNSt3__133__bitset_partition_partial_blocksB8ne190102INS_17_ClassicAlgPolicyERPFbddEPddEEvRT1_S7_T0_RT2_RySB_...
-WARNING: alive-tv undecided or unsupported. Output:
-ERROR: Unsupported metadata: 1
-ERROR: Could not translate '_ZNSt3__133__bitset_partition_partial_blocksB8ne190102INS_17_ClassicAlgPolicyERPFbddEPddEEvRT1_S7_T0_RT2_RySB_' to Alive IR
-Summary:
-  0 correct transformations
-  0 incorrect transformations
-  0 failed-to-prove transformations
-  1 Alive2 errors
-
-
-WARNING: [_ZNSt3__133__bitset_partition_partial_blocksB8ne190102INS_17_ClassicAlgPolicyERPFbddEPddEEvRT1_S7_T0_RT2_RySB_] UNSUPPORTED (timeout or unable to prove)
-INFO: Verifying candidate for _ZNSt3__124__swap_bitmap_pos_withinB8ne190102INS_17_ClassicAlgPolicyEPdEEvRT0_S4_RyS5_...
-WARNING: alive-tv undecided or unsupported. Output:
-ERROR: Unsupported metadata: 1
-ERROR: Could not translate '_ZNSt3__124__swap_bitmap_pos_withinB8ne190102INS_17_ClassicAlgPolicyEPdEEvRT0_S4_RyS5_' to Alive IR
-Summary:
-  0 correct transformations
-  0 incorrect transformations
-  0 failed-to-prove transformations
-  1 Alive2 errors
-
-
-WARNING: [_ZNSt3__124__swap_bitmap_pos_withinB8ne190102INS_17_ClassicAlgPolicyEPdEEvRT0_S4_RyS5_] UNSUPPORTED (timeout or unable to prove)
-INFO: Verifying candidate for _ZNSt3__111__introsortINS_17_ClassicAlgPolicyER17less_than_functorPdLb0EEEvT1_S5_T0_NS_15iterator_traitsIS5_E15difference_typeEb...
-WARNING: [_ZNSt3__111__introsortINS_17_ClassicAlgPolicyER17less_than_functorPdLb0EEEvT1_S5_T0_NS_15iterator_traitsIS5_E15difference_typeEb] Syntax check failed
-INFO: Verifying candidate for _ZNSt3__116__insertion_sortB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEvT1_S5_T0_...
-WARNING: [_ZNSt3__116__insertion_sortB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEvT1_S5_T0_] Syntax check failed
-INFO: Verifying candidate for _ZNSt3__126__insertion_sort_unguardedB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEvT1_S5_T0_...
-WARNING: [_ZNSt3__126__insertion_sort_unguardedB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEvT1_S5_T0_] Syntax check failed
-INFO: Verifying candidate for _ZNSt3__17__sort3B8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEjT1_S5_S5_T0_...
-WARNING: [_ZNSt3__17__sort3B8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEjT1_S5_S5_T0_] Syntax check failed
-INFO: Verifying candidate for _ZNSt3__131__partition_with_equals_on_leftB8ne190102INS_17_ClassicAlgPolicyEPdR17less_than_functorEET0_S5_S5_T1_...
-WARNING: [_ZNSt3__131__partition_with_equals_on_leftB8ne190102INS_17_ClassicAlgPolicyEPdR17less_than_functorEET0_S5_S5_T1_] Syntax check failed
-INFO: Verifying candidate for _ZNSt3__118__bitset_partitionB8ne190102INS_17_ClassicAlgPolicyEPdR17less_than_functorEENS_4pairIT0_bEES6_S6_T1_...
-WARNING: alive-tv undecided or unsupported. Output:
-ERROR: Unsupported metadata: 1
-ERROR: Could not translate '_ZNSt3__118__bitset_partitionB8ne190102INS_17_ClassicAlgPolicyEPdR17less_than_functorEENS_4pairIT0_bEES6_S6_T1_' to Alive IR
-Summary:
-  0 correct transformations
-  0 incorrect transformations
-  0 failed-to-prove transformations
-  1 Alive2 errors
-
-
-WARNING: [_ZNSt3__118__bitset_partitionB8ne190102INS_17_ClassicAlgPolicyEPdR17less_than_functorEENS_4pairIT0_bEES6_S6_T1_] UNSUPPORTED (timeout or unable to prove)
-INFO: Verifying candidate for _ZNSt3__132__partition_with_equals_on_rightB8ne190102INS_17_ClassicAlgPolicyEPdR17less_than_functorEENS_4pairIT0_bEES6_S6_T1_...
-WARNING: [_ZNSt3__132__partition_with_equals_on_rightB8ne190102INS_17_ClassicAlgPolicyEPdR17less_than_functorEENS_4pairIT0_bEES6_S6_T1_] Syntax check failed
-INFO: Verifying candidate for _ZNSt3__127__insertion_sort_incompleteB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEbT1_S5_T0_...
-WARNING: [_ZNSt3__127__insertion_sort_incompleteB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEbT1_S5_T0_] Syntax check failed
-INFO: Verifying candidate for _ZNSt3__17__sort5B8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEvT1_S5_S5_S5_S5_T0_...
-WARNING: alive-tv undecided or unsupported. Output:
-ERROR: Unsupported metadata: 1
-ERROR: Could not translate '_ZNSt3__17__sort5B8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEvT1_S5_S5_S5_S5_T0_' to Alive IR
-Summary:
-  0 correct transformations
-  0 incorrect transformations
-  0 failed-to-prove transformations
-  1 Alive2 errors
-
-
-WARNING: [_ZNSt3__17__sort5B8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEvT1_S5_S5_S5_S5_T0_] UNSUPPORTED (timeout or unable to prove)
-INFO: Verifying candidate for _ZNSt3__111__sift_downB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEvT1_OT0_NS_15iterator_traitsIS5_E15difference_typeES5_...
-WARNING: [_ZNSt3__111__sift_downB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEvT1_OT0_NS_15iterator_traitsIS5_E15difference_typeES5_] Syntax check failed
-INFO: Verifying candidate for _ZNSt3__19__sift_upB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEvT1_S5_OT0_NS_15iterator_traitsIS5_E15difference_typeE...
-WARNING: [_ZNSt3__19__sift_upB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEvT1_S5_OT0_NS_15iterator_traitsIS5_E15difference_typeE] Syntax check failed
-INFO: Verifying candidate for _ZNSt3__111__introsortINS_17_ClassicAlgPolicyER24inline_less_than_functorPdLb0EEEvT1_S5_T0_NS_15iterator_traitsIS5_E15difference_typeEb...
-WARNING: [_ZNSt3__111__introsortINS_17_ClassicAlgPolicyER24inline_less_than_functorPdLb0EEEvT1_S5_T0_NS_15iterator_traitsIS5_E15difference_typeEb] Syntax check failed
-INFO: Verifying candidate for _ZNSt3__116__insertion_sortB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEvT1_S5_T0_...
-WARNING: [_ZNSt3__116__insertion_sortB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEvT1_S5_T0_] Syntax check failed
-INFO: Verifying candidate for _ZNSt3__126__insertion_sort_unguardedB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEvT1_S5_T0_...
-WARNING: [_ZNSt3__126__insertion_sort_unguardedB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEvT1_S5_T0_] Syntax check failed
-INFO: Verifying candidate for _ZNSt3__17__sort3B8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEjT1_S5_S5_T0_...
-WARNING: [_ZNSt3__17__sort3B8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEjT1_S5_S5_T0_] Syntax check failed
-INFO: Verifying candidate for _ZNSt3__131__partition_with_equals_on_leftB8ne190102INS_17_ClassicAlgPolicyEPdR24inline_less_than_functorEET0_S5_S5_T1_...
-WARNING: [_ZNSt3__131__partition_with_equals_on_leftB8ne190102INS_17_ClassicAlgPolicyEPdR24inline_less_than_functorEET0_S5_S5_T1_] Syntax check failed
-INFO: Verifying candidate for _ZNSt3__132__partition_with_equals_on_rightB8ne190102INS_17_ClassicAlgPolicyEPdR24inline_less_than_functorEENS_4pairIT0_bEES6_S6_T1_...
-WARNING: [_ZNSt3__132__partition_with_equals_on_rightB8ne190102INS_17_ClassicAlgPolicyEPdR24inline_less_than_functorEENS_4pairIT0_bEES6_S6_T1_] Syntax check failed
-INFO: Verifying candidate for _ZNSt3__17__sort5B8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEvT1_S5_S5_S5_S5_T0_...
-WARNING: [_ZNSt3__17__sort5B8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEvT1_S5_S5_S5_S5_T0_] Syntax check failed
-INFO: Verifying candidate for _ZNSt3__111__sift_downB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEvT1_OT0_NS_15iterator_traitsIS5_E15difference_typeES5_...
-WARNING: [_ZNSt3__111__sift_downB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEvT1_OT0_NS_15iterator_traitsIS5_E15difference_typeES5_] Syntax check failed
-INFO: Verifying candidate for _ZNSt3__133__bitset_partition_partial_blocksB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPddEEvRT1_S6_T0_RT2_RySA_...
-WARNING: [_ZNSt3__133__bitset_partition_partial_blocksB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPddEEvRT1_S6_T0_RT2_RySA_] Syntax check failed
+INFO: Verifying candidate for execute_target_process...
+WARNING: [execute_target_process] Syntax check failed
+INFO: Verifying candidate for monitor_child_process...
+WARNING: [monitor_child_process] Syntax check failed
 INFO: Phase 6: assembly
-INFO: [_Z13record_resultdPKc] falling back to original (pending)
-INFO: [_Z9summarizePKciiii] falling back to original (syntax_fail)
-INFO: [_Z17summarize_simplefP7__sFILEPKc] falling back to original (syntax_fail)
-INFO: [_Z11start_timerv] falling back to original (pending)
-INFO: [_Z5timerv] falling back to original (pending)
-INFO: [_Z19less_than_function1PKvS0_] falling back to original (pending)
-INFO: [_Z19less_than_function2dd] falling back to original (pending)
-INFO: [_ZNK17less_than_functorclERKdS1_] falling back to original (pending)
-INFO: [_Z18quicksort_functionPdS_PFbddE] falling back to original (unsupported)
-INFO: [_Z9quicksortIPdPFbddEEvT_S3_T0_] falling back to original (syntax_fail)
 INFO: [main] falling back to original (syntax_fail)
-INFO: [_ZNSt3__14copyB8ne190102IPdS1_EET0_T_S3_S2_] falling back to original (pending)
-INFO: [_Z13verify_sortedIPdEvT_S1_] falling back to original (pending)
-INFO: [_Z9quicksortIPdXadL_Z19less_than_function2ddEEEvT_S1_] falling back to original (unsupported)
-INFO: [_ZNSt3__14sortB8ne190102IPdPFbddEEEvT_S4_T0_] falling back to original (pending)
-INFO: [_Z9quicksortIPd17less_than_functorEvT_S2_T0_] falling back to original (unsupported)
-INFO: [_ZNSt3__14sortB8ne190102IPd17less_than_functorEEvT_S3_T0_] falling back to original (pending)
-INFO: [_Z9quicksortIPd24inline_less_than_functorEvT_S2_T0_] falling back to original (unsupported)
-INFO: [_ZNSt3__14sortB8ne190102IPd24inline_less_than_functorEEvT_S3_T0_] falling back to original (pending)
-INFO: [_Z9quicksortIPdNSt3__14lessIdEEEvT_S4_T0_] falling back to original (syntax_fail)
-INFO: [_ZNSt3__14sortB8ne190102IPdNS_4lessIdEEEEvT_S4_T0_] falling back to original (pending)
-INFO: [_Z9quicksortIPdEvT_S1_] falling back to original (unsupported)
-INFO: [_ZNSt3__14sortB8ne190102IPdEEvT_S2_] falling back to original (pending)
-INFO: [_ZNSt3__16__copyB8ne190102INS_17_ClassicAlgPolicyEPdS2_S2_EENS_4pairIT0_T2_EES4_T1_S5_] falling back to original (pending)
-INFO: [_ZNSt3__124__copy_move_unwrap_itersB8ne190102INS_11__copy_implINS_17_ClassicAlgPolicyEEEPdS4_S4_Li0EEENS_4pairIT0_T2_EES6_T1_S7_] falling back to original (pending)
-INFO: [_ZNSt3__114__unwrap_rangeB8ne190102IPdS1_EENS_4pairIT0_S3_EET_S5_] falling back to original (pending)
-INFO: [_ZNKSt3__111__copy_implINS_17_ClassicAlgPolicyEEclB8ne190102IddLi0EEENS_4pairIPT_PT0_EES6_S6_S8_] falling back to original (pending)
-INFO: [_ZNSt3__113__unwrap_iterB8ne190102IPdNS_18__unwrap_iter_implIS1_Lb1EEELi0EEEDTclsrT0_8__unwrapclsr3stdE7declvalIT_EEEES5_] falling back to original (pending)
-INFO: [_ZNSt3__19make_pairB8ne190102IPdS1_EENS_4pairINS_18__unwrap_ref_decayIT_E4typeENS3_IT0_E4typeEEEOS4_OS7_] falling back to original (pending)
-INFO: [_ZNSt3__114__rewrap_rangeB8ne190102IPdS1_EET_S2_T0_] falling back to original (pending)
-INFO: [_ZNSt3__113__rewrap_iterB8ne190102IPdS1_NS_18__unwrap_iter_implIS1_Lb1EEEEET_S4_T0_] falling back to original (pending)
-INFO: [_ZNSt3__119__copy_trivial_implB8ne190102IddEENS_4pairIPT_PT0_EES3_S3_S5_] falling back to original (pending)
-INFO: [_ZNSt3__119__constexpr_memmoveB8ne190102IddLi0EEEPT_S2_PT0_NS_15__element_countE] falling back to original (pending)
-INFO: [_ZNSt3__19make_pairB8ne190102IRPdS1_EENS_4pairINS_18__unwrap_ref_decayIT_E4typeENS4_IT0_E4typeEEEOS5_OS8_] falling back to original (pending)
-INFO: [_ZNSt3__14pairIPdS1_EC1B8ne190102IRS1_S1_Li0EEEOT_OT0_] falling back to original (pending)
-INFO: [_ZNSt3__14pairIPdS1_EC2B8ne190102IRS1_S1_Li0EEEOT_OT0_] falling back to original (pending)
-INFO: [_ZNSt3__118__unwrap_iter_implIPdLb1EE8__unwrapB8ne190102ES1_] falling back to original (pending)
-INFO: [_ZNSt3__112__to_addressB8ne190102IdEEPT_S2_] falling back to original (pending)
-INFO: [_ZNSt3__14pairIPdS1_EC1B8ne190102IS1_S1_Li0EEEOT_OT0_] falling back to original (pending)
-INFO: [_ZNSt3__14pairIPdS1_EC2B8ne190102IS1_S1_Li0EEEOT_OT0_] falling back to original (pending)
-INFO: [_ZNSt3__118__unwrap_iter_implIPdLb1EE8__rewrapB8ne190102ES1_S1_] falling back to original (pending)
-INFO: [__clang_call_terminate] falling back to original (pending)
-INFO: [_ZNSt3__111__sort_implB8ne190102INS_17_ClassicAlgPolicyEPdPFbddEEEvT0_S5_RT1_] falling back to original (pending)
-INFO: [_ZNSt3__123__debug_randomize_rangeB8ne190102INS_17_ClassicAlgPolicyEPdS2_EEvT0_T1_] falling back to original (pending)
-INFO: [_ZNSt3__115__sort_dispatchB8ne190102INS_17_ClassicAlgPolicyEPdPFbddEEEvT0_S5_RT1_] falling back to original (pending)
-INFO: [_ZNSt3__135__check_strict_weak_ordering_sortedB8ne190102IPdPFbddEEEvT_S4_RT0_] falling back to original (pending)
-INFO: [_ZNSt3__17__log2iB8ne190102IlEET_S1_] falling back to original (pending)
-INFO: [_ZNSt3__111__introsortINS_17_ClassicAlgPolicyERPFbddEPdLb0EEEvT1_S6_T0_NS_15iterator_traitsIS6_E15difference_typeEb] falling back to original (syntax_fail)
-INFO: [_ZNSt3__112__libcpp_clzB8ne190102Em] falling back to original (pending)
-INFO: [_ZNSt3__18_IterOpsINS_17_ClassicAlgPolicyEE9iter_swapB8ne190102IRPdS5_EEvOT_OT0_] falling back to original (pending)
-INFO: [_ZNSt3__124__sort3_maybe_branchlessB8ne190102INS_17_ClassicAlgPolicyERPFbddEPdLi0EEEvT1_S6_S6_T0_] falling back to original (pending)
-INFO: [_ZNSt3__124__sort4_maybe_branchlessB8ne190102INS_17_ClassicAlgPolicyERPFbddEPdLi0EEEvT1_S6_S6_S6_T0_] falling back to original (pending)
-INFO: [_ZNSt3__124__sort5_maybe_branchlessB8ne190102INS_17_ClassicAlgPolicyERPFbddEPdLi0EEEvT1_S6_S6_S6_S6_T0_] falling back to original (pending)
-INFO: [_ZNSt3__116__insertion_sortB8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEvT1_S6_T0_] falling back to original (syntax_fail)
-INFO: [_ZNSt3__126__insertion_sort_unguardedB8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEvT1_S6_T0_] falling back to original (syntax_fail)
-INFO: [_ZNSt3__114__partial_sortB8ne190102INS_17_ClassicAlgPolicyERPFbddEPdS5_EET1_S6_S6_T2_RT0_] falling back to original (pending)
-INFO: [_ZNSt3__17__sort3B8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEjT1_S6_S6_T0_] falling back to original (syntax_fail)
-INFO: [_ZNSt3__18_IterOpsINS_17_ClassicAlgPolicyEE9iter_swapB8ne190102IRPdS4_EEvOT_OT0_] falling back to original (pending)
-INFO: [_ZNSt3__131__partition_with_equals_on_leftB8ne190102INS_17_ClassicAlgPolicyEPdRPFbddEEET0_S6_S6_T1_] falling back to original (syntax_fail)
-INFO: [_ZNSt3__118__bitset_partitionB8ne190102INS_17_ClassicAlgPolicyEPdRPFbddEEENS_4pairIT0_bEES7_S7_T1_] falling back to original (syntax_fail)
-INFO: [_ZNSt3__132__partition_with_equals_on_rightB8ne190102INS_17_ClassicAlgPolicyEPdRPFbddEEENS_4pairIT0_bEES7_S7_T1_] falling back to original (syntax_fail)
-INFO: [_ZNSt3__127__insertion_sort_incompleteB8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEbT1_S6_T0_] falling back to original (pending)
-INFO: [_ZNSt3__19iter_swapB8ne190102IPdS1_EEvT_T0_] falling back to original (pending)
-INFO: [_ZNSt3__14swapB8ne190102IdEENS_9enable_ifIXaasr21is_move_constructibleIT_EE5valuesr18is_move_assignableIS2_EE5valueEvE4typeERS2_S5_] falling back to original (pending)
-INFO: [_ZNSt3__17__sort4B8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEvT1_S6_S6_S6_T0_] falling back to original (pending)
-INFO: [_ZNSt3__17__sort5B8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEvT1_S6_S6_S6_S6_T0_] falling back to original (syntax_fail)
-INFO: [_ZNSt3__18_IterOpsINS_17_ClassicAlgPolicyEE11__iter_moveB8ne190102IRPdLi0EEEDTclsr3stdE4movedeclsr3stdE7declvalIRT_EEEEOS6_] falling back to original (pending)
-INFO: [_ZNSt3__18_IterOpsINS_17_ClassicAlgPolicyEE25__validate_iter_referenceB8ne190102IRPdEEvv] falling back to original (pending)
-INFO: [_ZNSt3__18_IterOpsINS_17_ClassicAlgPolicyEE4nextB8ne190102IPdEET_S5_S5_] falling back to original (pending)
-INFO: [_ZNSt3__119__partial_sort_implB8ne190102INS_17_ClassicAlgPolicyERPFbddEPdS5_EET1_S6_S6_T2_OT0_] falling back to original (pending)
-INFO: [_ZNSt3__111__make_heapB8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEvT1_S6_OT0_] falling back to original (pending)
-INFO: [_ZNSt3__111__sift_downB8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEvT1_OT0_NS_15iterator_traitsIS6_E15difference_typeES6_] falling back to original (syntax_fail)
-INFO: [_ZNSt3__111__sort_heapB8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEvT1_S6_OT0_] falling back to original (pending)
-INFO: [_ZNSt3__110__pop_heapB8ne190102INS_17_ClassicAlgPolicyEPFbddEPdEEvT1_S5_RT0_NS_15iterator_traitsIS5_E15difference_typeE] falling back to original (pending)
-INFO: [_ZNSt3__117__floyd_sift_downB8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEET1_S6_OT0_NS_15iterator_traitsIS6_E15difference_typeE] falling back to original (pending)
-INFO: [_ZNSt3__19__sift_upB8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEvT1_S6_OT0_NS_15iterator_traitsIS6_E15difference_typeE] falling back to original (syntax_fail)
-INFO: [_ZNSt3__122__populate_left_bitsetB8ne190102IRPFbddEPddEEvT0_T_RT1_Ry] falling back to original (pending)
-INFO: [_ZNSt3__123__populate_right_bitsetB8ne190102IRPFbddEPddEEvT0_T_RT1_Ry] falling back to original (pending)
-INFO: [_ZNSt3__117__swap_bitmap_posB8ne190102INS_17_ClassicAlgPolicyEPdEEvT0_S3_RyS4_] falling back to original (pending)
-INFO: [_ZNSt3__133__bitset_partition_partial_blocksB8ne190102INS_17_ClassicAlgPolicyERPFbddEPddEEvRT1_S7_T0_RT2_RySB_] falling back to original (unsupported)
-INFO: [_ZNSt3__124__swap_bitmap_pos_withinB8ne190102INS_17_ClassicAlgPolicyEPdEEvRT0_S4_RyS5_] falling back to original (unsupported)
-INFO: [_ZNSt3__19make_pairB8ne190102IRPdRbEENS_4pairINS_18__unwrap_ref_decayIT_E4typeENS5_IT0_E4typeEEEOS6_OS9_] falling back to original (pending)
-INFO: [_ZNSt3__112__libcpp_ctzB8ne190102Ey] falling back to original (pending)
-INFO: [_ZNSt3__113__libcpp_blsrB8ne190102Ey] falling back to original (pending)
-INFO: [_ZNSt3__18_IterOpsINS_17_ClassicAlgPolicyEE9iter_swapB8ne190102IPdS4_EEvOT_OT0_] falling back to original (pending)
-INFO: [_ZNSt3__112__libcpp_clzB8ne190102Ey] falling back to original (pending)
-INFO: [_ZNSt3__14pairIPdbEC1B8ne190102IRS1_RbLi0EEEOT_OT0_] falling back to original (pending)
-INFO: [_ZNSt3__14pairIPdbEC2B8ne190102IRS1_RbLi0EEEOT_OT0_] falling back to original (pending)
-INFO: [_ZNSt3__111__sort_implB8ne190102INS_17_ClassicAlgPolicyEPd17less_than_functorEEvT0_S4_RT1_] falling back to original (pending)
-INFO: [_ZNSt3__115__sort_dispatchB8ne190102INS_17_ClassicAlgPolicyEPd17less_than_functorEEvT0_S4_RT1_] falling back to original (pending)
-INFO: [_ZNSt3__135__check_strict_weak_ordering_sortedB8ne190102IPd17less_than_functorEEvT_S3_RT0_] falling back to original (pending)
-INFO: [_ZNSt3__111__introsortINS_17_ClassicAlgPolicyER17less_than_functorPdLb0EEEvT1_S5_T0_NS_15iterator_traitsIS5_E15difference_typeEb] falling back to original (syntax_fail)
-INFO: [_ZNSt3__124__sort3_maybe_branchlessB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdLi0EEEvT1_S5_S5_T0_] falling back to original (pending)
-INFO: [_ZNSt3__124__sort4_maybe_branchlessB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdLi0EEEvT1_S5_S5_S5_T0_] falling back to original (pending)
-INFO: [_ZNSt3__124__sort5_maybe_branchlessB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdLi0EEEvT1_S5_S5_S5_S5_T0_] falling back to original (pending)
-INFO: [_ZNSt3__116__insertion_sortB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEvT1_S5_T0_] falling back to original (syntax_fail)
-INFO: [_ZNSt3__126__insertion_sort_unguardedB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEvT1_S5_T0_] falling back to original (syntax_fail)
-INFO: [_ZNSt3__114__partial_sortB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdS4_EET1_S5_S5_T2_RT0_] falling back to original (pending)
-INFO: [_ZNSt3__17__sort3B8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEjT1_S5_S5_T0_] falling back to original (syntax_fail)
-INFO: [_ZNSt3__131__partition_with_equals_on_leftB8ne190102INS_17_ClassicAlgPolicyEPdR17less_than_functorEET0_S5_S5_T1_] falling back to original (syntax_fail)
-INFO: [_ZNSt3__118__bitset_partitionB8ne190102INS_17_ClassicAlgPolicyEPdR17less_than_functorEENS_4pairIT0_bEES6_S6_T1_] falling back to original (unsupported)
-INFO: [_ZNSt3__132__partition_with_equals_on_rightB8ne190102INS_17_ClassicAlgPolicyEPdR17less_than_functorEENS_4pairIT0_bEES6_S6_T1_] falling back to original (syntax_fail)
-INFO: [_ZNSt3__127__insertion_sort_incompleteB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEbT1_S5_T0_] falling back to original (syntax_fail)
-INFO: [_ZNSt3__17__sort4B8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEvT1_S5_S5_S5_T0_] falling back to original (pending)
-INFO: [_ZNSt3__17__sort5B8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEvT1_S5_S5_S5_S5_T0_] falling back to original (unsupported)
-INFO: [_ZNSt3__119__partial_sort_implB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdS4_EET1_S5_S5_T2_OT0_] falling back to original (pending)
-INFO: [_ZNSt3__111__make_heapB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEvT1_S5_OT0_] falling back to original (pending)
-INFO: [_ZNSt3__111__sift_downB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEvT1_OT0_NS_15iterator_traitsIS5_E15difference_typeES5_] falling back to original (syntax_fail)
-INFO: [_ZNSt3__111__sort_heapB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEvT1_S5_OT0_] falling back to original (pending)
-INFO: [_ZNSt3__110__pop_heapB8ne190102INS_17_ClassicAlgPolicyE17less_than_functorPdEEvT1_S4_RT0_NS_15iterator_traitsIS4_E15difference_typeE] falling back to original (pending)
-INFO: [_ZNSt3__117__floyd_sift_downB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEET1_S5_OT0_NS_15iterator_traitsIS5_E15difference_typeE] falling back to original (pending)
-INFO: [_ZNSt3__19__sift_upB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEvT1_S5_OT0_NS_15iterator_traitsIS5_E15difference_typeE] falling back to original (syntax_fail)
-INFO: [_ZNSt3__122__populate_left_bitsetB8ne190102IR17less_than_functorPddEEvT0_T_RT1_Ry] falling back to original (pending)
-INFO: [_ZNSt3__123__populate_right_bitsetB8ne190102IR17less_than_functorPddEEvT0_T_RT1_Ry] falling back to original (pending)
-INFO: [_ZNSt3__133__bitset_partition_partial_blocksB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPddEEvRT1_S6_T0_RT2_RySA_] falling back to original (pending)
-INFO: [_ZNK24inline_less_than_functorclERKdS1_] falling back to original (pending)
-INFO: [_ZNSt3__111__sort_implB8ne190102INS_17_ClassicAlgPolicyEPd24inline_less_than_functorEEvT0_S4_RT1_] falling back to original (pending)
-INFO: [_ZNSt3__115__sort_dispatchB8ne190102INS_17_ClassicAlgPolicyEPd24inline_less_than_functorEEvT0_S4_RT1_] falling back to original (pending)
-INFO: [_ZNSt3__135__check_strict_weak_ordering_sortedB8ne190102IPd24inline_less_than_functorEEvT_S3_RT0_] falling back to original (pending)
-INFO: [_ZNSt3__111__introsortINS_17_ClassicAlgPolicyER24inline_less_than_functorPdLb0EEEvT1_S5_T0_NS_15iterator_traitsIS5_E15difference_typeEb] falling back to original (syntax_fail)
-INFO: [_ZNSt3__124__sort3_maybe_branchlessB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdLi0EEEvT1_S5_S5_T0_] falling back to original (pending)
-INFO: [_ZNSt3__124__sort4_maybe_branchlessB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdLi0EEEvT1_S5_S5_S5_T0_] falling back to original (pending)
-INFO: [_ZNSt3__124__sort5_maybe_branchlessB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdLi0EEEvT1_S5_S5_S5_S5_T0_] falling back to original (pending)
-INFO: [_ZNSt3__116__insertion_sortB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEvT1_S5_T0_] falling back to original (syntax_fail)
-INFO: [_ZNSt3__126__insertion_sort_unguardedB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEvT1_S5_T0_] falling back to original (syntax_fail)
-INFO: [_ZNSt3__114__partial_sortB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdS4_EET1_S5_S5_T2_RT0_] falling back to original (pending)
-INFO: [_ZNSt3__17__sort3B8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEjT1_S5_S5_T0_] falling back to original (syntax_fail)
-INFO: [_ZNSt3__131__partition_with_equals_on_leftB8ne190102INS_17_ClassicAlgPolicyEPdR24inline_less_than_functorEET0_S5_S5_T1_] falling back to original (syntax_fail)
-INFO: [_ZNSt3__118__bitset_partitionB8ne190102INS_17_ClassicAlgPolicyEPdR24inline_less_than_functorEENS_4pairIT0_bEES6_S6_T1_] falling back to original (pending)
-INFO: [_ZNSt3__132__partition_with_equals_on_rightB8ne190102INS_17_ClassicAlgPolicyEPdR24inline_less_than_functorEENS_4pairIT0_bEES6_S6_T1_] falling back to original (syntax_fail)
-INFO: [_ZNSt3__127__insertion_sort_incompleteB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEbT1_S5_T0_] falling back to original (pending)
-INFO: [_ZNSt3__17__sort4B8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEvT1_S5_S5_S5_T0_] falling back to original (pending)
-INFO: [_ZNSt3__17__sort5B8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEvT1_S5_S5_S5_S5_T0_] falling back to original (syntax_fail)
-INFO: [_ZNSt3__119__partial_sort_implB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdS4_EET1_S5_S5_T2_OT0_] falling back to original (pending)
-INFO: [_ZNSt3__111__make_heapB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEvT1_S5_OT0_] falling back to original (pending)
-INFO: [_ZNSt3__111__sift_downB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEvT1_OT0_NS_15iterator_traitsIS5_E15difference_typeES5_] falling back to original (syntax_fail)
-INFO: [_ZNSt3__111__sort_heapB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEvT1_S5_OT0_] falling back to original (pending)
-INFO: [_ZNSt3__110__pop_heapB8ne190102INS_17_ClassicAlgPolicyE24inline_less_than_functorPdEEvT1_S4_RT0_NS_15iterator_traitsIS4_E15difference_typeE] falling back to original (pending)
-INFO: [_ZNSt3__117__floyd_sift_downB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEET1_S5_OT0_NS_15iterator_traitsIS5_E15difference_typeE] falling back to original (pending)
-INFO: [_ZNSt3__19__sift_upB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEvT1_S5_OT0_NS_15iterator_traitsIS5_E15difference_typeE] falling back to original (pending)
-INFO: [_ZNSt3__122__populate_left_bitsetB8ne190102IR24inline_less_than_functorPddEEvT0_T_RT1_Ry] falling back to original (pending)
-INFO: [_ZNSt3__123__populate_right_bitsetB8ne190102IR24inline_less_than_functorPddEEvT0_T_RT1_Ry] falling back to original (pending)
-INFO: [_ZNSt3__133__bitset_partition_partial_blocksB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPddEEvRT1_S6_T0_RT2_RySA_] falling back to original (syntax_fail)
-INFO: [_ZNKSt3__14lessIdEclB8ne190102ERKdS3_] falling back to original (pending)
-INFO: [_ZNSt3__111__sort_implB8ne190102INS_17_ClassicAlgPolicyEPdNS_4lessIdEEEEvT0_S5_RT1_] falling back to original (pending)
-INFO: [_ZNSt3__115__sort_dispatchB8ne190102INS_17_ClassicAlgPolicyEdLi0EEEvPT0_S3_RNS_4lessIS2_EE] falling back to original (pending)
-INFO: [_ZNSt3__135__check_strict_weak_ordering_sortedB8ne190102IPdNS_4lessIdEEEEvT_S4_RT0_] falling back to original (pending)
-INFO: [_ZNSt3__14sortB8ne190102IPdNS_6__lessIvvEEEEvT_S4_T0_] falling back to original (pending)
-INFO: [_ZNSt3__111__sort_implB8ne190102INS_17_ClassicAlgPolicyEPdNS_6__lessIvvEEEEvT0_S5_RT1_] falling back to original (pending)
-INFO: [_ZNSt3__115__sort_dispatchB8ne190102INS_17_ClassicAlgPolicyEdLi0EEEvPT0_S3_RNS_6__lessIvvEE] falling back to original (pending)
-INFO: [_ZNSt3__135__check_strict_weak_ordering_sortedB8ne190102IPdNS_6__lessIvvEEEEvT_S4_RT0_] falling back to original (pending)
-INFO: Wrote 151 rows to new_spec_results.csv
-INFO: DONE. Run `ninja` in the build directory to relink the executables with the modified .o files.
+INFO: [streq] falling back to original (pending)
+INFO: [usage] falling back to original (pending)
+INFO: [execute] falling back to original (pending)
+INFO: [terminate_handler] falling back to original (pending)
+INFO: [timeout_handler] falling back to original (pending)
+INFO: [sample_wall_time] falling back to original (pending)
+INFO: [execute_target_process] falling back to original (syntax_fail)
+INFO: [monitor_child_process] falling back to original (syntax_fail)
+INFO: [set_resource_limit_actual] falling back to original (pending)
+INFO: Processing fpcmp.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [diff_file] LLM finished with reason: 'stop', length: 2338
+INFO: [diff_file] Optimization returned cleanly from ollama/qwen2.5-coder:7b
+ERROR: [load_file] LLM call to ollama/qwen2.5-coder:3b failed: 
+ERROR: [AdvanceNumber] LLM call to ollama/qwen2.5-coder:3b failed: 
+ERROR: [contains_non_printable_characters] LLM call to ollama/qwen2.5-coder:3b failed: 
+ERROR: [main] LLM call to ollama/qwen2.5-coder:3b failed: 
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [CompareNumbers] LLM finished with reason: 'stop', length: 2984
+INFO: [CompareNumbers] Optimization returned cleanly from ollama/qwen2.5-coder:7b
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Verifying candidate for diff_file...
+WARNING: [diff_file] Syntax check failed
+INFO: Verifying candidate for CompareNumbers...
+WARNING: [CompareNumbers] Syntax check failed
+INFO: Phase 6: assembly
+INFO: [load_file] falling back to original (pending)
+INFO: [diff_file] falling back to original (syntax_fail)
+INFO: [skip_whitespace] falling back to original (pending)
+INFO: [isPossibleStartOfNumber] falling back to original (pending)
+INFO: [AdvanceNumber] falling back to original (pending)
+INFO: [CompareNumbers] falling back to original (syntax_fail)
+INFO: [dump_inputs] falling back to original (pending)
+INFO: [usage] falling back to original (pending)
+INFO: [main] falling back to original (pending)
+INFO: [isspace] falling back to original (pending)
+INFO: [__istype] falling back to original (pending)
+INFO: [isascii] falling back to original (pending)
+INFO: [isDigitChar] falling back to original (pending)
+INFO: [isSignedChar] falling back to original (pending)
+INFO: [isExponentChar] falling back to original (pending)
+INFO: [dump_input] falling back to original (pending)
+INFO: [contains_non_printable_characters] falling back to original (pending)
+INFO: [isprint] falling back to original (pending)
+INFO: Processing CMakeCCompilerId.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Phase 6: assembly
+INFO: [main] falling back to original (pending)
+INFO: Processing CMakeCXXCompilerId.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Phase 6: assembly
+INFO: [main] falling back to original (pending)
+INFO: Processing fbench.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+ERROR: [transit_surface] LLM call to ollama/qwen2.5-coder:3b failed: 
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [main] LLM finished with reason: 'stop', length: 2701
+INFO: [main] Optimization returned cleanly from ollama/qwen2.5-coder:7b
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Verifying candidate for main...
+WARNING: [main] Syntax check failed
+INFO: Phase 6: assembly
+INFO: [main] falling back to original (syntax_fail)
+INFO: [trace_line] falling back to original (pending)
+INFO: [transit_surface] falling back to original (pending)
+INFO: Processing flops-1.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Phase 6: assembly
+INFO: [main] falling back to original (pending)
+INFO: Processing richards_benchmark.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [schedule] LLM finished with reason: 'stop', length: 4413
+INFO: [schedule] Optimization returned cleanly from ollama/qwen2.5-coder:3b
+ERROR: [handlerfn] LLM call to ollama/qwen2.5-coder:3b failed: 
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Verifying candidate for schedule...
+WARNING: [schedule] Syntax check failed
+INFO: Phase 6: assembly
+INFO: [createtask] falling back to original (pending)
+INFO: [pkt] falling back to original (pending)
+INFO: [trace] falling back to original (pending)
+INFO: [schedule] falling back to original (syntax_fail)
+INFO: [Wait] falling back to original (pending)
+INFO: [holdself] falling back to original (pending)
+INFO: [findtcb] falling back to original (pending)
+INFO: [release] falling back to original (pending)
+INFO: [qpkt] falling back to original (pending)
+INFO: [append] falling back to original (pending)
+INFO: [idlefn] falling back to original (pending)
+INFO: [workfn] falling back to original (pending)
+INFO: [handlerfn] falling back to original (pending)
+INFO: [devfn] falling back to original (pending)
+INFO: [main] falling back to original (pending)
+INFO: Processing whetstone.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [main] LLM finished with reason: 'stop', length: 2691
+INFO: [main] Optimization returned cleanly from ollama/qwen2.5-coder:7b
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Verifying candidate for main...
+WARNING: [main] Syntax check failed
+INFO: Phase 6: assembly
+INFO: [main] falling back to original (syntax_fail)
+INFO: [POUT] falling back to original (pending)
+INFO: [PA] falling back to original (pending)
+INFO: [P3] falling back to original (pending)
+INFO: [P0] falling back to original (pending)
+INFO: Processing flops-2.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Phase 6: assembly
+INFO: [main] falling back to original (pending)
+INFO: Processing flops-3.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Phase 6: assembly
+INFO: [main] falling back to original (pending)
+INFO: Processing flops-7.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Phase 6: assembly
+INFO: [main] falling back to original (pending)
+INFO: Processing flops.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [main] LLM finished with reason: 'stop', length: 2013
+INFO: [main] Optimization returned cleanly from ollama/qwen2.5-coder:7b
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Verifying candidate for main...
+WARNING: [main] Syntax check failed
+INFO: Phase 6: assembly
+INFO: [main] falling back to original (syntax_fail)
+INFO: [dtime] falling back to original (pending)
+INFO: Processing flops-6.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Phase 6: assembly
+INFO: [main] falling back to original (pending)
+INFO: Processing mandel.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [mandel] LLM finished with reason: 'stop', length: 220
+INFO: [mandel] Optimization returned cleanly from ollama/qwen2.5-coder:3b
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Verifying candidate for mandel...
+WARNING: alive-tv undecided or unsupported. Output:
+ERROR: Unsupported attribute: 
+ERROR: Could not translate 'mandel' to Alive IR
+Summary:
+  0 correct transformations
+  0 incorrect transformations
+  0 failed-to-prove transformations
+  1 Alive2 errors
+
+
+WARNING: [mandel] UNSUPPORTED (timeout or unable to prove)
+INFO: Phase 6: assembly
+INFO: [emit] falling back to original (pending)
+INFO: [mandel] falling back to original (unsupported)
+INFO: [main] falling back to original (pending)
+INFO: Processing flops-4.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Phase 6: assembly
+INFO: [main] falling back to original (pending)
+INFO: Processing revertBits.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [main] LLM finished with reason: 'stop', length: 3140
+INFO: [main] Optimization returned cleanly from ollama/qwen2.5-coder:3b
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Verifying candidate for main...
+WARNING: alive-tv undecided or unsupported. Output:
+
+----------------------------------------
+declare i64 @strtoll(noundef ptr, noundef ptr, noundef i32)
+declare i32 @ReverseBits32(noundef i32)
+declare i64 @ReverseBits64(noundef i64)
+declare i32 @printf(noundef ptr)
+
+@.str = constant 11 bytes, align 1
+@.str.1 = constant 19 bytes, align 1
+@.str.2 = constant 14 bytes, align 1
+@.str.3 = constant 18 bytes, align 1
+
+define i32 @main() {
+init:
+  br label %#0
+
+#0:
+  %#13 = alloca i64 4, align 4
+  %#14 = alloca i64 8, align 8, dead
+  %#15 = alloca i64 8,
+WARNING: [main] UNSUPPORTED (timeout or unable to prove)
+INFO: Phase 6: assembly
+INFO: [ReverseBits32] falling back to original (pending)
+INFO: [ReverseBits64] falling back to original (pending)
+INFO: [main] falling back to original (unsupported)
+INFO: Processing evalloop.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Phase 6: assembly
+INFO: [execute] falling back to original (pending)
+INFO: [eval] falling back to original (pending)
+INFO: [main] falling back to original (pending)
+INFO: Processing flops-5.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Phase 6: assembly
+INFO: [main] falling back to original (pending)
+INFO: Processing dt.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Phase 6: assembly
+INFO: [main] falling back to original (pending)
+INFO: [double_array_divs_variable] falling back to original (pending)
+INFO: Processing himenobmtxpa.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [jacobi] LLM finished with reason: 'stop', length: 2377
+INFO: [jacobi] Optimization returned cleanly from ollama/qwen2.5-coder:7b
+ERROR: [set_param] LLM call to ollama/qwen2.5-coder:3b failed: 
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Verifying candidate for jacobi...
+WARNING: [jacobi] Syntax check failed
+INFO: Phase 6: assembly
+INFO: [main] falling back to original (pending)
+INFO: [newMat] falling back to original (pending)
+INFO: [mat_set_init] falling back to original (pending)
+INFO: [mat_set] falling back to original (pending)
+INFO: [jacobi] falling back to original (syntax_fail)
+INFO: [clearMat] falling back to original (pending)
+INFO: [fflop] falling back to original (pending)
+INFO: [mflops] falling back to original (pending)
+INFO: [set_param] falling back to original (pending)
+INFO: [second] falling back to original (pending)
+INFO: Processing salsa20.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Phase 6: assembly
+INFO: [salsa20] falling back to original (pending)
+INFO: [salsa] falling back to original (pending)
+INFO: [main] falling back to original (pending)
+INFO: Processing lowercase.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Phase 6: assembly
+INFO: [main] falling back to original (pending)
+INFO: [doTest] falling back to original (pending)
+INFO: [lower_StringImpl] falling back to original (pending)
+INFO: [toASCIILower] falling back to original (pending)
+INFO: Processing ffbench.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [main] LLM finished with reason: 'stop', length: 134
+INFO: [main] Optimization returned cleanly from ollama/qwen2.5-coder:3b
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [fourn] LLM finished with reason: 'stop', length: 1100
+INFO: [fourn] Optimization returned cleanly from ollama/qwen2.5-coder:7b
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Verifying candidate for main...
+WARNING: [main] Syntax check failed
+INFO: Verifying candidate for fourn...
+WARNING: [fourn] Syntax check failed
+INFO: Phase 6: assembly
+INFO: [main] falling back to original (syntax_fail)
+INFO: [fourn] falling back to original (syntax_fail)
+INFO: Processing ReedSolomon.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [rsdec_204] LLM finished with reason: 'stop', length: 199
+INFO: [rsdec_204] Optimization returned cleanly from ollama/qwen2.5-coder:3b
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [decode_rs] LLM finished with reason: 'stop', length: 1352
+INFO: [decode_rs] Optimization returned cleanly from ollama/qwen2.5-coder:7b
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [rsenc_204] LLM finished with reason: 'stop', length: 3745
+INFO: [rsenc_204] Optimization returned cleanly from ollama/qwen2.5-coder:3b
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [generate_gf] LLM finished with reason: 'stop', length: 496
+INFO: [generate_gf] Optimization returned cleanly from ollama/qwen2.5-coder:3b
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [gen_poly] LLM finished with reason: 'stop', length: 442
+INFO: [gen_poly] Optimization returned cleanly from ollama/qwen2.5-coder:3b
+ERROR: [encode_rs] LLM call to ollama/qwen2.5-coder:3b failed: 
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Verifying candidate for rsdec_204...
+WARNING: [rsdec_204] Syntax check failed
+INFO: Verifying candidate for rsenc_204...
+WARNING: [rsenc_204] Syntax check failed
+INFO: Verifying candidate for generate_gf...
+WARNING: [generate_gf] Syntax check failed
+INFO: Verifying candidate for gen_poly...
+WARNING: [gen_poly] Syntax check failed
+INFO: Verifying candidate for decode_rs...
+WARNING: alive-tv undecided or unsupported. Output:
+
+----------------------------------------
+@recd = global 1020 bytes, align 4
+@alpha_to = global 1024 bytes, align 4
+@index_of = global 1024 bytes, align 4
+
+define void @decode_rs() {
+#0:
+  %#169 = alloca i64 4, align 4, dead
+  %#170 = alloca i64 4, align 4, dead
+  %#171 = alloca i64 4, align 4, dead
+  %#172 = alloca i64 4, align 4, dead
+  %#173 = alloca i64 1152, align 4, dead
+  %#174 = alloca i64 72, align 4, dead
+  %#175 = alloca i64 72, align 4, dead
+  %#176 = alloca i64 72, align 4, dead
+  %
+WARNING: [decode_rs] UNSUPPORTED (timeout or unable to prove)
+INFO: Phase 6: assembly
+INFO: [rsdec_204] falling back to original (syntax_fail)
+INFO: [rsenc_204] falling back to original (syntax_fail)
+INFO: [main] falling back to original (pending)
+INFO: [generate_gf] falling back to original (syntax_fail)
+INFO: [gen_poly] falling back to original (syntax_fail)
+INFO: [decode_rs] falling back to original (unsupported)
+INFO: [encode_rs] falling back to original (pending)
+INFO: Processing matmul_f64_4x4.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Phase 6: assembly
+INFO: [wrap_mul4] falling back to original (pending)
+INFO: [mul4] falling back to original (pending)
+INFO: [main] falling back to original (pending)
+INFO: Processing pi.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Phase 6: assembly
+INFO: [myadd] falling back to original (pending)
+INFO: [main] falling back to original (pending)
+INFO: Processing fp-convert.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Phase 6: assembly
+INFO: [loop] falling back to original (pending)
+INFO: [main] falling back to original (pending)
+INFO: Processing aarch64-init-cpu-features.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Phase 6: assembly
+INFO: [main] falling back to original (pending)
+INFO: Processing flops-8.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Phase 6: assembly
+INFO: [main] falling back to original (pending)
+INFO: Processing mandel-2.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [loop] LLM finished with reason: 'stop', length: 2474
+INFO: [loop] Optimization returned cleanly from ollama/qwen2.5-coder:3b
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Verifying candidate for loop...
+WARNING: [loop] Syntax check failed
+INFO: Phase 6: assembly
+INFO: [sqr] falling back to original (pending)
+INFO: [cnorm2] falling back to original (pending)
+INFO: [loop] falling back to original (syntax_fail)
+INFO: [main] falling back to original (pending)
+INFO: Processing oourafft.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [main] LLM finished with reason: 'stop', length: 2539
+INFO: [main] Optimization returned cleanly from ollama/qwen2.5-coder:7b
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [bitrv2] LLM finished with reason: 'stop', length: 1251
+INFO: [bitrv2] Optimization returned cleanly from ollama/qwen2.5-coder:7b
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [cftfsub] LLM finished with reason: 'stop', length: 4071
+INFO: [cftfsub] Optimization returned cleanly from ollama/qwen2.5-coder:7b
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [bitrv2conj] LLM finished with reason: 'stop', length: 3632
+INFO: [bitrv2conj] Optimization returned cleanly from ollama/qwen2.5-coder:7b
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [cftbsub] LLM finished with reason: 'stop', length: 3219
+INFO: [cftbsub] Optimization returned cleanly from ollama/qwen2.5-coder:7b
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [cftmdl] LLM finished with reason: 'stop', length: 1295
+INFO: [cftmdl] Optimization returned cleanly from ollama/qwen2.5-coder:7b
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Verifying candidate for main...
+WARNING: [main] Syntax check failed
+INFO: Verifying candidate for bitrv2...
+WARNING: [bitrv2] Syntax check failed
+INFO: Verifying candidate for cftfsub...
+WARNING: [cftfsub] Syntax check failed
+INFO: Verifying candidate for bitrv2conj...
+WARNING: [bitrv2conj] Syntax check failed
+INFO: Verifying candidate for cftbsub...
+WARNING: alive-tv undecided or unsupported. Output:
+
+----------------------------------------
+declare void @cft1st(noundef i32, noundef ptr, noundef ptr)
+declare void @cftmdl(noundef i32, noundef i32, noundef ptr, noundef ptr)
+
+define void @cftbsub(i32 noundef %#0, ptr noundef %#1, ptr noundef %#2) {
+#3:
+  %#20 = alloca i64 4, align 4
+  %#21 = alloca i64 8, align 8
+  %#22 = alloca i64 8, align 8
+  %#23 = alloca i64 4, align 4, dead
+  %#24 = alloca i64 4, align 4, dead
+  %#25 = alloca i64 4, align 4, dead
+  %#26 = alloca i64 4, align 4, dead
+  %#2
+WARNING: [cftbsub] UNSUPPORTED (timeout or unable to prove)
+INFO: Verifying candidate for cftmdl...
+WARNING: [cftmdl] Syntax check failed
+INFO: Phase 6: assembly
+INFO: [main] falling back to original (syntax_fail)
+INFO: [get_time] falling back to original (pending)
+INFO: [makewt] falling back to original (pending)
+INFO: [putdata] falling back to original (pending)
+INFO: [cdft] falling back to original (pending)
+INFO: [errorcheck] falling back to original (pending)
+INFO: [bitrv2] falling back to original (syntax_fail)
+INFO: [cftfsub] falling back to original (syntax_fail)
+INFO: [bitrv2conj] falling back to original (syntax_fail)
+INFO: [cftbsub] falling back to original (unsupported)
+INFO: [cft1st] falling back to original (pending)
+INFO: [cftmdl] falling back to original (syntax_fail)
+INFO: Processing perlin.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [grad] LLM finished with reason: 'stop', length: 3441
+INFO: [grad] Optimization returned cleanly from ollama/qwen2.5-coder:3b
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Verifying candidate for grad...
+INFO: [grad] PASSED (proven refinement)
+INFO: Phase 6: assembly
+INFO: [main] falling back to original (pending)
+INFO: [noise] falling back to original (pending)
+INFO: [init] falling back to original (pending)
+INFO: [fade] falling back to original (pending)
+INFO: [lerp] falling back to original (pending)
+INFO: [grad] locking in proven optimization
+INFO: Processing correlation.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [kernel_correlation] LLM finished with reason: 'stop', length: 1583
+INFO: [kernel_correlation] Optimization returned cleanly from ollama/qwen2.5-coder:7b
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Verifying candidate for kernel_correlation...
+WARNING: [kernel_correlation] Syntax check failed
+INFO: Phase 6: assembly
+INFO: [polybench_flush_cache] falling back to original (pending)
+INFO: [polybench_prepare_instruments] falling back to original (pending)
+INFO: [polybench_timer_start] falling back to original (pending)
+INFO: [polybench_timer_stop] falling back to original (pending)
+INFO: [polybench_timer_print] falling back to original (pending)
+INFO: [polybench_free_data] falling back to original (pending)
+INFO: [polybench_alloc_data] falling back to original (pending)
+INFO: [xmalloc] falling back to original (pending)
+INFO: [main] falling back to original (pending)
+INFO: [init_array] falling back to original (pending)
+INFO: [kernel_correlation] falling back to original (syntax_fail)
+INFO: [print_array] falling back to original (pending)
+INFO: [rtclock] falling back to original (pending)
+INFO: [print_element] falling back to original (pending)
+INFO: Processing covariance.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [kernel_covariance] LLM finished with reason: 'stop', length: 1284
+INFO: [kernel_covariance] Optimization returned cleanly from ollama/qwen2.5-coder:3b
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Verifying candidate for kernel_covariance...
+WARNING: [kernel_covariance] Syntax check failed
+INFO: Phase 6: assembly
+INFO: [polybench_flush_cache] falling back to original (pending)
+INFO: [polybench_prepare_instruments] falling back to original (pending)
+INFO: [polybench_timer_start] falling back to original (pending)
+INFO: [polybench_timer_stop] falling back to original (pending)
+INFO: [polybench_timer_print] falling back to original (pending)
+INFO: [polybench_free_data] falling back to original (pending)
+INFO: [polybench_alloc_data] falling back to original (pending)
+INFO: [xmalloc] falling back to original (pending)
+INFO: [main] falling back to original (pending)
+INFO: [init_array] falling back to original (pending)
+INFO: [kernel_covariance] falling back to original (syntax_fail)
+INFO: [print_array] falling back to original (pending)
+INFO: [rtclock] falling back to original (pending)
+INFO: [print_element] falling back to original (pending)
+INFO: Processing seidel-2d.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [check_FP] LLM finished with reason: 'stop', length: 4698
+INFO: [check_FP] Optimization returned cleanly from ollama/qwen2.5-coder:3b
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Verifying candidate for check_FP...
+INFO: [check_FP] PASSED (proven refinement)
+INFO: Phase 6: assembly
+INFO: [polybench_flush_cache] falling back to original (pending)
+INFO: [polybench_prepare_instruments] falling back to original (pending)
+INFO: [polybench_timer_start] falling back to original (pending)
+INFO: [polybench_timer_stop] falling back to original (pending)
+INFO: [polybench_timer_print] falling back to original (pending)
+INFO: [polybench_free_data] falling back to original (pending)
+INFO: [polybench_alloc_data] falling back to original (pending)
+INFO: [xmalloc] falling back to original (pending)
+INFO: [main] falling back to original (pending)
+INFO: [init_array] falling back to original (pending)
+INFO: [kernel_seidel_2d] falling back to original (pending)
+INFO: [kernel_seidel_2d_StrictFP] falling back to original (pending)
+INFO: [check_FP] locking in proven optimization
+INFO: [print_array] falling back to original (pending)
+INFO: [rtclock] falling back to original (pending)
+INFO: [print_element] falling back to original (pending)
+INFO: Processing adi.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [kernel_adi] LLM finished with reason: 'stop', length: 2704
+INFO: [kernel_adi] Optimization returned cleanly from ollama/qwen2.5-coder:7b
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Verifying candidate for kernel_adi...
+WARNING: [kernel_adi] Syntax check failed
+INFO: Phase 6: assembly
+INFO: [polybench_flush_cache] falling back to original (pending)
+INFO: [polybench_prepare_instruments] falling back to original (pending)
+INFO: [polybench_timer_start] falling back to original (pending)
+INFO: [polybench_timer_stop] falling back to original (pending)
+INFO: [polybench_timer_print] falling back to original (pending)
+INFO: [polybench_free_data] falling back to original (pending)
+INFO: [polybench_alloc_data] falling back to original (pending)
+INFO: [xmalloc] falling back to original (pending)
+INFO: [main] falling back to original (pending)
+INFO: [init_array] falling back to original (pending)
+INFO: [kernel_adi] falling back to original (syntax_fail)
+INFO: [print_array] falling back to original (pending)
+INFO: [rtclock] falling back to original (pending)
+INFO: [print_element] falling back to original (pending)
+INFO: Processing jacobi-2d.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [kernel_jacobi_2d_StrictFP] LLM finished with reason: 'stop', length: 889
+INFO: [kernel_jacobi_2d_StrictFP] Optimization returned cleanly from ollama/qwen2.5-coder:3b
+ERROR: [kernel_jacobi_2d] LLM call to ollama/qwen2.5-coder:3b failed: 
+ERROR: [check_FP] LLM call to ollama/qwen2.5-coder:3b failed: 
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Verifying candidate for kernel_jacobi_2d_StrictFP...
+WARNING: [kernel_jacobi_2d_StrictFP] Syntax check failed
+INFO: Phase 6: assembly
+INFO: [polybench_flush_cache] falling back to original (pending)
+INFO: [polybench_prepare_instruments] falling back to original (pending)
+INFO: [polybench_timer_start] falling back to original (pending)
+INFO: [polybench_timer_stop] falling back to original (pending)
+INFO: [polybench_timer_print] falling back to original (pending)
+INFO: [polybench_free_data] falling back to original (pending)
+INFO: [polybench_alloc_data] falling back to original (pending)
+INFO: [xmalloc] falling back to original (pending)
+INFO: [main] falling back to original (pending)
+INFO: [init_array] falling back to original (pending)
+INFO: [kernel_jacobi_2d] falling back to original (pending)
+INFO: [kernel_jacobi_2d_StrictFP] falling back to original (syntax_fail)
+INFO: [check_FP] falling back to original (pending)
+INFO: [print_array] falling back to original (pending)
+INFO: [rtclock] falling back to original (pending)
+INFO: [print_element] falling back to original (pending)
+INFO: Processing jacobi-1d.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Phase 6: assembly
+INFO: [polybench_flush_cache] falling back to original (pending)
+INFO: [polybench_prepare_instruments] falling back to original (pending)
+INFO: [polybench_timer_start] falling back to original (pending)
+INFO: [polybench_timer_stop] falling back to original (pending)
+INFO: [polybench_timer_print] falling back to original (pending)
+INFO: [polybench_free_data] falling back to original (pending)
+INFO: [polybench_alloc_data] falling back to original (pending)
+INFO: [xmalloc] falling back to original (pending)
+INFO: [main] falling back to original (pending)
+INFO: [init_array] falling back to original (pending)
+INFO: [kernel_jacobi_1d] falling back to original (pending)
+INFO: [kernel_jacobi_1d_StrictFP] falling back to original (pending)
+INFO: [check_FP] falling back to original (pending)
+INFO: [print_array] falling back to original (pending)
+INFO: [rtclock] falling back to original (pending)
+INFO: [print_element] falling back to original (pending)
+INFO: Processing heat-3d.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [kernel_heat_3d] LLM finished with reason: 'stop', length: 2466
+INFO: [kernel_heat_3d] Optimization returned cleanly from ollama/qwen2.5-coder:7b
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Verifying candidate for kernel_heat_3d...
+WARNING: [kernel_heat_3d] Syntax check failed
+INFO: Phase 6: assembly
+INFO: [polybench_flush_cache] falling back to original (pending)
+INFO: [polybench_prepare_instruments] falling back to original (pending)
+INFO: [polybench_timer_start] falling back to original (pending)
+INFO: [polybench_timer_stop] falling back to original (pending)
+INFO: [polybench_timer_print] falling back to original (pending)
+INFO: [polybench_free_data] falling back to original (pending)
+INFO: [polybench_alloc_data] falling back to original (pending)
+INFO: [xmalloc] falling back to original (pending)
+INFO: [main] falling back to original (pending)
+INFO: [init_array] falling back to original (pending)
+INFO: [kernel_heat_3d] falling back to original (syntax_fail)
+INFO: [print_array] falling back to original (pending)
+INFO: [rtclock] falling back to original (pending)
+INFO: [print_element] falling back to original (pending)
+INFO: Processing fdtd-2d.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [kernel_fdtd_2d] LLM finished with reason: 'stop', length: 417
+INFO: [kernel_fdtd_2d] Optimization returned cleanly from ollama/qwen2.5-coder:3b
+ERROR: [kernel_fdtd_2d_StrictFP] LLM call to ollama/qwen2.5-coder:3b failed: 

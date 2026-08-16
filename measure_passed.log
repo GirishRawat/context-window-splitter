@@ -1,1 +1,19 @@
 llvmlite: for the --opaque-pointers option: may only occur zero or one times!
+[_Z9quicksortIPd17less_than_functorEvT_S2_T0_] Syntax check failed
+[_Z9quicksortIPd24inline_less_than_functorEvT_S2_T0_] Syntax check failed
+[_ZNSt3__133__bitset_partition_partial_blocksB8ne190102INS_17_ClassicAlgPolicyERPFbddEPddEEvRT1_S7_T0_RT2_RySB_] Syntax check failed
+[_ZNSt3__124__swap_bitmap_pos_withinB8ne190102INS_17_ClassicAlgPolicyEPdEEvRT0_S4_RyS5_] Syntax check failed
+[_ZNSt3__118__bitset_partitionB8ne190102INS_17_ClassicAlgPolicyEPdR17less_than_functorEENS_4pairIT0_bEES6_S6_T1_] REJECTED (counterexample found)
+PASS fpcmp.bc                 contains_non_printable_characters          52 ->   52 instrs  (+0.0%)
+PASS perlin.bc                grad                                       70 ->   70 instrs  (+0.0%)
+PASS floyd-warshall.bc        init_array                                 73 ->   73 instrs  (+0.0%)
+PASS fasta.bc                 random_fasta                               78 ->   78 instrs  (+0.0%)
+PASS stepanov_abstraction.bc  _ZN9benchmark9quicksortIPddEEvT_S2_        82 ->   82 instrs  (+0.0%)
+PASS functionobjects.bc       _Z18quicksort_functionPdS_PFbddE           88 ->   88 instrs  (+0.0%)
+PASS functionobjects.bc       _Z9quicksortIPdXadL_Z19less_than_functio   82 ->   82 instrs  (+0.0%)
+PASS functionobjects.bc       _Z9quicksortIPdEvT_S1_                     82 ->   82 instrs  (+0.0%)
+PASS functionobjects.bc       _ZNSt3__17__sort5B8ne190102INS_17_Classi   47 ->   47 instrs  (+0.0%)
+
+=== VERIFIED OPTIMIZATIONS ON REAL CODE ===
+  total PASSED: 9
+  with real instruction reduction (>0%): 0

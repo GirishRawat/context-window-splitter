@@ -108,10 +108,18 @@ class LLMRoutingConfig:
     retry_base_delay: float = 4.0
 
     def __post_init__(self):
-        # Which cloud backend to route to: "gemini" (default, matches the
-        # existing behaviour) or "openrouter" (free-tier frontier-scale
-        # models, no daily 20-request cliff like Gemini's free tier -- 50
-        # req/day unfunded, 20 req/min). Selected via LLM_BACKEND env var.
+        # Which backend to route to, selected via LLM_BACKEND env var:
+        #   "gemini"     (default) -- Google Gemini free tier
+        #   "openrouter" -- free-tier frontier-scale models via OpenRouter,
+        #                   no daily 20-request cliff like Gemini's free tier
+        #                   (50 req/day unfunded, 20 req/min)
+        #   "local_gpu"  -- self-hosted Ollama on a real GPU box (e.g. a
+        #                   JupyterHub instance with an A40/A100), no rate
+        #                   limiting or daily caps at all since it's your
+        #                   own hardware. Uses the same raw-HTTP Ollama path
+        #                   in p3_route.py as the earlier qwen 3b/7b runs
+        #                   (model_name.startswith("ollama/")), just pointed
+        #                   at a bigger model.
         backend = os.getenv("LLM_BACKEND", "gemini").lower()
 
         if backend == "openrouter":
@@ -125,11 +133,25 @@ class LLMRoutingConfig:
                 "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
             )
             default_rpm = 15  # stay under the 20/min free-tier cap
+        elif backend == "local_gpu":
+            # Default: Qwen2.5-Coder-32B-Instruct, 4-bit quantized (~20GB,
+            # fits comfortably on a 46GB A40 with headroom for KV cache).
+            # Pull it first with: ollama pull qwen2.5-coder:32b
+            # Override via OLLAMA_MODEL for a different local model.
+            model_id = os.getenv("OLLAMA_MODEL", "ollama/qwen2.5-coder:32b")
+            default_rpm = 1000  # no meaningful cap on your own hardware
         else:
             # Model id is overridable via GEMINI_MODEL (e.g. set to
             # "gemini/gemini-1.5-flash" for higher free-tier throughput).
             model_id = os.getenv("GEMINI_MODEL", "gemini/gemini-3.5-flash")
             default_rpm = 5
+
+        # Local GPU inference has no provider-side throttling, but a single
+        # A40 still decodes one request at a time in practice (Ollama
+        # defaults to serializing per-model), and our largest functions
+        # (~24k prompt tokens) can take a while even on-GPU -- give it a
+        # generous timeout rather than the 120s tuned for cloud APIs.
+        timeout_seconds = 300 if backend == "local_gpu" else 120
 
         if self.tiers is None:
             self.tiers = {
@@ -137,19 +159,19 @@ class LLMRoutingConfig:
                     name="fast",
                     models=[model_id],
                     max_concurrent=1,
-                    timeout_seconds=120
+                    timeout_seconds=timeout_seconds
                 ),
                 "mid": ModelTier(
                     name="mid",
                     models=[model_id],
                     max_concurrent=1,
-                    timeout_seconds=120
+                    timeout_seconds=timeout_seconds
                 ),
                 "frontier": ModelTier(
                     name="frontier",
                     models=[model_id],
                     max_concurrent=1,
-                    timeout_seconds=120
+                    timeout_seconds=timeout_seconds
                 )
             }
 

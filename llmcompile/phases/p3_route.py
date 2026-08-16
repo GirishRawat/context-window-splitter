@@ -444,10 +444,27 @@ async def _route_module_async(parsed: ParsedModule, config: PipelineConfig) -> N
 
     tasks = []
     
-    # We create a semaphore per tier based on max_concurrent
+    # We create a semaphore per tier based on max_concurrent.
+    #
+    # Exception: a local Ollama server generates one request per model at a
+    # time (OLLAMA_NUM_PARALLEL defaults to 1). With a semaphore per tier, two
+    # functions routed to different tiers fire concurrently against the SAME
+    # ollama model, and the one Ollama queues can exhaust its client-side
+    # timeout before generation even starts -- surfacing as a bare
+    # asyncio.TimeoutError (empty message) that looks like a model failure but
+    # is really harness-induced. Share ONE semaphore across every tier bound to
+    # the same ollama/ model so those calls serialize client-side. This costs
+    # no real throughput, since the server was serializing them anyway.
     semaphores = {}
+    ollama_shared: dict[str, asyncio.Semaphore] = {}
     for tier_name, tier_config in config.llm_routing.tiers.items():
-        semaphores[tier_name] = asyncio.Semaphore(tier_config.max_concurrent)
+        model_id = tier_config.models[0] if tier_config.models else None
+        if model_id and model_id.startswith("ollama/"):
+            semaphores[tier_name] = ollama_shared.setdefault(
+                model_id, asyncio.Semaphore(tier_config.max_concurrent)
+            )
+        else:
+            semaphores[tier_name] = asyncio.Semaphore(tier_config.max_concurrent)
 
     for record in parsed.functions:
         if record.triaged_out:

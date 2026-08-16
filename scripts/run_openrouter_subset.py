@@ -108,7 +108,11 @@ def run_subset(build_dir: Path, targets: dict[str, set[str]], output_csv: Path, 
 
         logger.info(f"Processing {file_name} (targets: {sorted(remaining)})...")
         ll_file = bc_file.with_suffix(".subset.ll")
-        subprocess.run(["clang", "-S", "-emit-llvm", str(bc_file), "-o", str(ll_file)], check=True)
+        try:
+            subprocess.run(["clang", "-S", "-emit-llvm", str(bc_file), "-o", str(ll_file)], check=True)
+        except subprocess.CalledProcessError as e:
+            logger.error(f"{file_name}: clang -emit-llvm failed ({e}), skipping this file")
+            continue
         ir_text = normalize_ir(ll_file.read_text())
 
         parsed: ParsedModule = parse_module(ir_text)

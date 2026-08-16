@@ -1,0 +1,8 @@
+file_name,function_name,complexity,tokens,model,llm_latency_s,verification_latency_s,verdict,orig_instrs,final_instrs,reduction_pct
+timeit.bc,execute_target_process,27,8704,ollama/qwen2.5-coder:32b,212.852,30.117,unsupported,219,219,0.0
+timeit.bc,monitor_child_process,18,8881,ollama/qwen2.5-coder:32b,225.588,0.041,passed,224,224,0.0
+exptree.bc,recSearch,22,5961,ollama/qwen2.5-coder:32b,217.125,16.306,unsupported,239,239,0.0
+functionobjects.bc,_ZNSt3__118__bitset_partitionB8ne190102INS_17_ClassicAlgPolicyEPdR24inline_less_than_functorEENS_4pairIT0_bEES6_S6_T1_,14,21198,ollama/qwen2.5-coder:32b,201.272,1.516,unsupported,168,168,0.0
+ReedSolomon.bc,decode_rs,59,23597,ollama/qwen2.5-coder:32b,264.891,0.255,unsupported,1217,1217,0.0
+Puzzle.bc,Puzzle,49,13301,ollama/qwen2.5-coder:32b,,,pending,672,672,0.0
+timeit.bc,main,36,11507,ollama/qwen2.5-coder:32b,,,pending,378,378,0.0

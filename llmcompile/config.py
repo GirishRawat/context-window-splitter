@@ -79,9 +79,15 @@ class ModelTier:
 class LLMRoutingConfig:
     """Phase 3 LLM routing configuration.
 
-    All models use the ``ollama_chat/`` prefix for LiteLLM's Ollama provider.
-    Concurrency is kept low because local GPU inference is sequential.
-    Timeouts are generous because local models are slower than cloud APIs.
+    Current default routes ALL tiers to Google Gemini free tier via LiteLLM's
+    ``gemini/`` provider, to evaluate whether a stronger model produces verified
+    optimizations where local Qwen models only echoed the input. To revert to
+    local inference, set each tier's ``models`` back to an ``ollama/...`` id.
+
+    Because free-tier Gemini is rate-limited (RPM/RPD), the real throttle is the
+    module-level wall-clock rate limiter in ``p3_route.py`` (paced to
+    ``requests_per_minute``), NOT the per-tier concurrency semaphore. Concurrency
+    is kept modest so a handful of calls can overlap up to the RPM budget.
     """
 
     # Model tiers by name (matches TriageConfig tier names)
@@ -90,28 +96,48 @@ class LLMRoutingConfig:
     # Global concurrency limit across all tiers
     global_max_concurrent: int = 4
 
+    # --- Rate limiting / retry (used by the gemini/ path in p3_route.py) ---
+    # Requests-per-minute cap enforced globally across all Gemini calls. Set
+    # conservatively for the free tier; overridable via GEMINI_RPM.
+    requests_per_minute: int = 10
+    # Retry attempts on rate-limit (429) / transient errors before falling back.
+    max_retries: int = 5
+    # Base delay (seconds) for exponential backoff between retries.
+    retry_base_delay: float = 4.0
+
     def __post_init__(self):
+        # Model id is overridable via GEMINI_MODEL (e.g. set to
+        # "gemini/gemini-2.0-flash" for higher free-tier throughput).
+        gemini_model = os.getenv("GEMINI_MODEL", "gemini/gemini-2.5-flash")
         if self.tiers is None:
             self.tiers = {
                 "fast": ModelTier(
                     name="fast",
-                    models=["ollama/qwen2.5-coder:3b"],
-                    max_concurrent=2,
+                    models=[gemini_model],
+                    max_concurrent=3,
                     timeout_seconds=120
                 ),
                 "mid": ModelTier(
                     name="mid",
-                    models=["ollama/qwen2.5-coder:7b"],
-                    max_concurrent=1,
-                    timeout_seconds=180
+                    models=[gemini_model],
+                    max_concurrent=3,
+                    timeout_seconds=120
                 ),
                 "frontier": ModelTier(
                     name="frontier",
-                    models=["claude-3-opus-20240229"],
-                    max_concurrent=1,
-                    timeout_seconds=300
+                    models=[gemini_model],
+                    max_concurrent=3,
+                    timeout_seconds=120
                 )
             }
+
+        # Allow overriding the RPM cap from the environment.
+        rpm_env = os.getenv("GEMINI_RPM")
+        if rpm_env:
+            try:
+                self.requests_per_minute = int(rpm_env)
+            except ValueError:
+                pass
 
 
 # ---------------------------------------------------------------------------

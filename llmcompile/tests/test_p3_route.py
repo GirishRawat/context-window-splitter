@@ -175,8 +175,11 @@ def test_llm_timeout_or_error_falls_back():
 # Ollama-Specific Tests
 # ---------------------------------------------------------------------------
 
-def test_ollama_model_prefix_passes_api_base():
-    """Verify that models with the ollama prefix get api_base injected."""
+# ---------------------------------------------------------------------------
+# Gemini-Specific Tests
+# ---------------------------------------------------------------------------
+
+def _gemini_config() -> PipelineConfig:
     config = PipelineConfig(
         triage=TriageConfig(
             complexity_threshold=1,
@@ -184,32 +187,69 @@ def test_ollama_model_prefix_passes_api_base():
         ),
         llm_routing=LLMRoutingConfig(
             tiers={
-                "fast": ModelTier("fast", ["ollama_chat/qwen2.5-coder:3b"]),
-                "mid": ModelTier("mid", ["ollama_chat/qwen2.5-coder:7b"]),
-                "frontier": ModelTier("frontier", ["ollama_chat/qwen2.5-coder:7b"]),
+                "fast": ModelTier("fast", ["gemini/gemini-2.5-flash"]),
+                "mid": ModelTier("mid", ["gemini/gemini-2.5-flash"]),
+                "frontier": ModelTier("frontier", ["gemini/gemini-2.5-flash"]),
             }
-        )
+        ),
     )
-    
+    # No pacing delay in unit tests.
+    config.llm_routing.requests_per_minute = 1_000_000
+    return config
+
+
+def test_gemini_branch_no_prefill_no_signature_dup():
+    """Gemini path sends no trailing assistant-prefill and does not duplicate the signature."""
+    import os
+    import llmcompile.phases.p3_route as p3
+
+    config = _gemini_config()
     parsed = parse_module(SAMPLE_IR)
     triage_module(parsed, config)
-    
+
+    # Gemini returns a FULL define block (not a prefill continuation).
     mock_response = MagicMock()
     mock_response.choices = [MagicMock()]
-    mock_response.choices[0].message.content = "define i32 @dummy() {\n  ret i32 0\n}"
-    
-    with patch('llmcompile.phases.p3_route.litellm') as mock_litellm:
-        mock_litellm.acompletion = AsyncMock(return_value=mock_response)
-        
-        with patch('llmcompile.phases.p3_route._check_ollama_health', return_value=True):
+    mock_response.choices[0].message.content = (
+        "define i32 @add(i32 %a, i32 %b) {\n  %r = add i32 %a, %b\n  ret i32 %r\n}"
+    )
+
+    p3._req_times.clear()
+    with patch.dict(os.environ, {"GEMINI_API_KEY": "test-key"}):
+        with patch('llmcompile.phases.p3_route.litellm') as mock_litellm:
+            mock_litellm.acompletion = AsyncMock(return_value=mock_response)
             route_module(parsed, config)
-        
-        # Check that api_base was passed in the acompletion calls
-        for call in mock_litellm.acompletion.call_args_list:
-            kwargs = call.kwargs if call.kwargs else {}
-            # api_base should be the default Ollama URL
-            assert "api_base" in kwargs, f"api_base not passed for Ollama model call"
-            assert kwargs["api_base"] == "http://localhost:11434"
+
+            assert mock_litellm.acompletion.call_count >= 1
+            # No assistant prefill: the final message must be the user turn.
+            for call in mock_litellm.acompletion.call_args_list:
+                messages = call.kwargs["messages"]
+                assert messages[-1]["role"] == "user"
+            fns = {f.name: f for f in parsed.functions}
+            assert fns["add"].assigned_model == "gemini/gemini-2.5-flash"
+            # No signature prepend: exactly one define in the recorded output.
+            assert fns["add"].llm_output.count("define") == 1
+
+
+def test_gemini_missing_key_falls_back():
+    """With no GEMINI_API_KEY/GOOGLE_API_KEY, pre-flight nulls output and never calls the API."""
+    import os
+
+    config = _gemini_config()
+    parsed = parse_module(SAMPLE_IR)
+    triage_module(parsed, config)
+
+    with patch.dict(os.environ):  # saved/restored automatically
+        os.environ.pop("GEMINI_API_KEY", None)
+        os.environ.pop("GOOGLE_API_KEY", None)
+        with patch('llmcompile.phases.p3_route.litellm') as mock_litellm:
+            mock_litellm.acompletion = AsyncMock()
+            route_module(parsed, config)
+
+            mock_litellm.acompletion.assert_not_called()
+            for fn in parsed.functions:
+                if not fn.triaged_out:
+                    assert fn.llm_output is None
 
 
 def test_ollama_health_check_failure_falls_back():

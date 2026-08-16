@@ -4,4 +4,8 @@ pydantic==2.7.4
 llvmlite
 tiktoken
 pytest
-litellm
+# litellm >=1.50 provides native gemini/ provider support (Google AI Studio free
+# tier, reads GEMINI_API_KEY / GOOGLE_API_KEY from the environment).
+litellm>=1.50
+# Optional but recommended for the gemini/ path on some litellm versions.
+google-generativeai

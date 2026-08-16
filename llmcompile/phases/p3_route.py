@@ -17,7 +17,9 @@ Contract established here (relied on by Phases 4-6):
 from __future__ import annotations
 
 import asyncio
+import collections
 import logging
+import os
 import re
 import time
 from typing import Any
@@ -39,6 +41,61 @@ from llmcompile.config import PipelineConfig, get_config
 from llmcompile.phases.p1_parse import extract_function_body
 
 logger = logging.getLogger(__name__)
+
+
+# --------------------------------------------------------------------------- #
+# Global wall-clock rate limiter (for rate-limited cloud APIs, e.g. Gemini free)
+# --------------------------------------------------------------------------- #
+#
+# route_module() calls asyncio.run() once PER .bc file, so a fresh event loop is
+# created for every module. A rate-limit budget therefore cannot live in
+# loop-bound asyncio state (it would reset every file). Instead we keep a
+# module-level sliding window of request start times keyed on time.monotonic()
+# (plain module state that survives across loops). spec_runner processes files
+# sequentially, so only one event loop is ever active at a time; within a loop
+# the lock below serialises acquisition. This enforces at most
+# `requests_per_minute` calls in any rolling 60s window, across the whole run.
+
+_req_times: "collections.deque[float]" = collections.deque()
+_rl_lock: asyncio.Lock | None = None
+_rl_lock_loop: Any = None
+
+
+def _get_rl_lock() -> asyncio.Lock:
+    """Return an asyncio.Lock bound to the currently-running event loop.
+
+    asyncio primitives bind to the running loop, so a lock created in one
+    per-file loop cannot be awaited in the next. Recreate it when the loop
+    changes. Safe because spec_runner runs one loop at a time.
+    """
+    global _rl_lock, _rl_lock_loop
+    loop = asyncio.get_running_loop()
+    if _rl_lock is None or _rl_lock_loop is not loop:
+        _rl_lock = asyncio.Lock()
+        _rl_lock_loop = loop
+    return _rl_lock
+
+
+async def _rate_limit_acquire(requests_per_minute: int) -> None:
+    """Block until issuing another request stays within the RPM budget.
+
+    Sliding 60s window. Holds the lock across the wait so acquisitions are
+    serialised (natural pacing); the lock is released as soon as this coroutine
+    returns, so the actual API calls still overlap up to the RPM cap.
+    """
+    if not requests_per_minute or requests_per_minute <= 0:
+        return
+    async with _get_rl_lock():
+        while True:
+            now = time.monotonic()
+            while _req_times and now - _req_times[0] >= 60.0:
+                _req_times.popleft()
+            if len(_req_times) < requests_per_minute:
+                _req_times.append(now)
+                return
+            wait = 60.0 - (now - _req_times[0]) + 0.01
+            logger.debug(f"rate limiter: at {requests_per_minute} rpm cap, waiting {wait:.1f}s")
+            await asyncio.sleep(wait)
 
 
 def sanitize_llm_output(raw_text: str) -> str | None:
@@ -210,10 +267,73 @@ entry:
                 raw_output = data.get("response", "")
                 finish_reason = data.get("done_reason", "stop")
                 
-                # Because we prefilled the exact signature, the model's output will 
+                # Because we prefilled the exact signature, the model's output will
                 # be everything AFTER the brace. We must prepend the signature back to it.
                 raw_output = signature + "\n" + raw_output
-                
+
+            elif model_name.startswith("gemini/"):
+                # Rate-limited cloud model (Gemini free tier) via LiteLLM.
+                # Differs from the Ollama path in two ways: (1) NO assistant
+                # prefill message and NO signature prepend -- Gemini returns the
+                # full `define ... }` block, which sanitize_llm_output cleans;
+                # prepending would duplicate the signature. (2) every call is
+                # paced by the global RPM limiter and retried with backoff on
+                # 429/transient errors so free-tier throttling does not silently
+                # drop functions. Signature fidelity is requested in-prompt.
+                sig_line = signature.rstrip().rstrip("{").rstrip()
+                gemini_user = (
+                    f"{user_prompt}\n\n"
+                    f"Return ONLY the optimized function as raw LLVM IR. It MUST keep "
+                    f"exactly this signature line:\n{sig_line}\n"
+                    f"Output only the define block. No markdown fences, no prose."
+                )
+                messages = [
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": example_user},
+                    {"role": "assistant", "content": example_assistant},
+                    {"role": "user", "content": gemini_user},
+                ]
+                rpm = config.llm_routing.requests_per_minute
+                max_retries = config.llm_routing.max_retries
+                base_delay = config.llm_routing.retry_base_delay
+
+                response = None
+                for attempt in range(max_retries + 1):
+                    await _rate_limit_acquire(rpm)
+                    try:
+                        response = await litellm.acompletion(
+                            model=model_name,
+                            messages=messages,
+                            temperature=0.0,
+                            timeout=timeout_seconds,
+                        )
+                        break
+                    except Exception as e:
+                        status = getattr(e, "status_code", None)
+                        ename = type(e).__name__
+                        is_rate = status == 429 or "RateLimit" in ename
+                        is_transient = (
+                            is_rate
+                            or status in (500, 502, 503, 529)
+                            or "Timeout" in ename
+                            or "ServiceUnavailable" in ename
+                            or "InternalServer" in ename
+                        )
+                        if attempt < max_retries and is_transient:
+                            delay = min(base_delay * (2 ** attempt), 60.0)
+                            logger.warning(
+                                f"[{record.name}] Gemini transient error "
+                                f"(attempt {attempt + 1}/{max_retries}), backoff "
+                                f"{delay:.0f}s: {e}"
+                            )
+                            await asyncio.sleep(delay)
+                            continue
+                        raise  # non-transient or retries exhausted -> outer except -> fallback
+
+                raw_output = response.choices[0].message.content or ""
+                finish_reason = getattr(response.choices[0], "finish_reason", "stop")
+                # No signature prepend: Gemini returns the whole define block.
+
             else:
                 # For chat models (like Claude 3), use the Messages API with assistant prefill
                 response = await litellm.acompletion(
@@ -258,6 +378,27 @@ entry:
 
 async def _route_module_async(parsed: ParsedModule, config: PipelineConfig) -> None:
     """Async core of Phase 3."""
+
+    # --- Gemini API key pre-flight ---
+    # If any tier uses a gemini/ model, fail loudly BEFORE dispatching hundreds
+    # of calls that would all 401 and silently fall back. LiteLLM reads the key
+    # from GEMINI_API_KEY (or GOOGLE_API_KEY) in the environment.
+    uses_gemini = any(
+        model.startswith("gemini/")
+        for tier in config.llm_routing.tiers.values()
+        for model in tier.models
+    )
+    if uses_gemini and not (os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")):
+        logger.error(
+            "A gemini/ model is configured but neither GEMINI_API_KEY nor "
+            "GOOGLE_API_KEY is set. Every Gemini call would fail. Export the key "
+            "and retry, e.g.  export GEMINI_API_KEY=...  "
+            "All functions fall back to their original IR for now."
+        )
+        for record in parsed.functions:
+            if not record.triaged_out:
+                record.llm_output = None
+        return
 
     # --- Ollama health check ---
     # If any configured model uses Ollama, verify the server is reachable

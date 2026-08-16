@@ -16,3 +16,7 @@ llvm-test-suite/
 test.ll
 spec_results.csv*
 /Thesis Dissertation/
+
+# Local secrets — never commit
+.gemini_env
+.env

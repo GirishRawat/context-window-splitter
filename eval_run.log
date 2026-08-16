@@ -842,3 +842,327 @@ INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
 INFO: [kernel_fdtd_2d] LLM finished with reason: 'stop', length: 417
 INFO: [kernel_fdtd_2d] Optimization returned cleanly from ollama/qwen2.5-coder:3b
 ERROR: [kernel_fdtd_2d_StrictFP] LLM call to ollama/qwen2.5-coder:3b failed: 
+ERROR: [print_array] LLM call to ollama/qwen2.5-coder:3b failed: 
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Verifying candidate for kernel_fdtd_2d...
+WARNING: [kernel_fdtd_2d] Syntax check failed
+INFO: Phase 6: assembly
+INFO: [polybench_flush_cache] falling back to original (pending)
+INFO: [polybench_prepare_instruments] falling back to original (pending)
+INFO: [polybench_timer_start] falling back to original (pending)
+INFO: [polybench_timer_stop] falling back to original (pending)
+INFO: [polybench_timer_print] falling back to original (pending)
+INFO: [polybench_free_data] falling back to original (pending)
+INFO: [polybench_alloc_data] falling back to original (pending)
+INFO: [xmalloc] falling back to original (pending)
+INFO: [main] falling back to original (pending)
+INFO: [init_array] falling back to original (pending)
+INFO: [kernel_fdtd_2d] falling back to original (syntax_fail)
+INFO: [kernel_fdtd_2d_StrictFP] falling back to original (pending)
+INFO: [print_array] falling back to original (pending)
+INFO: [rtclock] falling back to original (pending)
+INFO: [print_element] falling back to original (pending)
+INFO: Processing deriche.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [kernel_deriche] LLM finished with reason: 'stop', length: 3250
+INFO: [kernel_deriche] Optimization returned cleanly from ollama/qwen2.5-coder:7b
+ERROR: [check_FP] LLM call to ollama/qwen2.5-coder:3b failed: 
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [kernel_deriche_StrictFP] LLM finished with reason: 'stop', length: 2009
+INFO: [kernel_deriche_StrictFP] Optimization returned cleanly from ollama/qwen2.5-coder:7b
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Verifying candidate for kernel_deriche...
+WARNING: [kernel_deriche] Syntax check failed
+INFO: Verifying candidate for kernel_deriche_StrictFP...
+WARNING: [kernel_deriche_StrictFP] Syntax check failed
+INFO: Phase 6: assembly
+INFO: [polybench_flush_cache] falling back to original (pending)
+INFO: [polybench_prepare_instruments] falling back to original (pending)
+INFO: [polybench_timer_start] falling back to original (pending)
+INFO: [polybench_timer_stop] falling back to original (pending)
+INFO: [polybench_timer_print] falling back to original (pending)
+INFO: [polybench_free_data] falling back to original (pending)
+INFO: [polybench_alloc_data] falling back to original (pending)
+INFO: [xmalloc] falling back to original (pending)
+INFO: [main] falling back to original (pending)
+INFO: [init_array] falling back to original (pending)
+INFO: [kernel_deriche] falling back to original (syntax_fail)
+INFO: [kernel_deriche_StrictFP] falling back to original (syntax_fail)
+INFO: [check_FP] falling back to original (pending)
+INFO: [print_array] falling back to original (pending)
+INFO: [rtclock] falling back to original (pending)
+INFO: [print_element] falling back to original (pending)
+INFO: Processing floyd-warshall.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [kernel_floyd_warshall] LLM finished with reason: 'stop', length: 1446
+INFO: [kernel_floyd_warshall] Optimization returned cleanly from ollama/qwen2.5-coder:3b
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [init_array] LLM finished with reason: 'stop', length: 3257
+INFO: [init_array] Optimization returned cleanly from ollama/qwen2.5-coder:3b
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [kernel_floyd_warshall_StrictFP] LLM finished with reason: 'stop', length: 1310
+INFO: [kernel_floyd_warshall_StrictFP] Optimization returned cleanly from ollama/qwen2.5-coder:3b
+ERROR: [check_FP] LLM call to ollama/qwen2.5-coder:3b failed: 
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Verifying candidate for init_array...
+INFO: [init_array] PASSED (proven refinement)
+INFO: Verifying candidate for kernel_floyd_warshall...
+WARNING: [kernel_floyd_warshall] Syntax check failed
+INFO: Verifying candidate for kernel_floyd_warshall_StrictFP...
+WARNING: [kernel_floyd_warshall_StrictFP] Syntax check failed
+INFO: Phase 6: assembly
+INFO: [polybench_flush_cache] falling back to original (pending)
+INFO: [polybench_prepare_instruments] falling back to original (pending)
+INFO: [polybench_timer_start] falling back to original (pending)
+INFO: [polybench_timer_stop] falling back to original (pending)
+INFO: [polybench_timer_print] falling back to original (pending)
+INFO: [polybench_free_data] falling back to original (pending)
+INFO: [polybench_alloc_data] falling back to original (pending)
+INFO: [xmalloc] falling back to original (pending)
+INFO: [main] falling back to original (pending)
+INFO: [init_array] locking in proven optimization
+INFO: [kernel_floyd_warshall] falling back to original (syntax_fail)
+INFO: [kernel_floyd_warshall_StrictFP] falling back to original (syntax_fail)
+INFO: [check_FP] falling back to original (pending)
+INFO: [print_array] falling back to original (pending)
+INFO: [rtclock] falling back to original (pending)
+INFO: [print_element] falling back to original (pending)
+INFO: Processing nussinov.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [kernel_nussinov] LLM finished with reason: 'stop', length: 1920
+INFO: [kernel_nussinov] Optimization returned cleanly from ollama/qwen2.5-coder:7b
+ERROR: [check_FP] LLM call to ollama/qwen2.5-coder:3b failed: 
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [kernel_nussinov_StrictFP] LLM finished with reason: 'stop', length: 2889
+INFO: [kernel_nussinov_StrictFP] Optimization returned cleanly from ollama/qwen2.5-coder:7b
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Verifying candidate for kernel_nussinov...
+WARNING: [kernel_nussinov] Syntax check failed
+INFO: Verifying candidate for kernel_nussinov_StrictFP...
+WARNING: [kernel_nussinov_StrictFP] Syntax check failed
+INFO: Phase 6: assembly
+INFO: [polybench_flush_cache] falling back to original (pending)
+INFO: [polybench_prepare_instruments] falling back to original (pending)
+INFO: [polybench_timer_start] falling back to original (pending)
+INFO: [polybench_timer_stop] falling back to original (pending)
+INFO: [polybench_timer_print] falling back to original (pending)
+INFO: [polybench_free_data] falling back to original (pending)
+INFO: [polybench_alloc_data] falling back to original (pending)
+INFO: [xmalloc] falling back to original (pending)
+INFO: [main] falling back to original (pending)
+INFO: [init_array] falling back to original (pending)
+INFO: [kernel_nussinov] falling back to original (syntax_fail)
+INFO: [kernel_nussinov_StrictFP] falling back to original (syntax_fail)
+INFO: [check_FP] falling back to original (pending)
+INFO: [print_array] falling back to original (pending)
+INFO: [rtclock] falling back to original (pending)
+INFO: [print_element] falling back to original (pending)
+INFO: Processing 3mm.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [init_array] LLM finished with reason: 'stop', length: 1538
+INFO: [init_array] Optimization returned cleanly from ollama/qwen2.5-coder:3b
+ERROR: [kernel_3mm] LLM call to ollama/qwen2.5-coder:3b failed: 
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Verifying candidate for init_array...
+WARNING: [init_array] Syntax check failed
+INFO: Phase 6: assembly
+INFO: [polybench_flush_cache] falling back to original (pending)
+INFO: [polybench_prepare_instruments] falling back to original (pending)
+INFO: [polybench_timer_start] falling back to original (pending)
+INFO: [polybench_timer_stop] falling back to original (pending)
+INFO: [polybench_timer_print] falling back to original (pending)
+INFO: [polybench_free_data] falling back to original (pending)
+INFO: [polybench_alloc_data] falling back to original (pending)
+INFO: [xmalloc] falling back to original (pending)
+INFO: [main] falling back to original (pending)
+INFO: [init_array] falling back to original (syntax_fail)
+INFO: [kernel_3mm] falling back to original (pending)
+INFO: [print_array] falling back to original (pending)
+INFO: [rtclock] falling back to original (pending)
+INFO: [print_element] falling back to original (pending)
+INFO: Processing bicg.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Phase 6: assembly
+INFO: [polybench_flush_cache] falling back to original (pending)
+INFO: [polybench_prepare_instruments] falling back to original (pending)
+INFO: [polybench_timer_start] falling back to original (pending)
+INFO: [polybench_timer_stop] falling back to original (pending)
+INFO: [polybench_timer_print] falling back to original (pending)
+INFO: [polybench_free_data] falling back to original (pending)
+INFO: [polybench_alloc_data] falling back to original (pending)
+INFO: [xmalloc] falling back to original (pending)
+INFO: [main] falling back to original (pending)
+INFO: [init_array] falling back to original (pending)
+INFO: [kernel_bicg] falling back to original (pending)
+INFO: [print_array] falling back to original (pending)
+INFO: [rtclock] falling back to original (pending)
+INFO: [print_element] falling back to original (pending)
+INFO: Processing atax.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [kernel_atax] LLM finished with reason: 'stop', length: 1955
+INFO: [kernel_atax] Optimization returned cleanly from ollama/qwen2.5-coder:3b
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Verifying candidate for kernel_atax...
+WARNING: [kernel_atax] Syntax check failed
+INFO: Phase 6: assembly
+INFO: [polybench_flush_cache] falling back to original (pending)
+INFO: [polybench_prepare_instruments] falling back to original (pending)
+INFO: [polybench_timer_start] falling back to original (pending)
+INFO: [polybench_timer_stop] falling back to original (pending)
+INFO: [polybench_timer_print] falling back to original (pending)
+INFO: [polybench_free_data] falling back to original (pending)
+INFO: [polybench_alloc_data] falling back to original (pending)
+INFO: [xmalloc] falling back to original (pending)
+INFO: [main] falling back to original (pending)
+INFO: [init_array] falling back to original (pending)
+INFO: [kernel_atax] falling back to original (syntax_fail)
+INFO: [print_array] falling back to original (pending)
+INFO: [rtclock] falling back to original (pending)
+INFO: [print_element] falling back to original (pending)
+INFO: Processing doitgen.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [kernel_doitgen_StrictFP] LLM finished with reason: 'stop', length: 173
+INFO: [kernel_doitgen_StrictFP] Optimization returned cleanly from ollama/qwen2.5-coder:3b
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [kernel_doitgen] LLM finished with reason: 'stop', length: 164
+INFO: [kernel_doitgen] Optimization returned cleanly from ollama/qwen2.5-coder:3b
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [init_array] LLM finished with reason: 'stop', length: 2001
+INFO: [init_array] Optimization returned cleanly from ollama/qwen2.5-coder:3b
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [check_FP] LLM finished with reason: 'stop', length: 3516
+INFO: [check_FP] Optimization returned cleanly from ollama/qwen2.5-coder:3b
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Verifying candidate for kernel_doitgen...
+WARNING: [kernel_doitgen] Syntax check failed
+INFO: Verifying candidate for kernel_doitgen_StrictFP...
+WARNING: [kernel_doitgen_StrictFP] Syntax check failed
+INFO: Verifying candidate for init_array...
+WARNING: [init_array] Syntax check failed
+INFO: Verifying candidate for check_FP...
+WARNING: [check_FP] Syntax check failed
+INFO: Phase 6: assembly
+INFO: [polybench_flush_cache] falling back to original (pending)
+INFO: [polybench_prepare_instruments] falling back to original (pending)
+INFO: [polybench_timer_start] falling back to original (pending)
+INFO: [polybench_timer_stop] falling back to original (pending)
+INFO: [polybench_timer_print] falling back to original (pending)
+INFO: [polybench_free_data] falling back to original (pending)
+INFO: [polybench_alloc_data] falling back to original (pending)
+INFO: [xmalloc] falling back to original (pending)
+INFO: [kernel_doitgen] falling back to original (syntax_fail)
+INFO: [kernel_doitgen_StrictFP] falling back to original (syntax_fail)
+INFO: [main] falling back to original (pending)
+INFO: [init_array] falling back to original (syntax_fail)
+INFO: [check_FP] falling back to original (syntax_fail)
+INFO: [print_array] falling back to original (pending)
+INFO: [rtclock] falling back to original (pending)
+INFO: [print_element] falling back to original (pending)
+INFO: Processing mvt.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [kernel_mvt_StrictFP] LLM finished with reason: 'stop', length: 4746
+INFO: [kernel_mvt_StrictFP] Optimization returned cleanly from ollama/qwen2.5-coder:3b
+ERROR: [kernel_mvt] LLM call to ollama/qwen2.5-coder:3b failed: 
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Verifying candidate for kernel_mvt_StrictFP...
+WARNING: [kernel_mvt_StrictFP] Syntax check failed
+INFO: Phase 6: assembly
+INFO: [polybench_flush_cache] falling back to original (pending)
+INFO: [polybench_prepare_instruments] falling back to original (pending)
+INFO: [polybench_timer_start] falling back to original (pending)
+INFO: [polybench_timer_stop] falling back to original (pending)
+INFO: [polybench_timer_print] falling back to original (pending)
+INFO: [polybench_free_data] falling back to original (pending)
+INFO: [polybench_alloc_data] falling back to original (pending)
+INFO: [xmalloc] falling back to original (pending)
+INFO: [main] falling back to original (pending)
+INFO: [init_array] falling back to original (pending)
+INFO: [kernel_mvt] falling back to original (pending)
+INFO: [kernel_mvt_StrictFP] falling back to original (syntax_fail)
+INFO: [check_FP] falling back to original (pending)
+INFO: [print_array] falling back to original (pending)
+INFO: [rtclock] falling back to original (pending)
+INFO: [print_element] falling back to original (pending)
+INFO: Processing 2mm.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+ERROR: [init_array] LLM call to ollama/qwen2.5-coder:3b failed: 
+ERROR: [kernel_2mm] LLM call to ollama/qwen2.5-coder:3b failed: 
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Phase 6: assembly
+INFO: [polybench_flush_cache] falling back to original (pending)
+INFO: [polybench_prepare_instruments] falling back to original (pending)
+INFO: [polybench_timer_start] falling back to original (pending)
+INFO: [polybench_timer_stop] falling back to original (pending)
+INFO: [polybench_timer_print] falling back to original (pending)
+INFO: [polybench_free_data] falling back to original (pending)
+INFO: [polybench_alloc_data] falling back to original (pending)
+INFO: [xmalloc] falling back to original (pending)
+INFO: [init_array] falling back to original (pending)
+INFO: [main] falling back to original (pending)
+INFO: [kernel_2mm] falling back to original (pending)
+INFO: [print_array] falling back to original (pending)
+INFO: [rtclock] falling back to original (pending)
+INFO: [print_element] falling back to original (pending)
+INFO: Processing gemm.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [kernel_gemm] LLM finished with reason: 'stop', length: 208
+INFO: [kernel_gemm] Optimization returned cleanly from ollama/qwen2.5-coder:3b

@@ -22,3 +22,4 @@ spec_results.csv*
 .gemini_env
 .env
 *.log
+eval_subset_corpus_instnamed/

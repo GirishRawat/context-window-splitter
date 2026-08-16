@@ -13,3 +13,70 @@ huffbench.bc,compdecomp,32,14725,ollama/qwen2.5-coder:3b,276.269,,syntax_fail,66
                                    ^"
 whetstone.bc,main,30,14578,ollama/qwen2.5-coder:3b,,,pending,702,702,0.0,call_error: ,
 exptree.bc,recSearch,22,6506,ollama/qwen2.5-coder:3b,96.672,21.977,unsupported,239,239,0.0,stop,
+functionobjects.bc,main,21,28129,ollama/qwen2.5-coder:3b,269.021,,syntax_fail,501,501,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpgbqahpvy.ll:890:39: error: expected '(' in call
+  call void @_Z9quicksortIPdPFbddEptr noundef %i104, ptr noundef %i108, ptr noundef @_Z19less_than_function2dd)
+                                      ^"
+functionobjects.bc,_ZNSt3__111__introsortINS_17_ClassicAlgPolicyERPFbddEPdLb0EEEvT1_S6_T0_NS_15iterator_traitsIS6_E15difference_typeEb,15,24700,ollama/qwen2.5-coder:3b,171.466,,syntax_fail,292,292,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpwp6w307l.ll:1084:13: error: use of undefined value '@_ZNSt3__111__introsortINS_17_ClassicAlgPolicyERPFbddEPdLb-EEEvT1_S6_T0_NS_15iterator_traitsIS6_E15difference_typeEb'
+  call void @_ZNSt3__111__introsortINS_17_ClassicAlgPolicyERPFbddEPdLb-EEEvT1_S6_T0_NS_15iterator_traitsIS6_E15difference_typeEb(ptr noundef %i217, ptr noundef %i218, ptr noundef nonnull align 8 dereferenceable(8) %i219, i64 noundef %i220, i1 noundef zeroext %i222)
+            ^"
+functionobjects.bc,_ZNSt3__111__introsortINS_17_ClassicAlgPolicyER24inline_less_than_functorPdLb0EEEvT1_S5_T0_NS_15iterator_traitsIS5_E15difference_typeEb,15,24752,ollama/qwen2.5-coder:3b,149.764,,syntax_fail,286,286,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmphi4w6h4m.ll:1009:36: error: use of undefined value '%bb210'
+  br i1 %i181, label %bb182, label %bb210
+                                   ^"
+functionobjects.bc,_ZNSt3__118__bitset_partitionB8ne190102INS_17_ClassicAlgPolicyEPdR24inline_less_than_functorEENS_4pairIT0_bEES6_S6_T1_,14,21911,ollama/qwen2.5-coder:3b,92.954,1.623,unsupported,168,168,0.0,stop,
+linpack-pc.bc,main,21,17458,ollama/qwen2.5-coder:3b,,,pending,738,738,0.0,call_error: ,
+linpack-pc.bc,dgesl,10,8102,ollama/qwen2.5-coder:3b,76.779,,syntax_fail,287,287,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmphckw6kmt.ll:223:3: error: instruction forward referenced with type 'i32'
+  %i49 = sext i32 %i49 to i64
+  ^"
+linpack-pc.bc,dmxpy,11,15810,ollama/qwen2.5-coder:3b,251.77,,syntax_fail,732,732,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpwjk423ju.ll:289:45: error: '%i96' defined with type 'float' but expected 'ptr'
+  %i105 = getelementptr inbounds float, ptr %i96, i64 %i104
+                                            ^"
+smallpt.bc,_Z8radianceRK3RayiPt,18,24788,ollama/qwen2.5-coder:3b,,,pending,999,999,0.0,call_error: ,
+smallpt.bc,main,12,13467,ollama/qwen2.5-coder:3b,110.927,0.047,unsupported,510,510,0.0,stop,
+ffbench.bc,main,18,7327,ollama/qwen2.5-coder:3b,45.632,1.82,passed,314,314,0.0,stop,
+ffbench.bc,fourn,13,9511,ollama/qwen2.5-coder:3b,65.351,,syntax_fail,450,450,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmp9yuyhhig.ll:276:46: error: '%i120' defined with type 'double' but expected 'ptr'
+  %i125 = getelementptr inbounds double, ptr %i120, i64 %i124
+                                             ^"
+fpcmp.bc,AdvanceNumber,16,5294,ollama/qwen2.5-coder:3b,17.606,0.043,passed,130,130,0.0,stop,
+fpcmp.bc,CompareNumbers,17,7825,ollama/qwen2.5-coder:3b,37.611,1.59,unsupported,262,262,0.0,stop,
+fpcmp.bc,main,11,6174,ollama/qwen2.5-coder:3b,23.333,,syntax_fail,174,174,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpi49ezqpn.ll:377:3: error: multiple definition of local value named 'i129'
+  %i129 = load i32, ptr %i, align 4
+  ^"
+nussinov.bc,kernel_nussinov,16,9274,ollama/qwen2.5-coder:3b,60.007,,syntax_fail,373,373,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpw6tbdaiv.ll:356:3: error: instruction forward referenced with type 'i32'
+  %i180 = sext i32 %i180 to i64
+  ^"
+nussinov.bc,kernel_nussinov_StrictFP,16,9274,ollama/qwen2.5-coder:3b,59.964,,syntax_fail,373,373,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmp_prxsl5e.ll:356:3: error: instruction forward referenced with type 'i32'
+  %i180 = sext i32 %i180 to i64
+  ^"
+flops.bc,main,15,27347,ollama/qwen2.5-coder:3b,,,pending,1341,1341,0.0,call_error: ,
+fannkuch.bc,fannkuch,15,6312,ollama/qwen2.5-coder:3b,40.954,3.623,passed,294,293,0.34,stop,
+queens.bc,main,15,5029,ollama/qwen2.5-coder:3b,24.93,7.124,unsupported,177,177,0.0,stop,
+deriche.bc,kernel_deriche,13,12467,ollama/qwen2.5-coder:3b,77.326,,syntax_fail,533,533,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmph0y2bskw.ll:493:3: error: instruction forward referenced with type 'i64'
+  %i230 = getelementptr inbounds [2160 x float], ptr %i227, i64 0, i64 %i230
+  ^"
+deriche.bc,kernel_deriche_StrictFP,13,12506,ollama/qwen2.5-coder:3b,78.061,,syntax_fail,546,546,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmp9ywslz4d.ll:516:3: error: instruction forward referenced with type 'i64'
+  %i250 = getelementptr inbounds [2160 x float], ptr %i247, i64 0, i64 %i250
+  ^"
+misr.bc,main,13,5689,ollama/qwen2.5-coder:3b,31.302,13.592,unsupported,206,206,0.0,stop,
+misr.bc,simulate,13,7455,ollama/qwen2.5-coder:3b,46.265,,syntax_fail,325,325,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: assembly parsed, but does not verify as correct!
+Only PHI nodes may reference their own value!
+  %i149 = getelementptr inbounds %struct.cells, ptr %i149, i32 0, i32 0
+Only PHI nodes may reference their own value!
+  %i210 = getelementptr inbounds %struct.cells, ptr %i210, i32 0, i32 0
+Only PHI nodes may reference their own value!
+  %i229 = getelementptr inbounds %struct.cells, ptr %i229, i32 0, i32 1
+Only PHI nodes may reference their own value!
+  %i250 = getelementptr inbounds %struct.cells, ptr %i250, i32 0, i32 2"
+fbench.bc,main,12,8818,ollama/qwen2.5-coder:3b,46.955,1.591,unsupported,290,290,0.0,stop,
+ludcmp.bc,init_array,12,7334,ollama/qwen2.5-coder:3b,37.49,10.493,passed,268,257,4.1,stop,
+ludcmp.bc,kernel_ludcmp,10,7472,ollama/qwen2.5-coder:3b,36.682,,syntax_fail,278,278,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpmgcsywty.ll:281:55: error: '%i100' defined with type 'i32' but expected 'ptr'
+  %i102 = getelementptr inbounds [2000 x double], ptr %i100, i64 %i101
+                                                      ^"
+correlation.bc,kernel_correlation,11,8208,ollama/qwen2.5-coder:3b,50.751,,syntax_fail,341,341,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpftsrov47.ll:464:3: error: instruction forward referenced with type 'i32'
+  %i240 = sext i32 %i240 to i64
+  ^"
+cholesky.bc,init_array,11,7065,ollama/qwen2.5-coder:3b,40.299,,syntax_fail,257,257,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmp7av3rej7.ll:346:3: error: multiple definition of local value named 'i120'
+  %i120 = load i32, ptr %i7, align 4
+  ^"
+lu.bc,init_array,11,6371,ollama/qwen2.5-coder:3b,31.757,10.288,passed,223,223,0.0,stop,
+himenobmtxpa.bc,set_param,11,3941,ollama/qwen2.5-coder:3b,14.111,0.042,passed,98,98,0.0,stop,
+mandel-text.bc,main,11,4205,ollama/qwen2.5-coder:3b,25.393,1.496,unsupported,192,192,0.0,stop,

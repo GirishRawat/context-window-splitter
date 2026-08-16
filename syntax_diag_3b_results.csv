@@ -1,0 +1,17 @@
+file_name,function_name,complexity,tokens,model,llm_latency_s,verification_latency_s,verdict,orig_instrs,final_instrs,reduction_pct,finish_reason,syntax_error
+ReedSolomon.bc,decode_rs,59,23597,ollama/qwen2.5-coder:3b,68.267,,syntax_fail,1217,1217,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmp6vz82qbm.ll:140:31: error: use of undefined value '%76'
+  br i1 %19, label %20, label %76
+                              ^"
+Puzzle.bc,Puzzle,49,13301,ollama/qwen2.5-coder:3b,279.447,,syntax_fail,672,672,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: assembly parsed, but does not verify as correct!
+Only PHI nodes may reference their own value!
+  %350 = mul nsw i32 8, %350"
+timeit.bc,main,36,11507,ollama/qwen2.5-coder:3b,192.645,,syntax_fail,378,378,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpkok56nfj.ll:391:3: error: instruction forward referenced with type 'i32'
+  %100 = icmp eq i32 %98, %100
+  ^"
+timeit.bc,execute_target_process,27,8704,ollama/qwen2.5-coder:3b,101.473,0.036,passed,219,219,0.0,stop,
+timeit.bc,monitor_child_process,18,8881,ollama/qwen2.5-coder:3b,111.647,0.035,passed,224,224,0.0,stop,
+huffbench.bc,compdecomp,32,13291,ollama/qwen2.5-coder:3b,,,pending,660,660,0.0,call_error: ,
+whetstone.bc,main,30,13131,ollama/qwen2.5-coder:3b,,,pending,702,702,0.0,call_error: ,
+exptree.bc,recSearch,22,5961,ollama/qwen2.5-coder:3b,114.233,,syntax_fail,239,239,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpy17f513c.ll:312:3: error: instruction forward referenced with type 'i32'
+  %118 = icmp eq i32 %118, 0
+  ^"

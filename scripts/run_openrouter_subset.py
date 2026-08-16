@@ -48,6 +48,7 @@ FIELDNAMES = [
     "file_name", "function_name", "complexity", "tokens", "model",
     "llm_latency_s", "verification_latency_s", "verdict",
     "orig_instrs", "final_instrs", "reduction_pct",
+    "finish_reason", "syntax_error",
 ]
 
 
@@ -152,6 +153,8 @@ def run_subset(build_dir: Path, targets: dict[str, set[str]], output_csv: Path, 
                 "orig_instrs": orig_inst,
                 "final_instrs": final_inst,
                 "reduction_pct": round(reduction_pct, 2),
+                "finish_reason": record.finish_reason,
+                "syntax_error": record.syntax_error,
             }
             with open(output_csv, "a", newline="") as f:
                 csv.DictWriter(f, fieldnames=FIELDNAMES).writerow(row)

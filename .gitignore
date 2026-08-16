@@ -15,6 +15,7 @@ build/
 llvm-test-suite/
 test.ll
 spec_results.csv*
+*.subset.ll
 /Thesis Dissertation/
 
 # Local secrets — never commit

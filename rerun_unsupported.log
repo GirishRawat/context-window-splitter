@@ -1,1 +1,93 @@
 llvmlite: for the --opaque-pointers option: may only occur zero or one times!
+[main] Syntax check failed
+[handlerfn] Syntax check failed
+alive-tv undecided or unsupported. Output:
+
+----------------------------------------
+declare i64 @strtoll(noundef ptr, noundef ptr, noundef i32)
+declare i32 @ReverseBits32(noundef i32)
+declare i64 @ReverseBits64(noundef i64)
+declare i32 @printf(noundef ptr)
+
+@.str = constant 11 bytes, align 1
+@.str.1 = constant 19 bytes, align 1
+@.str.2 = constant 14 bytes, align 1
+@.str.3 = constant 18 bytes, align 1
+
+define i32 @main() {
+init:
+  br label %#0
+
+#0:
+  %#13 = alloca i64 4, align 4
+  %#14 = alloca i64 8, align 8, dead
+  %#15 = alloca i64 8,
+[main] UNSUPPORTED (timeout or unable to prove)
+[main] Syntax check failed
+[bitrv2] Syntax check failed
+[cftfsub] Syntax check failed
+alive-tv undecided or unsupported. Output:
+
+----------------------------------------
+declare void @cft1st(noundef i32, noundef ptr, noundef ptr)
+declare void @cftmdl(noundef i32, noundef i32, noundef ptr, noundef ptr)
+
+define void @cftbsub(i32 noundef %#0, ptr noundef %#1, ptr noundef %#2) {
+#3:
+  %#20 = alloca i64 4, align 4
+  %#21 = alloca i64 8, align 8
+  %#22 = alloca i64 8, align 8
+  %#23 = alloca i64 4, align 4, dead
+  %#24 = alloca i64 4, align 4, dead
+  %#25 = alloca i64 4, align 4, dead
+  %#26 = alloca i64 4, align 4, dead
+  %#2
+[cftbsub] UNSUPPORTED (timeout or unable to prove)
+[kernel_correlation] Syntax check failed
+[kernel_fdtd_2d_StrictFP] LLM call to ollama/qwen2.5-coder:3b failed: 
+[init_array] Syntax check failed
+[init_array] LLM call to ollama/qwen2.5-coder:3b failed: 
+[Func2] Syntax check failed
+[Func2] LLM call to ollama/qwen2.5-coder:3b failed: 
+[Proc0] LLM call to ollama/qwen2.5-coder:3b failed: 
+[Insert] REJECTED (counterexample found)
+alive-tv undecided or unsupported. Output:
+
+----------------------------------------
+declare void @bInitarr()
+declare i32 @printf(noundef ptr)
+
+@top = global 4 bytes, align 4
+@sortlist = global 20004 bytes, align 4
+@littlest = global 4 bytes, align 4
+@biggest = global 4 bytes, align 4
+@.str = constant 19 bytes, align 1
+@.str.1 = constant 4 bytes, align 1
+
+define void @Bubble(i32 noundef %#0) {
+init:
+  br label %#1
+
+#1:
+  %#13 = alloca i64 4, align 4
+  %#14 = alloca i64 4, align 4, dead
+  %#15 = alloca i64 4, align 4, dead
+  store i32 nou
+[Bubble] UNSUPPORTED (timeout or unable to prove)
+[main] Syntax check failed
+alive-tv undecided or unsupported. Output:
+
+----------------------------------------
+declare double @anpm(noundef double)
+declare double @llvm.cos.f64(double) nofree willreturn memory(none)
+declare double @llvm.sin.f64(double) nofree willreturn memory(none)
+declare double @atan2(noundef double, noundef double) willreturn
+
+@a = constant 192 bytes, align 8
+@dlm = constant 192 bytes, align 8
+@e = constant 192 bytes, align 8
+@pi = constant 192 bytes, align 8
+@dinc = constant 192 bytes, align 8
+@omega = constant 192 bytes, align 8
+@kp = const
+[planetpv] UNSUPPORTED (timeout or unable to prove)

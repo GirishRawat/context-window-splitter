@@ -239,15 +239,54 @@ Design decisions made building M1 (do not re-litigate without cause):
    - **Prompting Strategy**: Zero-shot, strict instruction to act as an LLVM IR optimizer. The prompt explicitly commands the model to return ONLY a valid `define ... }` block without any conversational preamble, chain-of-thought, or markdown explanations.
 4. **M5 - `eval/harness.py`.** Per function: instruction count before/after, verdict, model, latency → dissertation tables.
 
-### Evaluation Findings (sbase Corpus)
+### Evaluation Findings
 
-The initial capability ceiling evaluation was run on 311 functions from the Unix `sbase` corpus. The results show a clear limitation on free, local models (like `qwen2.5-coder:3b` and `7b`):
+Regenerate every number below with `python3 -m scripts.analyze_final_results`.
+
+**Read the denominators carefully.** Across all real-corpus result CSVs there are
+7,526 rows, but **94.2% are `pending`** — functions a run never reached (rate-limit
+exhaustion) or that timed out client-side. `pending` is a *harness artifact, not a
+model result*, so the honest sample size is **436 completed attempts**. Never quote
+row counts as N.
 
 ![LLM Capability Ceiling Plot](analysis_plot.png)
 
-* **Simple Synthetic Code:** Achieved up to 78% formally-verified instruction reductions.
-* **Complex Real-World Code:** The models hit a capability wall on functions with cyclomatic complexity $\ge 5$ and token counts up to 4,000+. They consistently failed to generate syntactically valid LLVM IR (either hallucinating unallocated variables, breaking strict SSA casting rules, or truncating early). 
-* **The Safety Gate Works:** 100% of these unreliable outputs were caught by the extraction and syntax filter gates, securely falling back to the compiler's original `-O0` code, completely protecting the final binary from model hallucinations.
+* **The safety gate works — this is the load-bearing, fully-supported claim.**
+  393 candidates were rejected by the gate (`syntax_fail` + `rejected` +
+  `unsupported`) and **zero** invalid candidates ever reached the final module.
+  Every non-`PASSED` function fell back to its original `-O0` body by construction.
+
+* **Verified optimisation on real code has happened exactly once.** Of 436
+  completed attempts, 43 candidates were proven correct by Alive2 and **exactly
+  one reduced instruction count**: `fpcmp.bc::diff_file`, **60.67%**, complexity 25,
+  9,400 tokens, by `gemini-3.5-flash`. Every *other* proven-correct candidate was a
+  0.00% no-op — a semantically identical function that Alive2 duly proved correct.
+
+* **⚠️ The "78% reduction" figure is NOT a corpus result.** It comes from
+  `eval_results.csv` — **seven hand-written toy functions** (complexity 1–3,
+  ~600 tokens). It must be labelled synthetic wherever it is cited and must never
+  be pooled with real-corpus numbers.
+
+* **Syntactic competence and optimisation ability are separate thresholds.**
+  Measured `syntax_fail` rate over completed attempts: `qwen2.5-coder:3b` 75%,
+  `7b` 73%, `32b` **15%**, `gemini-3.5-flash` **0%**. Scale clearly fixes IR
+  *syntactic* competence — but the win rate stays **0% at every local scale**.
+  Local models cross the first threshold and not the second. (Caveat: the 32b
+  figure is n=13; the full-corpus run exists to firm this up.)
+
+* **The failures are not truncation.** With `finish_reason` instrumentation:
+  34 `stop`, **0 `length`**. And only **5 functions in project history were ever
+  Alive2-`rejected`** — models almost never produce subtly-wrong-but-valid IR.
+  They produce *unparseable* IR: **91% of `qwen2.5-coder:3b`'s syntax failures are
+  SSA value-numbering incoherence** (`SSA_FORWARD_REF` 52%, `SSA_TYPE_MISMATCH` 22%),
+  e.g. `%190 = getelementptr ..., i64 %190` — the model using its own
+  not-yet-defined number as an operand. See `scripts/categorize_syntax_failures.py`.
+
+* **⚠️ `pct_of_o2_gap_closed` measures the wrong thing** and should not be cited.
+  It compares a per-isolated-function result against inter-procedural `-O2`, which
+  inlines and unrolls across functions — something this architecture forbids by
+  design (§2). Per-function `-O2` actually *increases* instruction count for
+  156/244 measured functions.
 
 ### Rules of engagement for agents
 

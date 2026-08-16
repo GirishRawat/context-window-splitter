@@ -74,7 +74,8 @@ def normalize_ir(ir_text: str) -> str:
     return ir_text
 
 
-def run_subset(build_dir: Path, targets: dict[str, set[str]], output_csv: Path, complexity_threshold: int) -> None:
+def run_subset(build_dir: Path, targets: dict[str, set[str]], output_csv: Path, complexity_threshold: int,
+               max_functions: int | None = None) -> None:
     config = get_config()
     config.triage.complexity_threshold = complexity_threshold
 
@@ -96,11 +97,28 @@ def run_subset(build_dir: Path, targets: dict[str, set[str]], output_csv: Path, 
     bc_files = sorted(build_dir.rglob("*.bc"))
     bc_by_name = {p.name: p for p in bc_files}
 
+    written = 0
     for file_name, wanted_functions in targets.items():
+        if max_functions is not None and written >= max_functions:
+            logger.info(f"Reached --max-functions={max_functions}; stopping. "
+                        f"Re-run the same command to continue from here.")
+            break
+
         remaining = {fn for fn in wanted_functions if (file_name, fn) not in completed}
         if not remaining:
             logger.info(f"Skipping {file_name} (all target functions already done)")
             continue
+
+        # Trim to the remaining budget BEFORE routing. Phase 3 dispatches every
+        # non-triaged function in the file concurrently, so trimming afterwards
+        # would spend rate-limited quota on candidates we then discard -- the
+        # whole point of batching against a provider with a daily cap.
+        if max_functions is not None:
+            budget = max_functions - written
+            if len(remaining) > budget:
+                remaining = set(sorted(remaining)[:budget])
+                logger.info(f"{file_name}: trimmed to {sorted(remaining)} to fit "
+                            f"remaining budget of {budget}")
 
         bc_file = bc_by_name.get(file_name)
         if bc_file is None:
@@ -190,6 +208,7 @@ def run_subset(build_dir: Path, targets: dict[str, set[str]], output_csv: Path, 
             }
             with open(output_csv, "a", newline="") as f:
                 csv.DictWriter(f, fieldnames=FIELDNAMES).writerow(row)
+            written += 1
             reduction_str = f"{reduction_pct:.2f}%" if reduction_pct is not None else "N/A"
             logger.info(f"  [{record.name}] verdict={record.verdict.value} reduction={reduction_str}")
 
@@ -202,12 +221,20 @@ def main():
     parser.add_argument("--subset", type=Path, default=Path("target_subset.csv"))
     parser.add_argument("--output-csv", type=Path, default=Path("openrouter_subset_results.csv"))
     parser.add_argument("--complexity-threshold", type=int, default=5)
+    parser.add_argument(
+        "--max-functions", type=int, default=None,
+        help="Stop cleanly after writing this many NEW rows this invocation. "
+             "For rate-limited backends with a daily cap (Gemini's free tier is "
+             "20 requests/day), run with --max-functions 20 once a day; the "
+             "resume logic skips already-completed functions, so re-running the "
+             "same command continues where the last batch stopped.")
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
     targets = load_subset(args.subset)
     logger.info(f"Loaded {sum(len(v) for v in targets.values())} target functions across {len(targets)} files")
-    run_subset(args.build_dir, targets, args.output_csv, args.complexity_threshold)
+    run_subset(args.build_dir, targets, args.output_csv, args.complexity_threshold,
+               max_functions=args.max_functions)
 
 
 if __name__ == "__main__":

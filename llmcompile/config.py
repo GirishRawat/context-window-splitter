@@ -151,7 +151,18 @@ class LLMRoutingConfig:
         # defaults to serializing per-model), and our largest functions
         # (~24k prompt tokens) can take a while even on-GPU -- give it a
         # generous timeout rather than the 120s tuned for cloud APIs.
-        timeout_seconds = 300 if backend == "local_gpu" else 120
+        # Raised from 300s for local_gpu: the 32b subset run came back 26/39
+        # `pending`, and the completed rows averaged 234s with a max of 297s --
+        # i.e. the 300s ceiling was clipping the tail of the latency
+        # distribution, turning slow-but-fine generations into empty-message
+        # asyncio timeouts. Override with LLM_TIMEOUT_SECONDS.
+        timeout_seconds = 600 if backend == "local_gpu" else 120
+        timeout_env = os.getenv("LLM_TIMEOUT_SECONDS")
+        if timeout_env:
+            try:
+                timeout_seconds = int(timeout_env)
+            except ValueError:
+                pass
 
         if self.tiers is None:
             self.tiers = {
@@ -208,8 +219,13 @@ class VerificationConfig:
     # llvm-as syntax-check timeout in seconds (should be near-instant)
     llvm_as_timeout: int = 10
 
-    # alive-tv timeout in seconds
-    alive_tv_timeout: int = 30
+    # alive-tv timeout in seconds. Raised from 30s: the local-model runs mostly
+    # asked Alive2 to prove trivial no-ops (every `passed` row on real code was
+    # a 0.00% reduction), so 30s was never actually exercised. A model that
+    # returns genuinely *changed* IR gives the solver real work, and a too-tight
+    # budget silently converts real wins into UNSUPPORTED. Override with
+    # ALIVE_TV_TIMEOUT.
+    alive_tv_timeout: int = 120
 
     # SMT solver timeout. Reserved: intended to be passed to alive-tv (e.g.
     # --smt-to) once the exact flag/units are pinned against the Alive2 build.
@@ -266,6 +282,19 @@ class VerificationConfig:
             self.alive_tv_path = os.getenv("ALIVE_TV_PATH", self.alive_tv_path)
         if opt_is_default:
             self.opt_path = os.getenv("OPT_PATH", self.opt_path)
+
+        # Timeouts are env-overridable so a long unattended corpus run can be
+        # retuned without editing code (README rule: no hard-coded timeouts).
+        for env_name, attr in (
+            ("ALIVE_TV_TIMEOUT", "alive_tv_timeout"),
+            ("LLVM_AS_TIMEOUT", "llvm_as_timeout"),
+        ):
+            raw = os.getenv(env_name)
+            if raw:
+                try:
+                    setattr(self, attr, int(raw))
+                except ValueError:
+                    pass
 
 
 # ---------------------------------------------------------------------------

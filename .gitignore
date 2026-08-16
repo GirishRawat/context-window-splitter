@@ -20,3 +20,4 @@ spec_results.csv*
 # Local secrets — never commit
 .gemini_env
 .env
+*.log

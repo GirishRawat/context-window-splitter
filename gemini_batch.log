@@ -1,0 +1,63 @@
+llvmlite: for the --opaque-pointers option: may only occur zero or one times!
+[contains_non_printable_characters] Syntax check failed
+[main] Syntax check failed
+alive-tv undecided or unsupported. Output:
+
+----------------------------------------
+declare void @append(noundef ptr, noundef ptr)
+declare ptr @qpkt(noundef ptr)
+declare ptr @Wait()
+
+@v1 = global 8 bytes, align 8
+@v2 = global 8 bytes, align 8
+
+define ptr @handlerfn(ptr noundef %#0) {
+#1:
+  %#14 = alloca i64 8, align 8
+  %#15 = alloca i64 8, align 8
+  %#16 = alloca i64 4, align 4, dead
+  %#17 = alloca i64 8, align 8, dead
+  %#18 = alloca i64 4, align 4
+  %#19 = alloca i64 8, align 8, dead
+  store ptr noundef %#0, ptr %#15, align 8
+  %#20
+[handlerfn] UNSUPPORTED (timeout or unable to prove)
+[main] Gemini transient error (attempt 1/5), backoff 4s: litellm.Timeout: Connection timed out. Timeout passed=120.0, time taken=120.059 seconds
+[main] Syntax check failed
+[main] Syntax check failed
+[bitrv2] Syntax check failed
+[cftfsub] Syntax check failed
+[cftbsub] Syntax check failed
+[kernel_correlation] Syntax check failed
+[kernel_fdtd_2d_StrictFP] Syntax check failed
+[init_array] Syntax check failed
+model=gemini/gemini-2.5-flash  rpm=10
+
+  fpcmp.bc                 contains_non_printable_character syntax_fail           (12.9s)
+  fbench.bc                main                             syntax_fail           (89.4s)
+  richards_benchmark.bc    handlerfn                        unsupported           (57.1s)
+  revertBits.bc            main                             syntax_fail           (173.8s)
+  ffbench.bc               main                             syntax_fail           (52.5s)
+  oourafft.bc              bitrv2                           syntax_fail           (88.5s)
+  oourafft.bc              cftfsub                          syntax_fail           (66.3s)
+  oourafft.bc              cftbsub                          syntax_fail           (59.2s)
+  perlin.bc                grad                             passed        +72.9%  (8.8s)
+  correlation.bc           kernel_correlation               syntax_fail           (81.7s)
+  fdtd-2d.bc               kernel_fdtd_2d_StrictFP          syntax_fail           (86.1s)
+  floyd-warshall.bc        init_array                       syntax_fail           (36.5s)
+Traceback (most recent call last):
+  File "/Users/girishrawat/Documents/Projects/context-window-splitter/scripts/gemini_small_batch.py", line 107, in <module>
+    main()
+  File "/Users/girishrawat/Documents/Projects/context-window-splitter/scripts/gemini_small_batch.py", line 89, in main
+    fi = get_instruction_counts(rec.candidate_ir).get(rec.name, oi)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/girishrawat/Documents/Projects/context-window-splitter/llmcompile/eval/harness.py", line 25, in get_instruction_counts
+    mod = llvm.parse_assembly(ir_text)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/llvmlite/binding/module.py", line 25, in parse_assembly
+    raise RuntimeError("LLVM IR parsing error\n{0}".format(errmsg))
+RuntimeError: LLVM IR parsing error
+<string>:147:3: error: instruction expected to be numbered '%5'
+  %6 = alloca i32, align 4
+  ^
+

@@ -24,3 +24,5 @@ fpcmp.bc,main,11,5791,ollama/qwen2.5-coder:32b,244.563,1.507,unsupported,174,174
 nussinov.bc,kernel_nussinov,16,8370,ollama/qwen2.5-coder:32b,,,pending,373,373,0.0
 nussinov.bc,kernel_nussinov_StrictFP,16,8370,ollama/qwen2.5-coder:32b,,,pending,373,373,0.0
 flops.bc,main,15,24689,ollama/qwen2.5-coder:32b,,,pending,1341,1341,0.0
+fannkuch.bc,fannkuch,15,5674,ollama/qwen2.5-coder:32b,,,pending,294,294,0.0
+queens.bc,main,15,4669,ollama/qwen2.5-coder:32b,228.977,9.626,passed,,,,stop,

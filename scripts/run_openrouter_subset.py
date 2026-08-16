@@ -129,17 +129,40 @@ def run_subset(build_dir: Path, targets: dict[str, set[str]], output_csv: Path, 
         verify_module(parsed, config)
         assemble_module(parsed, config)
 
-        orig_counts = get_instruction_counts(parsed.source_ir)
-        final_counts = get_instruction_counts(parsed.final_module_ir)
+        # get_instruction_counts re-parses parsed.final_module_ir with llvmlite.
+        # This is a known-bad interaction: Phase 6 can assemble a module that
+        # llvm-as itself would accept per-function but that llvmlite's parser
+        # rejects here (seen: "label expected to be numbered 'N'" on a PASSED
+        # candidate's body once stitched into the multi-function module,
+        # confirmed reproducible on queens.bc::main). It is an eval-harness
+        # metrics bug, not a correctness-gate bug -- Alive2 already proved the
+        # candidate is a refinement over its own original_ir/candidate_ir pair
+        # in Phase 5, independent of this re-parse. Left uninvestigated
+        # (needs a separate look at p6_assemble.py's body substitution); this
+        # try/except only keeps one bad file from killing the whole run,
+        # matching the existing clang try/except above.
+        try:
+            orig_counts = get_instruction_counts(parsed.source_ir)
+            final_counts = get_instruction_counts(parsed.final_module_ir)
+            counting_failed = False
+        except Exception as e:
+            logger.error(f"{file_name}: instruction counting on the assembled "
+                         f"module failed ({e}); recording verdicts with instrs=None")
+            orig_counts, final_counts = {}, {}
+            counting_failed = True
 
         for record in parsed.functions:
             if record.name not in remaining:
                 continue
-            orig_inst = orig_counts.get(record.name, 0)
-            final_inst = final_counts.get(record.name, orig_inst)
-            reduction_pct = 0.0
-            if orig_inst > 0:
-                reduction_pct = ((orig_inst - final_inst) / orig_inst) * 100.0
+            if counting_failed:
+                orig_inst = final_inst = reduction_pct = None
+            else:
+                orig_inst = orig_counts.get(record.name, 0)
+                final_inst = final_counts.get(record.name, orig_inst)
+                reduction_pct = 0.0
+                if orig_inst > 0:
+                    reduction_pct = ((orig_inst - final_inst) / orig_inst) * 100.0
+                reduction_pct = round(reduction_pct, 2)
 
             row = {
                 "file_name": file_name,
@@ -152,13 +175,14 @@ def run_subset(build_dir: Path, targets: dict[str, set[str]], output_csv: Path, 
                 "verdict": record.verdict.value,
                 "orig_instrs": orig_inst,
                 "final_instrs": final_inst,
-                "reduction_pct": round(reduction_pct, 2),
+                "reduction_pct": reduction_pct,
                 "finish_reason": record.finish_reason,
                 "syntax_error": record.syntax_error,
             }
             with open(output_csv, "a", newline="") as f:
                 csv.DictWriter(f, fieldnames=FIELDNAMES).writerow(row)
-            logger.info(f"  [{record.name}] verdict={record.verdict.value} reduction={reduction_pct:.2f}%")
+            reduction_str = f"{reduction_pct:.2f}%" if reduction_pct is not None else "N/A"
+            logger.info(f"  [{record.name}] verdict={record.verdict.value} reduction={reduction_str}")
 
         ll_file.unlink(missing_ok=True)
 

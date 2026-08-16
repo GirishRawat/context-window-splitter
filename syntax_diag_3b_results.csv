@@ -15,3 +15,20 @@ whetstone.bc,main,30,13131,ollama/qwen2.5-coder:3b,,,pending,702,702,0.0,call_er
 exptree.bc,recSearch,22,5961,ollama/qwen2.5-coder:3b,114.233,,syntax_fail,239,239,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpy17f513c.ll:312:3: error: instruction forward referenced with type 'i32'
   %118 = icmp eq i32 %118, 0
   ^"
+functionobjects.bc,main,21,26661,ollama/qwen2.5-coder:3b,282.63,,syntax_fail,501,501,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpbpn2ktnc.ll:841:12: error: '%90' is not a basic block
+  br label %90
+           ^"
+functionobjects.bc,_ZNSt3__111__introsortINS_17_ClassicAlgPolicyERPFbddEPdLb0EEEvT1_S6_T0_NS_15iterator_traitsIS6_E15difference_typeEb,15,23731,ollama/qwen2.5-coder:3b,172.378,,syntax_fail,292,292,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpfvqildfy.ll:904:3: error: instruction forward referenced with type 'ptr'
+  %110 = call i32 @_ZNSt3__17__sort3B8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEjT1_S6_S6_T0_(ptr noundef %103, ptr noundef %106, ptr noundef %108, ptr noundef nonnull align 8 dereferenceable(8) %110)
+  ^"
+functionobjects.bc,_ZNSt3__111__introsortINS_17_ClassicAlgPolicyER24inline_less_than_functorPdLb0EEEvT1_S5_T0_NS_15iterator_traitsIS5_E15difference_typeEb,15,23795,ollama/qwen2.5-coder:3b,175.114,,syntax_fail,286,286,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpxbdfu5td.ll:778:12: error: use of undefined value '%222'
+  br label %222
+           ^"
+functionobjects.bc,_ZNSt3__118__bitset_partitionB8ne190102INS_17_ClassicAlgPolicyEPdR24inline_less_than_functorEENS_4pairIT0_bEES6_S6_T1_,14,21198,ollama/qwen2.5-coder:3b,106.555,1.541,unsupported,168,168,0.0,stop,
+linpack-pc.bc,main,21,16067,ollama/qwen2.5-coder:3b,155.951,,syntax_fail,738,738,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpwn9iv2vk.ll:533:56: error: '%251' defined with type 'i32' but expected 'ptr'
+  %252 = call i32 (ptr, ptr, ...) @fprintf(ptr noundef %251, ptr noundef @.str.15, i32 noundef %252, double noundef 0.000000e+00) #6
+                                                       ^"
+linpack-pc.bc,dgesl,10,7421,ollama/qwen2.5-coder:3b,123.995,17.682,unsupported,287,287,0.0,stop,
+linpack-pc.bc,dmxpy,11,14080,ollama/qwen2.5-coder:3b,143.086,,syntax_fail,732,732,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpvm6pxpkj.ll:288:44: error: '%98' defined with type 'float' but expected 'ptr'
+  %107 = getelementptr inbounds float, ptr %98, i64 %106
+                                           ^"

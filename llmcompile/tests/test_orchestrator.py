@@ -11,6 +11,7 @@ Run with:
 
 from __future__ import annotations
 
+import re
 from unittest.mock import patch
 
 import llvmlite.binding as llvm
@@ -91,10 +92,22 @@ def test_end_to_end_all_pass_is_identity(mock_syntax, mock_verify):
 
     with patch('llmcompile.phases.p3_route.litellm') as mock_litellm:
         async def identity_completion(**kwargs):
-            user_msg = kwargs.get("messages", [{}])[1].get("content", "")
-            # The user prompt is "Optimize this LLVM IR function:\n\n<original_ir>"
-            # Return the original IR as-is (identity transform)
-            body = user_msg.split("Optimize this LLVM IR function:\n\n")[-1]
+            # Take the last USER message. Index 1 is the one-shot EXAMPLE (a @max
+            # function), not this function, and index -1 can be the assistant
+            # prefill on the chat path -- both made this "identity" mock return
+            # something other than the function under test.
+            _msgs = kwargs.get("messages", [])
+            user_msg = next((m.get("content", "") for m in reversed(_msgs)
+                             if m.get("role") == "user"), "")
+            _ir = user_msg.split("Optimize this LLVM IR function:\n\n")[-1]
+            # The chat path sends an assistant prefill ending at the signature's
+            # "{" and prepends that signature to whatever comes back, so a true
+            # identity response is the define block *after* its opening brace.
+            _m = re.search(r"define\s+.*?\{", _ir, re.DOTALL)
+            _blk = _ir[_m.start():] if _m else _ir
+            # lstrip: the prefill already ends in a newline after "{", so
+            # keeping this one would insert a blank line and break byte-identity.
+            body = _blk[_blk.find("{") + 1:].lstrip("\n") if "{" in _blk else _blk
             resp = MagicMock()
             resp.choices = [MagicMock()]
             resp.choices[0].message.content = body
@@ -124,9 +137,22 @@ def test_end_to_end_triage_mix(mock_syntax, mock_verify):
     # threshold 2: @add & @use (complexity 1) triaged out, @branchy (2) optimized
     from unittest.mock import AsyncMock, MagicMock
     async def identity_completion(**kwargs):
-        user_msg = kwargs.get("messages", [{}])[1].get("content", "")
-        # Return the function body from the user prompt
-        body = user_msg.split("Optimize this LLVM IR function:\n\n")[-1]
+        # Take the last USER message. Index 1 is the one-shot EXAMPLE (a @max
+        # function), not this function, and index -1 can be the assistant
+        # prefill on the chat path -- both made this "identity" mock return
+        # something other than the function under test.
+        _msgs = kwargs.get("messages", [])
+        user_msg = next((m.get("content", "") for m in reversed(_msgs)
+                         if m.get("role") == "user"), "")
+        _ir = user_msg.split("Optimize this LLVM IR function:\n\n")[-1]
+        # The chat path sends an assistant prefill ending at the signature's
+        # "{" and prepends that signature to whatever comes back, so a true
+        # identity response is the define block *after* its opening brace.
+        _m = re.search(r"define\s+.*?\{", _ir, re.DOTALL)
+        _blk = _ir[_m.start():] if _m else _ir
+        # lstrip: the prefill already ends in a newline after "{", so
+        # keeping this one would insert a blank line and break byte-identity.
+        body = _blk[_blk.find("{") + 1:].lstrip("\n") if "{" in _blk else _blk
         resp = MagicMock()
         resp.choices = [MagicMock()]
         resp.choices[0].message.content = body
@@ -162,8 +188,22 @@ def test_end_to_end_toolchain_absent_falls_back():
     )
 
     async def identity_completion(**kwargs):
-        user_msg = kwargs.get("messages", [{}])[1].get("content", "")
-        body = user_msg.split("Optimize this LLVM IR function:\n\n")[-1]
+        # Take the last USER message. Index 1 is the one-shot EXAMPLE (a @max
+        # function), not this function, and index -1 can be the assistant
+        # prefill on the chat path -- both made this "identity" mock return
+        # something other than the function under test.
+        _msgs = kwargs.get("messages", [])
+        user_msg = next((m.get("content", "") for m in reversed(_msgs)
+                         if m.get("role") == "user"), "")
+        _ir = user_msg.split("Optimize this LLVM IR function:\n\n")[-1]
+        # The chat path sends an assistant prefill ending at the signature's
+        # "{" and prepends that signature to whatever comes back, so a true
+        # identity response is the define block *after* its opening brace.
+        _m = re.search(r"define\s+.*?\{", _ir, re.DOTALL)
+        _blk = _ir[_m.start():] if _m else _ir
+        # lstrip: the prefill already ends in a newline after "{", so
+        # keeping this one would insert a blank line and break byte-identity.
+        body = _blk[_blk.find("{") + 1:].lstrip("\n") if "{" in _blk else _blk
         resp = MagicMock()
         resp.choices = [MagicMock()]
         resp.choices[0].message.content = body

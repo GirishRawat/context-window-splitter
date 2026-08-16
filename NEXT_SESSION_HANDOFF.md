@@ -1,239 +1,211 @@
-# Agent Handoff — JupyterHub A40 session, 2026-08-16
+# Agent Handoff — 2026-08-16/17 session
 
-**To the next agent**: this replaces the previous (stale, Mac/Gemini-era)
-version of this file entirely. Everything below happened in one continuous
-session on a JupyterHub pod (QMUL, `jhub-qmul`) with an idle NVIDIA A40. Read
-this fully before doing anything — several things here look like they'd need
-re-diagnosing but are already resolved; re-deriving them wastes time.
+**To the next agent**: this replaces the previous (stale, A40-GPU-toolchain-era)
+version of this file entirely. That session's toolchain work all still holds
+(Ollama, Alive2, `llvm_toolchain` paths — nothing there changed). This session
+built on top of it: fixed three silent-crash bugs in the eval runner, ran and
+completed several diagnostic evals, found a real mechanistic result, corrected
+misleading README claims, fixed two pre-existing test failures, and queued an
+overnight chain of runs that should be finishing or finished by the time you
+read this. **Three background processes are intentionally still running** —
+see §1. Do not kill them without reading why first.
 
-## 0. Environment identity (read this first)
+For the fast version of "what happened while I slept," read `MORNING.md`
+instead — it's the wake-up checklist. This file is the full technical record.
 
-This Claude Code session runs **inside the JupyterHub pod itself** (confirmed
-via process tree: `claude` ← `bash -l` ← `jupyterhub-singleuser` ← `tini`),
-not on the user's laptop. `/home/jovyan` is a small **24GB** persistent
-network volume — it was already filled with the user's other coursework/
-research before this session and got driven to 100% once by putting Ollama's
-model cache there by mistake (recovered, see §1). `/` (overlay, ~893GB) and
-everything under `/tmp` is the large, ephemeral, non-persistent filesystem.
-**Put anything large (model weights, build scratch) under `/tmp`, never
-under `/home/jovyan`.**
+## 0. Environment identity (unchanged from prior session, still true)
 
-## 1. Original task (see `JUPYTERHUB_AGENT_HANDOFF.md`)
+JupyterHub pod (QMUL, `jhub-qmul`), NVIDIA A40. `/home/jovyan` is a small 24GB
+persistent volume — **never** put anything large there. `/tmp` (overlay,
+~893GB) is large and ephemeral. Ollama binary lives under a previous session's
+scratchpad path:
+`/tmp/claude-1000755250/-home-jovyan/ab0ec1f0-ef52-46f1-a31d-caba1a12f3d1/scratchpad/ollama-run/bin/ollama`
+— it and the server it started have survived across multiple sessions on this
+pod, so `/tmp` at that base path is apparently persistent here, not
+session-scoped. `llvm-as`/`opt`/`clang` are at
+`~/llvm_toolchain/llvm-project/llvm/build/bin` (put on `PATH` explicitly —
+`config.py` auto-resolves `llvm-as`/`alive-tv`/`opt` paths but the runner
+scripts still shell out to bare `clang`, which needs `PATH`). `alive-tv` is at
+`~/llvm_toolchain/alive2/build/alive-tv`.
 
-Run the curated 40-function sample (`target_subset.csv`) through
-`qwen2.5-coder:32b` on this A40 (no rate limits, unlike earlier Gemini/
-OpenRouter free-tier attempts), verified by Alive2/Z3, to see whether a
-bigger *local* model beats the existing 0%-reduction local (3B/7B) ceiling.
+## 1. Processes intentionally left running — DO NOT KILL without reading this
 
-## 2. Toolchain built from scratch this session (nothing worked out of the box)
-
-- **Ollama**: no usable root/sudo in this container (`no new privileges`
-  flag blocks `sudo`). Installed user-space: the official `.tgz` URL in the
-  old handoff 404s now — Ollama moved to `.tar.zst` — downloaded from GitHub
-  releases directly and extracted with `zstd`. Lives under the session
-  scratchpad (`/tmp/claude-*/scratchpad/ollama-run/`), **not** `~/ollama`
-  (first attempt put it there + the model cache, which filled the 24GB home
-  volume to 100%; deleted and relocated). Server runs via `nohup`, model
-  `qwen2.5-coder:32b` pulled (19GB). GPU-confirmed working.
-- **Alive2 (`alive-tv`)**: the pre-existing build dir referenced a whole
-  toolchain (`cmake`, `ninja`, `git`, `ar`/`ranlib`, `z3` headers+lib,
-  `cc`/`c++`) at `/opt/conda/bin/*` that no longer exists — this container
-  image was evidently reset since that build directory was created (July 3).
-  Fixed: `pip install ninja cmake patchelf`, a `z3-solver` PyPI wheel for Z3
-  headers+`libz3.so` (had to hand-write `z3_version.h` — the wheel doesn't
-  ship one, and it's only used by a CMake version-gate, not real verifier
-  logic), symlinked system `git`/`ar`/`ranlib` where the cached CMake config
-  expected them.
-  - **Genuine version mismatch, not just missing tools**: the checked-out
-    Alive2 commit (dated 2026-06) targets newer LLVM attribute APIs
-    (`Attribute::Captures`/`Range`/`DeadOnReturn`/`Initializes`/
-    `DenormalFPEnv`) that don't exist in the pinned LLVM 18.1.8 (2024-06)
-    build. Fixed by checking out Alive2 commit `9b7d1ab5` (2024-04-06), the
-    last one before any of those attributes were introduced upstream
-    (confirmed via `git log -S` on each attribute name individually).
-  - **`opt`/`llvm-as`/`alive-tv` all need `CXXABI_1.3.15`** from libstdc++,
-    which neither system libstdc++ (GCC 11, tops at 1.3.13) nor conda's
-    provided. Fixed via `conda install -c conda-forge libstdcxx-ng`.
-    `opt`/`llvm-as` already had `/opt/conda/lib` in their RPATH from the
-    original build; `alive-tv` didn't, so it was `patchelf --set-rpath`'d.
-  - Verified for real (not just `--version`): fed `alive-tv` a hand-written
-    self-equivalence `.ll`, got a correct "Transformation seems to be
-    correct!" verdict.
-- **Python deps**: `pip install -r requirements.txt`, but had to pin
-  `llvmlite==0.43.0` — unpinned latest (0.49.0) makes `llvm.initialize()` a
-  hard error instead of a no-op.
-- **`clang`** needed adding to `PATH` from
-  `~/llvm_toolchain/llvm-project/llvm/build/bin` (built alongside
-  `llvm-as`/`opt` per `build_toolchain.sh`, just wasn't on `PATH`).
-
-## 3. Two real pipeline bugs found and fixed (not environment issues)
-
-### 3a. Corpus compiled on Apple Silicon crashes clang on x86_64
-
-`eval_subset_corpus/*.bc` (all 25 files) carries embedded per-function
-`target-cpu="apple-m1"`/ARM64 `target-features` attributes. The pipeline's
-`clang -S -emit-llvm` overrides the *module*-level target triple to x86_64
-but never strips these *function*-level attributes, so clang's backend
-segfaults on at least one file (`timeit.bc`). Confirmed zero actual
-`@llvm.aarch64.*` intrinsic calls anywhere in the corpus (just tuning
-metadata), so stripping is semantically safe. Fix: sanitized copies of all
-25 files written to `eval_subset_corpus_sanitized/` (committed, originals
-untouched), plus `scripts/run_openrouter_subset.py` now wraps the
-`clang -emit-llvm` call in try/except so one bad file can't kill a
-multi-hour run. **Always point `--build-dir` at `eval_subset_corpus_sanitized/`, not the original.**
-
-### 3b. False timeouts from concurrent dispatch to a single-GPU Ollama server
-
-`p3_route.py` gave each routing tier (`fast`/`mid`/`frontier`) its own
-`asyncio.Semaphore`. For the `local_gpu` backend all three tiers point at
-the *same* Ollama model, but Ollama serializes generation
-(`OLLAMA_NUM_PARALLEL=1`, one GPU). Two functions landing in different tiers
-fired concurrently; the one Ollama queued behind the other could exhaust its
-client-side 300s timeout before generation even started — surfacing as a
-bare `asyncio.TimeoutError` (empty message, since `str(TimeoutError())` is
-`""`) that looked like a model failure but was harness-induced. **Caught
-this live**: watched `main`'s call fail with the empty-message signature
-*while* `execute_target_process` (same file, dispatched concurrently) was
-still generating. Fix: tiers bound to the same `ollama/` model now share one
-semaphore (`p3_route.py`, `_route_module_async`), so calls serialize
-client-side — no real throughput cost, since the server was serializing
-anyway. Cloud backends (`gemini/`, `openrouter/`) unaffected — verified they
-still get independent per-tier semaphores. Note `global_max_concurrent` in
-`config.py` is **dead config**, defined but never read anywhere — don't
-reach for it as the fix.
-
-**My own mistake worth flagging**: mid-session I deleted the results CSV
-believing it held 2 rows when it actually held 19 (a stale, buffered log
-read misled me). A `cp` backup ran first so nothing was lost, but don't
-trust a lagging log over the CSV itself — the CSV is flushed per-row, the
-log was block-buffered. Fixed by adding `PYTHONUNBUFFERED=1` to the launch
-command going forward.
-
-## 4. Git / GitHub push
-
-No `gh` CLI, no SSH key, no credential helper existed in this pod. Set up
-`git config --global credential.helper store` + `git credential approve`
-with a user-supplied fine-grained PAT (their first token lacked the
-`Contents: Read and write` permission — 403'd; second token worked). The
-credential is **stored persistently** in `~/.git-credentials` (mode 600) —
-future pushes in this pod should just work without re-prompting for a token,
-unless the token expires/is revoked.
-
-Local git identity is set (`user.name`/`user.email`, repo-local not
-`--global`) to match the existing commit author convention in this repo.
-
-**Commit `62be838`** ("Fix Ollama concurrency false-timeouts and sanitize
-corpus for x86_64") is pushed to `origin/main`. It contains: the concurrency
-fix, the sanitized corpus, the try/except resiliency patch, and a mid-run
-checkpoint of `qwen32b_subset_results.csv`.
-
-**Not yet committed** (git status shows these modified/untracked as of this
-handoff): `api.py`, `llmcompile/models.py`, `llmcompile/phases/p3_route.py`,
-`llmcompile/phases/p5_verify.py`, `llmcompile/tests/test_orchestrator.py`,
-`llmcompile/tests/test_p5_verify.py`, `llmcompile/verification/alive.py`,
-`qwen32b_subset_results.csv` (further progress), and the new
-`SYNTAX_FAILURE_DIAGNOSIS.md` — **this session pushed these before ending,
-see the final commit on `origin/main` for the actual state; if you don't see
-it there, something went wrong and you should commit+push them yourself
-following the pattern of commit `62be838`.**
-
-## 5. Strategy discussion — where the project actually stands
-
-Mined all historical result CSVs before writing new code. Key findings, in
-case anyone re-litigates:
-
-- The README's headline "78% verified reduction" claim
-  (`eval_results.csv`) is from **7 hand-written toy functions**
-  (complexity 1-3, ~600 tokens) — not representative of the real corpus
-  (complexity 10-59, 6k-27k tokens). Don't cite it as a corpus result.
-- Across the 387-function routed corpus (`new_spec_results.csv`): only 5
-  functions were ever Alive2-`rejected` (semantically wrong but syntactically
-  valid). **122 (31.5%) were `syntax_fail`** — the model produces unparseable
-  IR far more often than it produces wrong-but-valid IR. This is *the*
-  bottleneck to understand (see §6).
-- Per-function `-O2` **increases** instruction count for 156/244 measured
-  functions (aggregate **+22%**, because `-O2` inlines/unrolls
-  inter-procedurally, which this project's architecture forbids). The
-  `pct_of_o2_gap_closed` column in some CSVs is currently measuring the
-  wrong thing — comparing against inter-procedural `-O2` per isolated
-  function is apples-to-oranges. The real, available intra-procedural
-  headroom (measured directly against a handful of corpus files) is
-  **~30-69%**, dominated by `mem2reg` (SSA promotion) — exactly what `-O0`
-  code is bloated with, and exactly what the models keep failing at.
-- Full list of 8 strategies discussed (ordered by leverage): (1) switch to
-  an IR-native model, e.g. Meta's LLM Compiler, already cited in the README
-  but never tried; (2) sample k=5-10 times per function instead of one
-  greedy draw, keep the best verified one — stays within the architecture's
-  "stateless, single-turn" constraint; (3) grammar-constrained decoding
-  (GBNF) to eliminate a whole class of syntax failures deterministically;
-  (4) a `mem2reg`-canonicalized second arm as an ablation (flagged: this
-  deviates from raw `-O0` input, run as an explicit comparison arm, not a
-  silent swap); (5) fix the `-O2` baseline metric; (6) raise
-  `alive_tv_timeout` from 30s; (7) a stratified complexity sweep across the
-  unexplored middle band; (8) **categorize the 122 syntax failures** — this
-  is what the rest of this session did, see §6.
-- Reframe worth keeping in mind: the dissertation's load-bearing claim
-  (100% of invalid/hallucinated output safely caught and fell back) is
-  already proven. "Off-the-shelf LLMs can't optimize real `-O0` IR, precisely
-  characterized" is a solid result on its own — don't let the thesis depend
-  on breaking the 0% ceiling.
-
-## 6. Syntax-failure diagnosis — IN PROGRESS, read `SYNTAX_FAILURE_DIAGNOSIS.md`
-
-Full context, plan, and detailed status live in
-**`SYNTAX_FAILURE_DIAGNOSIS.md`** at the repo root — read it before touching
-any of `llmcompile/verification/alive.py`, `p5_verify.py`, `p3_route.py`,
-or `models.py`. Short version:
-
-- **§1 (instrumentation) is done and tested.** `check_syntax()` now returns
-  `(bool, diagnostic_text)` instead of discarding `llvm-as`'s stderr;
-  `FunctionRecord` gained `syntax_error` and `finish_reason` fields (the
-  latter captures Ollama's `done_reason`/`"length"` — a direct truncation
-  signal that was being computed and thrown away before). Full test suite
-  run: `4 failed, 60 passed, 12 skipped` — **verified via `git stash` that
-  all 4 pre-exist on unmodified `main`**, not caused by this work. Two of
-  them (`test_orchestrator.py::test_end_to_end_all_pass_is_identity` and
-  `::test_end_to_end_triage_mix`) look like a genuine bug in the M1
-  identity/triage path worth someone's attention separately.
-- **§2 (not started)**: pull `qwen2.5-coder:3b`/`:7b` (the model class that
-  actually produced the historical 122 failures — not the `:32b` used for
-  the separate headroom eval) and re-run
-  `scripts/run_openrouter_subset.py` with `LLM_BACKEND=local_gpu
-  OLLAMA_MODEL=ollama/qwen2.5-coder:3b` against
-  `eval_subset_corpus_sanitized`/`target_subset.csv`, to generate real
-  `syntax_error`/`finish_reason` data (none exists yet anywhere — the
-  original 122 failures' raw output was never persisted and is
-  unrecoverable; the full SPEC/llvm-test-suite corpus that produced them
-  isn't on this host either, only 20/51 of the implicated files are, inside
-  `eval_subset_corpus_sanitized/`).
-- **§3 (not started)**: write `scripts/categorize_syntax_failures.py` to
-  bucket that data (TRUNCATED via `finish_reason`, UNDECLARED_REFERENCE,
-  MALFORMED_SYNTAX, SSA_REUSE, STRUCTURAL, OTHER) — the actual deliverable.
-
-**Do §2 before §3** — there's nothing to categorize yet.
-
-## 7. Separate, still-running background eval — do not confuse with §6
-
-`qwen32b_subset_results.csv` — the *original* task from §1 of this doc, run
-via `LLM_BACKEND=local_gpu` against `qwen2.5-coder:32b`. Was still running in
-the background (PID 3904 as of this handoff — check if it's still alive,
-it's very likely finished or dead by the time you read this) when this
-session ended. Check progress with:
-```bash
-wc -l qwen32b_subset_results.csv   # rows so far, out of 40
-tail -n +2 qwen32b_subset_results.csv | awk -F, '{print $8}' | sort | uniq -c
 ```
-As of handoff: 15/40 done (9 pending, 4 unsupported, 2 passed — both passes
-at 0.0% reduction, consistent with the existing 3B/7B ceiling, but the
-sample is far too small to conclude anything). If it finished, report per
-the original handoff's "done" criteria: `passed` count with
-`reduction_pct > 0`, total wall-clock time, and whether the `unsupported`
-rate (3 of 4 real verdicts were `unsupported` earlier in the run) points at
-another verifier gap like the `!tbaa` one already fixed historically.
+PID 12607  python3 -m scripts.run_openrouter_subset ... full_corpus_subset.csv ...  (32b full-corpus eval)
+PID 13566  bash ./scripts/overnight_chain.sh 12607                                   (waits for 12607, then chains 3b arms)
+PID 13689  bash ./scripts/auto_commit_results.sh 1800                                (checkpoints *_results.csv to git every 30 min)
+```
 
-## 8. If you need to push again
+Check them with `ps -p 12607,13566,13689 -o pid,etime,cmd`. If any are gone,
+that's expected once the chain completes — see §3 for what "done" looks like.
 
-Credentials are already stored (`~/.git-credentials`, mode 600) — `git push`
-should just work. If it 403s, the PAT likely expired or lacks `Contents:
-Read and write` permission; ask the user for a new one, don't try to work
-around it.
+**`scripts/auto_commit_results.sh`** is a scoped auto-commit loop (only ever
+stages `*_results.csv`, never `git add .`) — leave it running for any future
+long unattended eval; it already proved itself this session (commit `f0afbf2`
+landed while I was mid-commit of the same file and won the race harmlessly).
+
+## 2. TL;DR — what this session actually found
+
+The single most important number in the whole project, verified this session:
+**across 436 completed real-code attempts (before tonight's runs), exactly ONE
+verified non-zero instruction reduction has ever occurred** —
+`fpcmp.bc::diff_file`, 60.67%, `gemini-3.5-flash`. Every other proven-correct
+candidate, across every local model at every scale, is a 0.00% no-op.
+
+But scale is not *useless* — it fixes IR syntactic competence even though it
+never fixes optimisation:
+
+| model | syntax_fail rate (of completed) | wins |
+|---|---|---|
+| qwen2.5-coder:3b | 67.6% | 0 |
+| qwen2.5-coder:7b | 36.1% | 0 |
+| qwen2.5-coder:32b | 15% (n=13, low-powered — tonight's run fixes this) | 0 |
+| gemini-3.5-flash | 0% (n=7) | **1 (14.3%)** |
+
+**Syntactic competence and optimisation ability are separate thresholds.**
+Local models cross the first and not the second; Gemini crosses both. That's
+the thesis framing this session settled on (see `/home/jovyan/.claude/plans/based-on-what-we-cached-yao.md`
+for the full 2-month plan and rationale).
+
+**Why the syntax failures happen**: 91% of `qwen2.5-coder:3b`'s syntax failures
+are SSA value-numbering incoherence — the model can't track its own implicit
+unnamed-value counter (`%1, %2, …`) across a long body, producing e.g.
+`%190 = getelementptr ..., i64 %190` (using its own not-yet-defined number as
+an operand). See `scripts/categorize_syntax_failures.py` and
+`SYNTAX_FAILURE_DIAGNOSIS.md`.
+
+**Causal test of that (the instnamer experiment, `INSTNAMER_EXPERIMENT.md`)**:
+naming every SSA value (`opt -passes=instnamer`, count-neutral, verified)
+dropped the syntax-failure rate 67.6% → 51.4%, but at **p=0.22** — not
+significant at n≈35/arm. More interesting than the headline number: the
+*failure mode relocated* rather than disappearing. `SSA_REUSE` (name
+collisions) went 0 → 2 and `UNDECLARED_REFERENCE` rose 13% → 22%. Removing the
+numeric counter didn't stop the model losing track of identifiers; it changed
+*how* it loses track. That argues the deficit is identifier bookkeeping in
+general, not the counter specifically — rules out the cheap fix, motivates
+grammar-constrained decoding or an IR-native model instead. **Tonight's
+overnight chain runs both arms over the full 114-function corpus specifically
+to get this to statistical significance** (~150/arm needed; full corpus gets
+each arm to ~100, ~135 pooled with the subset data).
+
+## 3. What the overnight chain is doing and how to tell if it's done
+
+`scripts/overnight_chain.sh` (started ~22:52 UTC) runs, **in order**, waiting
+for each to finish before starting the next (GPU is single-tenant — Ollama
+serializes generation, so concurrent jobs queue and can timeout each other;
+this bit us twice this session before the fix):
+
+1. **32b full-corpus** (PID 12607, already running when I set this up) →
+   `qwen32b_full_corpus_results.csv`, 114 functions, ~7-8h estimated.
+2. **3b full-corpus baseline** → `qwen3b_full_corpus_results.csv`.
+3. **3b full-corpus instnamed** → `qwen3b_full_corpus_instnamed_results.csv`.
+
+Check `overnight_chain.log` for `START`/`END` markers per arm and a final
+`ALL OVERNIGHT ARMS COMPLETE` line. Every arm resumes from its own CSV via the
+runner's built-in `(file_name, function_name)` completed-set logic, so if you
+find it partway through any arm, just re-run the same command (see the script)
+to continue — nothing is lost.
+
+**First thing to check**: the `pending` rate on the 32b run. It was 0% through
+17/114 when I left. If it's climbed above ~10% by the time you read this, the
+timeout needs raising further and that arm should be considered unreliable
+until redone — a run that's a third `pending` is not a usable result (this is
+exactly what killed the *original* 32b subset run's credibility, fixed this
+session, see §5).
+
+## 4. Bugs found and fixed this session (all committed, `bf9cd9f` and earlier)
+
+Three distinct silent-crash bugs in `scripts/run_openrouter_subset.py`, all
+now guarded with try/except so one bad file/function can't kill a multi-hour
+run (matching the pre-existing clang-emit-llvm guard):
+
+1. **Phase 6 module-reassembly numbering bug** (commit `0be3e3a`) — a `PASSED`
+   candidate's body, once stitched into the full multi-function module, can
+   fail llvmlite's re-parse (`label expected to be numbered 'N'`) even though
+   `llvm-as` accepted it standalone. Reproduced on `queens.bc::main`.
+   **Contained but not root-caused** — it's a metrics-harness bug (breaks
+   instruction counting), not a correctness-gate bug (Alive2 already proved
+   the refinement independently in Phase 5). Someone should eventually look at
+   how `p6_assemble.py` substitutes `record.llm_output` into the full module.
+2. **Timeout clipping** (commit `db4a7f8`) — `local_gpu` LLM-call timeout was
+   300s while real latencies average 234s with a 297s max; raised to 600s
+   (900s for the full-corpus arm). `alive_tv_timeout` raised 30s→120s since the
+   local-model runs had never actually given Alive2 real proof work (every
+   pass was a no-op) so the tight timeout was never exercised — a model that
+   returns *genuinely different* IR needs real SMT budget. Both are now
+   env-overridable (`LLM_TIMEOUT_SECONDS`, `ALIVE_TV_TIMEOUT`,
+   `LLVM_AS_TIMEOUT`).
+3. **`lists.bc` Phase 1 parse failure** (commit `a59b5ad`) — clang emits a
+   newer-LLVM-only attribute (`dead_on_unwind writable sret(...)`) via a
+   libc++ call that llvmlite 0.43/LLVM-14 can't parse. Now skipped and logged
+   rather than crashing. `lists.bc::test_lists` is therefore permanently
+   unreachable on this host; 39/40 (subset) or 114/115 (full corpus, effectively;
+   see below) is the ceiling, not 40 or 115.
+
+Also added `--max-functions N` (commit `db4a7f8`) for rate-limited-backend
+batching, validated end-to-end (exact row counts, no duplicate resume, budget
+trimmed *before* routing so a rate-limited backend never spends quota on
+discarded candidates).
+
+## 5. Two pre-existing test failures fixed (commit `bf9cd9f`)
+
+Both handoffs (this one's predecessor included) flagged
+`test_end_to_end_all_pass_is_identity` and `test_end_to_end_triage_mix` as
+"looks like a genuine bug, needs attention" and left them alone. **Not a
+pipeline bug.** All four identity-transform mocks in the test suite read
+`messages[1]` to recover "the user's prompt" — correct when written, but
+`p3_route.py`'s prompt gained a one-shot example since (`messages` is now
+`[system, example_user, example_assistant, user, (assistant_prefill)]`), so
+index 1 was the hardcoded `@max` example, not the function under test. Every
+"identity" mock was silently echoing `@max` back for every function — which is
+exactly the double-`define` garbage that showed up in the parse error. Fixed
+to read the last `role=="user"` message and correctly account for the chat
+path's assistant-prefill contract. **Full suite: 64 passed, 0 failed**,
+verified deterministic across repeated runs.
+
+## 6. What's still blocked on the user: the Gemini arm
+
+Highest-value remaining experiment, needs `GEMINI_API_KEY`. Tooling is built
+and tested (`--max-functions`, validated this session). Command is in
+`MORNING.md` — two batches of 20 (free tier's daily cap), one per day. Why it
+matters: Gemini is the only model that's ever produced a verified win (1/8
+completed attempts); this turns that into a real hit-rate with n=40.
+
+## 7. Files worth knowing about (created/rewritten this session)
+
+- `scripts/analyze_final_results.py` — the aggregate numbers script. Run this
+  first in any future session; it self-updates as new CSVs land.
+- `scripts/categorize_syntax_failures.py` — syntax-failure taxonomy, refined
+  this session from guessed patterns (87% OTHER) to observed ones (0% OTHER).
+- `scripts/make_result_figs.py` — 3 dissertation figures, portable paths
+  (replaces the Mac-hardcoded `make_paper_figs.py`). Regenerate after any new
+  eval data lands.
+- `scripts/prep_instnamer_corpus.py`, `INSTNAMER_EXPERIMENT.md` — the causal
+  experiment and its write-up.
+- `scripts/make_full_corpus_subset.py` — generates `full_corpus_subset.csv`
+  (114 routed functions across 24 usable files).
+- `scripts/launch_32b_full_corpus.sh`, `scripts/overnight_chain.sh` — the
+  gated/chained launchers described in §3.
+- `scripts/auto_commit_results.sh` — the checkpoint loop, §1.
+- `MORNING.md` — wake-up briefing (may be stale by the time you read this if
+  the user already read it; feel free to overwrite with a fresh status).
+- `/home/jovyan/.claude/plans/based-on-what-we-cached-yao.md` — the full
+  2-month dissertation strategy (Tracks A–G), written in plan mode with the
+  user's explicit sign-off. Track A (Gemini) and Track E (32b full corpus,
+  in progress) are P0. Read this before proposing new work — it's the agreed
+  roadmap, not just notes.
+- `README.md` §"Evaluation Findings" — corrected this session (was citing a
+  7-function toy result as if it were a corpus result; now separates them and
+  states the real numbers, regenerable via `analyze_final_results.py`).
+
+## 8. Rules of engagement (carried forward, still true)
+
+- §2 of `README.md` (architectural constraints) is hard. Stop and flag if a
+  task conflicts with it.
+- No hard-coded thresholds/timeouts — everything in `config.py`,
+  env-overridable.
+- Every CSV committed as a checkpoint mid-run is intentional and matches this
+  project's established convention (see commit history) — don't be alarmed by
+  "unfinished" data in a committed CSV; that's normal here.
+- Git credentials are stored (`~/.git-credentials`, mode 600) — `git push`
+  should just work.

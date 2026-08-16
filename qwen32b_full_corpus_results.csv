@@ -21,3 +21,12 @@ cholesky.bc,check_FP,5,3736,ollama/qwen2.5-coder:32b,68.075,,syntax_fail,97,97,0
   %45 = load ptr, ptr @__stderrp, align 8
   ^"
 correlation.bc,kernel_correlation,11,7422,ollama/qwen2.5-coder:32b,315.996,10.86,passed,,,,stop,
+deriche.bc,kernel_deriche,13,11320,ollama/qwen2.5-coder:32b,503.829,,syntax_fail,533,533,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpfx2xurao.ll:350:22: error: '%9' defined with type 'ptr' but expected 'i32'
+  %143 = add nsw i32 %9, -1
+                     ^"
+deriche.bc,kernel_deriche_StrictFP,13,11333,ollama/qwen2.5-coder:32b,509.5,,syntax_fail,546,546,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpsu7z99tj.ll:354:22: error: '%9' defined with type 'ptr' but expected 'i32'
+  %147 = add nsw i32 %9, -1
+                     ^"
+deriche.bc,check_FP,5,3949,ollama/qwen2.5-coder:32b,70.585,,syntax_fail,97,97,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpx9amsuyy.ll:218:3: error: instruction expected to be numbered '%49' or greater
+  %45 = load ptr, ptr @__stderrp, align 8
+  ^"

@@ -6,3 +6,11 @@ functionobjects.bc,_ZNSt3__118__bitset_partitionB8ne190102INS_17_ClassicAlgPolic
 ReedSolomon.bc,decode_rs,59,23597,ollama/qwen2.5-coder:32b,264.891,0.255,unsupported,1217,1217,0.0
 Puzzle.bc,Puzzle,49,13301,ollama/qwen2.5-coder:32b,,,pending,672,672,0.0
 timeit.bc,main,36,11507,ollama/qwen2.5-coder:32b,,,pending,378,378,0.0
+huffbench.bc,compdecomp,32,13291,ollama/qwen2.5-coder:32b,,,pending,660,660,0.0
+whetstone.bc,main,30,13131,ollama/qwen2.5-coder:32b,,,pending,702,702,0.0
+functionobjects.bc,main,21,26661,ollama/qwen2.5-coder:32b,,,pending,501,501,0.0
+functionobjects.bc,_ZNSt3__111__introsortINS_17_ClassicAlgPolicyERPFbddEPdLb0EEEvT1_S6_T0_NS_15iterator_traitsIS6_E15difference_typeEb,15,23731,ollama/qwen2.5-coder:32b,,,pending,292,292,0.0
+functionobjects.bc,_ZNSt3__111__introsortINS_17_ClassicAlgPolicyER24inline_less_than_functorPdLb0EEEvT1_S5_T0_NS_15iterator_traitsIS5_E15difference_typeEb,15,23795,ollama/qwen2.5-coder:32b,,,pending,286,286,0.0
+linpack-pc.bc,main,21,16067,ollama/qwen2.5-coder:32b,,,pending,738,738,0.0
+linpack-pc.bc,dgesl,10,7421,ollama/qwen2.5-coder:32b,267.203,0.044,passed,287,287,0.0
+linpack-pc.bc,dmxpy,11,14080,ollama/qwen2.5-coder:32b,,,pending,732,732,0.0

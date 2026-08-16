@@ -16,20 +16,24 @@ from llmcompile.config import VerificationConfig
 
 logger = logging.getLogger(__name__)
 
-def check_syntax(ir_text: str, config: VerificationConfig) -> bool:
+def check_syntax(ir_text: str, config: VerificationConfig) -> Tuple[bool, str | None]:
     """Run llvm-as to perform a fast syntax and structural validity check.
-    
+
     Args:
         ir_text: The standalone LLVM IR string to check.
         config: Verification configuration with llvm_as_path.
-        
+
     Returns:
-        True if llvm-as exits with code 0 (syntax OK), False otherwise.
+        (True, None) if llvm-as exits with code 0 (syntax OK).
+        (False, diagnostic) otherwise, where diagnostic is llvm-as's stderr
+        (falling back to stdout, then a synthesized message) explaining why —
+        needed to distinguish truncation/hallucinated-reference/malformed-
+        syntax failure modes instead of collapsing them all into SYNTAX_FAIL.
     """
     with tempfile.NamedTemporaryFile(mode="w", suffix=".ll") as f:
         f.write(ir_text)
         f.flush()
-        
+
         try:
             # We don't care about the object file, just checking syntax
             # llvm-as -disable-output validates without writing to disk
@@ -40,17 +44,21 @@ def check_syntax(ir_text: str, config: VerificationConfig) -> bool:
                 timeout=config.llvm_as_timeout,
                 check=False
             )
-            return result.returncode == 0
+            if result.returncode == 0:
+                return True, None
+            diagnostic = (result.stderr or result.stdout or "").strip() or \
+                f"llvm-as exited {result.returncode} with no output"
+            return False, diagnostic
         except FileNotFoundError:
             # llvm-as not found in PATH or config path is wrong
             logger.error(f"Syntax check failed: {config.llvm_as_path} not found")
-            return False
+            return False, f"{config.llvm_as_path} not found"
         except subprocess.TimeoutExpired:
             logger.error(f"Syntax check timed out after {config.llvm_as_timeout}s")
-            return False
+            return False, f"llvm-as timed out after {config.llvm_as_timeout}s"
         except Exception as e:
             logger.error(f"Syntax check failed unexpectedly: {e}")
-            return False
+            return False, f"unexpected error: {e}"
 
 def verify_refinement(original_ir: str, candidate_ir: str, config: VerificationConfig) -> Tuple[Verdict, str | None]:
     """Run alive-tv to prove the candidate is a sound refinement of the original.

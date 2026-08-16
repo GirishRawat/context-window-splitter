@@ -71,7 +71,7 @@ def _cfg(threshold=1, **verif):
 # ---------------------------------------------------------------------------
 
 @patch("llmcompile.phases.p5_verify.verify_refinement", return_value=(Verdict.PASSED, None))
-@patch("llmcompile.phases.p5_verify.check_syntax", return_value=True)
+@patch("llmcompile.phases.p5_verify.check_syntax", return_value=(True, None))
 def test_end_to_end_all_pass_is_identity(mock_syntax, mock_verify):
     # test-model names don't start with "ollama" so health check is skipped,
     # but litellm.acompletion will be called. Mock it to return an identity transform.
@@ -119,7 +119,7 @@ def test_end_to_end_all_pass_is_identity(mock_syntax, mock_verify):
 
 
 @patch("llmcompile.phases.p5_verify.verify_refinement", return_value=(Verdict.PASSED, None))
-@patch("llmcompile.phases.p5_verify.check_syntax", return_value=True)
+@patch("llmcompile.phases.p5_verify.check_syntax", return_value=(True, None))
 def test_end_to_end_triage_mix(mock_syntax, mock_verify):
     # threshold 2: @add & @use (complexity 1) triaged out, @branchy (2) optimized
     from unittest.mock import AsyncMock, MagicMock

@@ -28,28 +28,46 @@ def mock_config():
 def test_check_syntax_passes(mock_run, mock_config):
     # Mock successful execution
     mock_run.return_value = MagicMock(returncode=0)
-    
-    result = check_syntax("define void @f() { ret void }", mock_config)
-    assert result is True
+
+    ok, diagnostic = check_syntax("define void @f() { ret void }", mock_config)
+    assert ok is True
+    assert diagnostic is None
     mock_run.assert_called_once()
     assert "mock-llvm-as" in mock_run.call_args[0][0]
 
 
 @patch("subprocess.run")
 def test_check_syntax_fails(mock_run, mock_config):
-    # Mock failed execution (syntax error)
-    mock_run.return_value = MagicMock(returncode=1)
-    
-    result = check_syntax("define void @f() { broken }", mock_config)
-    assert result is False
+    # Mock failed execution (syntax error) -- the diagnostic text is what
+    # scripts/categorize_syntax_failures.py buckets by, so it must survive.
+    mock_run.return_value = MagicMock(
+        returncode=1,
+        stderr="<stdin>:2:5: error: use of undefined value '@missing'",
+        stdout="",
+    )
+
+    ok, diagnostic = check_syntax("define void @f() { broken }", mock_config)
+    assert ok is False
+    assert "use of undefined value" in diagnostic
+
+
+@patch("subprocess.run")
+def test_check_syntax_fails_falls_back_to_stdout(mock_run, mock_config):
+    """Some llvm-as builds print to stdout instead of stderr."""
+    mock_run.return_value = MagicMock(returncode=1, stderr="", stdout="error: bad token")
+
+    ok, diagnostic = check_syntax("define void @f() { broken }", mock_config)
+    assert ok is False
+    assert diagnostic == "error: bad token"
 
 
 @patch("subprocess.run")
 def test_check_syntax_timeout(mock_run, mock_config):
     mock_run.side_effect = subprocess.TimeoutExpired(cmd="mock-llvm-as", timeout=10)
-    
-    result = check_syntax("define void @f() { ret void }", mock_config)
-    assert result is False
+
+    ok, diagnostic = check_syntax("define void @f() { ret void }", mock_config)
+    assert ok is False
+    assert "timed out" in diagnostic
 
 
 @patch("subprocess.run")
@@ -152,9 +170,9 @@ def test_verify_module_pipeline_integration(mock_verify_refinement, mock_check_s
     # f2: syntax FAIL
     def syntax_side_effect(ir_text, config):
         if "f2_opt" in ir_text:
-            return False
-        return True
-        
+            return False, "error: use of undefined value '@bogus'"
+        return True, None
+
     mock_check_syntax.side_effect = syntax_side_effect
     
     # verify_refinement is only called for f1 because f2 fails syntax
@@ -169,9 +187,13 @@ def test_verify_module_pipeline_integration(mock_verify_refinement, mock_check_s
     # f1 should be PASSED
     assert functions["f1"].verdict == Verdict.PASSED
     
-    # f2 should be SYNTAX_FAIL
+    # f2 should be SYNTAX_FAIL, with the diagnostic text preserved
     assert functions["f2"].verdict == Verdict.SYNTAX_FAIL
-    
+    assert functions["f2"].syntax_error == "error: use of undefined value '@bogus'"
+
+    # f1 passed syntax, so it must not carry a stale/spurious syntax_error
+    assert functions["f1"].syntax_error is None
+
     # f_triaged should be skipped (PENDING)
     assert functions["f_triaged"].verdict == Verdict.PENDING
     
@@ -226,4 +248,6 @@ def test_verify_refinement_prefers_failure_when_both_markers_present(mock_run, m
 @patch("subprocess.run")
 def test_check_syntax_binary_missing(mock_run, mock_config):
     mock_run.side_effect = FileNotFoundError()
-    assert check_syntax("define void @f() { ret void }", mock_config) is False
+    ok, diagnostic = check_syntax("define void @f() { ret void }", mock_config)
+    assert ok is False
+    assert "not found" in diagnostic

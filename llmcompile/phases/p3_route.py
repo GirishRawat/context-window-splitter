@@ -356,6 +356,7 @@ entry:
                 raw_output = signature + "\n" + raw_output
 
             record.llm_latency_seconds = time.perf_counter() - t0
+            record.finish_reason = finish_reason
             logger.info(f"[{record.name}] LLM finished with reason: '{finish_reason}', length: {len(raw_output)}")
             
             # Dump raw output for empirical debugging
@@ -376,6 +377,7 @@ entry:
         except Exception as e:
             logger.error(f"[{record.name}] LLM call to {model_name} failed: {e}")
             record.llm_output = None
+            record.finish_reason = f"call_error: {e or type(e).__name__}"
 
 
 async def _route_module_async(parsed: ParsedModule, config: PipelineConfig) -> None:

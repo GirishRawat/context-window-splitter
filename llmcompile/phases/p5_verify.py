@@ -49,10 +49,11 @@ def verify_module(
         logger.info(f"Verifying candidate for {record.name}...")
 
         # 1. Syntax check (cheap filter before the expensive SMT proof).
-        syntax_ok = check_syntax(record.candidate_ir, config.verification)
+        syntax_ok, syntax_error = check_syntax(record.candidate_ir, config.verification)
         if not syntax_ok:
-            logger.warning(f"[{record.name}] Syntax check failed")
+            logger.warning(f"[{record.name}] Syntax check failed: {syntax_error}")
             record.verdict = Verdict.SYNTAX_FAIL
+            record.syntax_error = syntax_error
             continue
 
         # 2. Refinement proof: source = original, target = candidate.

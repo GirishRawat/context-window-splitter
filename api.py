@@ -262,8 +262,9 @@ def verify_ir(request: VerifyRequest):
 
         
         # 1. Syntax check
-        if not check_syntax(request.candidate_ir, config):
-            return VerifyResponse(verdict=Verdict.SYNTAX_FAIL.value)
+        syntax_ok, syntax_error = check_syntax(request.candidate_ir, config)
+        if not syntax_ok:
+            return VerifyResponse(verdict=Verdict.SYNTAX_FAIL.value, error=syntax_error)
             
         # 2. Semantic refinement check
         verdict, cex = verify_refinement(request.original_ir, request.candidate_ir, config)

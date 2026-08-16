@@ -1,0 +1,2 @@
+file_name,function_name,complexity,tokens,model,llm_latency_s,verification_latency_s,verdict,orig_instrs,final_instrs,reduction_pct
+ReedSolomon.bc,decode_rs,59,23866,openrouter/cohere/north-mini-code:free,990.295,,pending,1217,1217,0.0

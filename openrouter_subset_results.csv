@@ -1,3 +1,7 @@
 file_name,function_name,complexity,tokens,model,llm_latency_s,verification_latency_s,verdict,orig_instrs,final_instrs,reduction_pct
 ReedSolomon.bc,decode_rs,59,23866,openrouter/nvidia/nemotron-3-ultra-550b-a55b:free,1168.584,0.251,unsupported,1217,1217,0.0
 Puzzle.bc,Puzzle,49,14530,openrouter/nvidia/nemotron-3-ultra-550b-a55b:free,665.813,,syntax_fail,672,672,0.0
+timeit.bc,main,36,12208,openrouter/nvidia/nemotron-3-ultra-550b-a55b:free,289.826,30.017,unsupported,378,378,0.0
+timeit.bc,execute_target_process,27,9405,openrouter/nvidia/nemotron-3-ultra-550b-a55b:free,116.28,,syntax_fail,219,219,0.0
+timeit.bc,monitor_child_process,18,9582,openrouter/nvidia/nemotron-3-ultra-550b-a55b:free,129.456,10.637,unsupported,224,224,0.0
+huffbench.bc,compdecomp,32,13992,openrouter/nvidia/nemotron-3-ultra-550b-a55b:free,242.736,,pending,660,660,0.0

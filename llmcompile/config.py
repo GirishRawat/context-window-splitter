@@ -79,13 +79,15 @@ class ModelTier:
 class LLMRoutingConfig:
     """Phase 3 LLM routing configuration.
 
-    Current default routes ALL tiers to Google Gemini free tier via LiteLLM's
-    ``gemini/`` provider, to evaluate whether a stronger model produces verified
-    optimizations where local Qwen models only echoed the input. To revert to
-    local inference, set each tier's ``models`` back to an ``ollama/...`` id.
+    Routes ALL tiers to a single cloud model, selected via ``LLM_BACKEND``
+    ("gemini" (default) or "openrouter"), via LiteLLM's ``gemini/`` or
+    ``openrouter/`` provider, to evaluate whether a stronger model produces
+    verified optimizations where local Qwen models only echoed the input. To
+    revert to local inference, set each tier's ``models`` back to an
+    ``ollama/...`` id.
 
-    Because free-tier Gemini is rate-limited (RPM/RPD), the real throttle is the
-    module-level wall-clock rate limiter in ``p3_route.py`` (paced to
+    Because both free tiers are rate-limited (RPM/RPD), the real throttle is
+    the module-level wall-clock rate limiter in ``p3_route.py`` (paced to
     ``requests_per_minute``), NOT the per-tier concurrency semaphore. Concurrency
     is kept modest so a handful of calls can overlap up to the RPM budget.
     """
@@ -106,33 +108,56 @@ class LLMRoutingConfig:
     retry_base_delay: float = 4.0
 
     def __post_init__(self):
-        # Model id is overridable via GEMINI_MODEL (e.g. set to
-        # "gemini/gemini-1.5-flash" for higher free-tier throughput).
-        gemini_model = os.getenv("GEMINI_MODEL", "gemini/gemini-3.5-flash")
+        # Which cloud backend to route to: "gemini" (default, matches the
+        # existing behaviour) or "openrouter" (free-tier frontier-scale
+        # models, no daily 20-request cliff like Gemini's free tier -- 50
+        # req/day unfunded, 20 req/min). Selected via LLM_BACKEND env var.
+        backend = os.getenv("LLM_BACKEND", "gemini").lower()
+
+        if backend == "openrouter":
+            # Default: Nemotron 3 Ultra (550B/55B-active MoE), the largest,
+            # most frontier-scale model on OpenRouter's free tier as of
+            # 2026-08. Override via OPENROUTER_MODEL, e.g.
+            # "openrouter/cohere/north-mini-code:free" as a coding-specialist
+            # fallback if Nemotron gets provider-side throttled.
+            model_id = os.getenv(
+                "OPENROUTER_MODEL",
+                "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+            )
+            default_rpm = 15  # stay under the 20/min free-tier cap
+        else:
+            # Model id is overridable via GEMINI_MODEL (e.g. set to
+            # "gemini/gemini-1.5-flash" for higher free-tier throughput).
+            model_id = os.getenv("GEMINI_MODEL", "gemini/gemini-3.5-flash")
+            default_rpm = 5
+
         if self.tiers is None:
             self.tiers = {
                 "fast": ModelTier(
                     name="fast",
-                    models=[gemini_model],
+                    models=[model_id],
                     max_concurrent=1,
                     timeout_seconds=120
                 ),
                 "mid": ModelTier(
                     name="mid",
-                    models=[gemini_model],
+                    models=[model_id],
                     max_concurrent=1,
                     timeout_seconds=120
                 ),
                 "frontier": ModelTier(
                     name="frontier",
-                    models=[gemini_model],
+                    models=[model_id],
                     max_concurrent=1,
                     timeout_seconds=120
                 )
             }
 
-        # Allow overriding the RPM cap from the environment.
-        rpm_env = os.getenv("GEMINI_RPM")
+        self.requests_per_minute = default_rpm
+
+        # Allow overriding the RPM cap from the environment (checked in order;
+        # the backend-specific var wins if both happen to be set).
+        rpm_env = os.getenv("OPENROUTER_RPM") if backend == "openrouter" else os.getenv("GEMINI_RPM")
         if rpm_env:
             try:
                 self.requests_per_minute = int(rpm_env)
@@ -154,6 +179,10 @@ class VerificationConfig:
     # Path to alive-tv binary (from Alive2 build)
     alive_tv_path: str = "alive-tv"
 
+    # Path to opt (LLVM optimizer, used only to compute the -O2 baseline
+    # metric for eval reporting -- not part of the correctness-critical path)
+    opt_path: str = "opt"
+
     # llvm-as syntax-check timeout in seconds (should be near-instant)
     llvm_as_timeout: int = 10
 
@@ -173,15 +202,24 @@ class VerificationConfig:
         # specific toolchain regardless of what happens to be on the host.
         llvm_as_is_default = self.llvm_as_path == "llvm-as"
         alive_tv_is_default = self.alive_tv_path == "alive-tv"
+        opt_is_default = self.opt_path == "opt"
 
         # Default fallback paths for JupyterHub build if they exist on the host
         jovyan_llvm_as = "/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as"
         jovyan_alive_tv = "/home/jovyan/llvm_toolchain/alive2/build/alive-tv"
+        jovyan_opt = "/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/opt"
 
         if llvm_as_is_default and os.path.exists(jovyan_llvm_as):
             self.llvm_as_path = jovyan_llvm_as
         if alive_tv_is_default and os.path.exists(jovyan_alive_tv):
             self.alive_tv_path = jovyan_alive_tv
+        if opt_is_default and os.path.exists(jovyan_opt):
+            self.opt_path = jovyan_opt
+
+        # Default fallback path for the local Mac build if it exists on the host
+        mac_opt = os.path.expanduser("~/llvm_toolchain/llvm-project/llvm/build/bin/opt")
+        if opt_is_default and os.path.exists(mac_opt):
+            self.opt_path = mac_opt
 
         # Read from toolchain_versions.lock if it exists (for local Mac builds)
         lock_path = os.path.expanduser("~/llvm_toolchain/toolchain_versions.lock")
@@ -194,6 +232,8 @@ class VerificationConfig:
                             self.llvm_as_path = os.path.expandvars(line.split("=", 1)[1])
                         elif alive_tv_is_default and line.startswith("alive_tv_path="):
                             self.alive_tv_path = os.path.expandvars(line.split("=", 1)[1])
+                        elif opt_is_default and line.startswith("opt_path="):
+                            self.opt_path = os.path.expandvars(line.split("=", 1)[1])
             except Exception:
                 pass
 
@@ -202,6 +242,8 @@ class VerificationConfig:
             self.llvm_as_path = os.getenv("LLVM_AS_PATH", self.llvm_as_path)
         if alive_tv_is_default:
             self.alive_tv_path = os.getenv("ALIVE_TV_PATH", self.alive_tv_path)
+        if opt_is_default:
+            self.opt_path = os.getenv("OPT_PATH", self.opt_path)
 
 
 # ---------------------------------------------------------------------------

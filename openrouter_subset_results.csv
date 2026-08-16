@@ -1,0 +1,3 @@
+file_name,function_name,complexity,tokens,model,llm_latency_s,verification_latency_s,verdict,orig_instrs,final_instrs,reduction_pct
+ReedSolomon.bc,decode_rs,59,23866,openrouter/nvidia/nemotron-3-ultra-550b-a55b:free,1168.584,0.251,unsupported,1217,1217,0.0
+Puzzle.bc,Puzzle,49,14530,openrouter/nvidia/nemotron-3-ultra-550b-a55b:free,665.813,,syntax_fail,672,672,0.0

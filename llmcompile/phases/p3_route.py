@@ -271,12 +271,14 @@ entry:
                 # be everything AFTER the brace. We must prepend the signature back to it.
                 raw_output = signature + "\n" + raw_output
 
-            elif model_name.startswith("gemini/"):
-                # Rate-limited cloud model (Gemini free tier) via LiteLLM.
-                # Differs from the Ollama path in two ways: (1) NO assistant
-                # prefill message and NO signature prepend -- Gemini returns the
-                # full `define ... }` block, which sanitize_llm_output cleans;
-                # prepending would duplicate the signature. (2) every call is
+            elif model_name.startswith("gemini/") or model_name.startswith("openrouter/"):
+                # Rate-limited cloud model (Gemini or OpenRouter free tier) via
+                # LiteLLM. Differs from the Ollama path in two ways: (1) NO
+                # assistant prefill message and NO signature prepend -- these
+                # providers return the full `define ... }` block, which
+                # sanitize_llm_output cleans; prepending would duplicate the
+                # signature. Prefill is also unreliable across the many
+                # different backends OpenRouter proxies. (2) every call is
                 # paced by the global RPM limiter and retried with backoff on
                 # 429/transient errors so free-tier throttling does not silently
                 # drop functions. Signature fidelity is requested in-prompt.
@@ -322,7 +324,7 @@ entry:
                         if attempt < max_retries and is_transient:
                             delay = min(base_delay * (2 ** attempt), 60.0)
                             logger.warning(
-                                f"[{record.name}] Gemini transient error "
+                                f"[{record.name}] {model_name} transient error "
                                 f"(attempt {attempt + 1}/{max_retries}), backoff "
                                 f"{delay:.0f}s: {e}"
                             )
@@ -393,6 +395,24 @@ async def _route_module_async(parsed: ParsedModule, config: PipelineConfig) -> N
             "A gemini/ model is configured but neither GEMINI_API_KEY nor "
             "GOOGLE_API_KEY is set. Every Gemini call would fail. Export the key "
             "and retry, e.g.  export GEMINI_API_KEY=...  "
+            "All functions fall back to their original IR for now."
+        )
+        for record in parsed.functions:
+            if not record.triaged_out:
+                record.llm_output = None
+        return
+
+    # --- OpenRouter API key pre-flight (same rationale as the Gemini check) ---
+    uses_openrouter = any(
+        model.startswith("openrouter/")
+        for tier in config.llm_routing.tiers.values()
+        for model in tier.models
+    )
+    if uses_openrouter and not os.getenv("OPENROUTER_API_KEY"):
+        logger.error(
+            "An openrouter/ model is configured but OPENROUTER_API_KEY is not "
+            "set. Every OpenRouter call would fail. Export the key and retry, "
+            "e.g.  export OPENROUTER_API_KEY=...  "
             "All functions fall back to their original IR for now."
         )
         for record in parsed.functions:

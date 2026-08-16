@@ -1,0 +1,50 @@
+file_name,function_name,complexity,tokens,model,llm_latency_s,verification_latency_s,verdict,orig_instrs,final_instrs,reduction_pct,finish_reason,syntax_error
+ReedSolomon.bc,decode_rs,59,23597,ollama/qwen2.5-coder:7b,54.365,,syntax_fail,1217,1217,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpz7o8r02u.ll:257:7: error: expected '=' after instruction id
+  %972:                                             ; preds = %971
+      ^"
+Puzzle.bc,Puzzle,49,13301,ollama/qwen2.5-coder:7b,172.581,0.403,passed,672,672,0.0,stop,
+timeit.bc,main,36,11507,ollama/qwen2.5-coder:7b,92.157,,syntax_fail,378,378,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpwbm7d_et.ll:418:12: error: expected value token
+  store ptr, ptr @g_target_redirect_stderr, align 8
+           ^"
+timeit.bc,execute_target_process,27,8704,ollama/qwen2.5-coder:7b,52.217,0.045,passed,219,219,0.0,stop,
+timeit.bc,monitor_child_process,18,8881,ollama/qwen2.5-coder:7b,54.943,15.281,unsupported,224,224,0.0,stop,
+huffbench.bc,compdecomp,32,13291,ollama/qwen2.5-coder:7b,177.983,,syntax_fail,660,660,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpcc0gjal8.ll:492:21: error: '%235' defined with type 'i64' but expected 'i32'
+  %236 = shl i32 1, %235
+                    ^"
+whetstone.bc,main,30,13131,ollama/qwen2.5-coder:7b,176.396,,syntax_fail,702,702,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpu4fjnj6x.ll:311:16: error: use of undefined value '%130'
+  store double %130, ptr %19, align 8
+               ^"
+exptree.bc,recSearch,22,5961,ollama/qwen2.5-coder:7b,54.722,0.045,passed,239,239,0.0,stop,
+functionobjects.bc,main,21,26661,ollama/qwen2.5-coder:7b,152.293,14.075,unsupported,501,501,0.0,stop,
+functionobjects.bc,_ZNSt3__111__introsortINS_17_ClassicAlgPolicyERPFbddEPdLb0EEEvT1_S6_T0_NS_15iterator_traitsIS6_E15difference_typeEb,15,23731,ollama/qwen2.5-coder:7b,97.952,,syntax_fail,292,292,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmp9l8kodyu.ll:903:3: error: instruction forward referenced with type 'ptr'
+  %110 = call i32 @_ZNSt3__17__sort3B8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEjT1_S6_S6_T0_(ptr noundef %103, ptr noundef %106, ptr noundef %108, ptr noundef nonnull align 8 dereferenceable(8) %110)
+  ^"
+functionobjects.bc,_ZNSt3__111__introsortINS_17_ClassicAlgPolicyER24inline_less_than_functorPdLb0EEEvT1_S5_T0_NS_15iterator_traitsIS5_E15difference_typeEb,15,23795,ollama/qwen2.5-coder:7b,98.784,,syntax_fail,286,286,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmp2hichyly.ll:876:222: error: use of undefined value '%90'
+  call void @_ZNSt3__114__partial_sortB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdS4_EET1_S5_S5_T2_RT0_(ptr noundef %87, ptr noundef %88, ptr noundef %89, ptr noundef nonnull align 1 dereferenceable(1) %90)
+                                                                                                                                                                                                                             ^"
+functionobjects.bc,_ZNSt3__118__bitset_partitionB8ne190102INS_17_ClassicAlgPolicyEPdR24inline_less_than_functorEENS_4pairIT0_bEES6_S6_T1_,14,21198,ollama/qwen2.5-coder:7b,58.555,1.594,unsupported,168,168,0.0,stop,
+linpack-pc.bc,main,21,16067,ollama/qwen2.5-coder:7b,228.311,,syntax_fail,738,738,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpd2dliti2.ll:235:3: error: instruction forward referenced with type 'double'
+  %51 = fptrunc double %52 to float
+  ^"
+linpack-pc.bc,dgesl,10,7421,ollama/qwen2.5-coder:7b,115.881,0.041,passed,287,287,0.0,stop,
+linpack-pc.bc,dmxpy,11,14080,ollama/qwen2.5-coder:7b,258.269,,syntax_fail,732,732,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmp8gb1hcrl.ll:582:3: error: instruction forward referenced with type 'label'
+  %380 = add nsw i32 %379, 1
+  ^"
+smallpt.bc,_Z8radianceRK3RayiPt,18,22834,ollama/qwen2.5-coder:7b,,,pending,999,999,0.0,call_error: ,
+smallpt.bc,main,12,12441,ollama/qwen2.5-coder:7b,249.779,0.038,unsupported,510,510,0.0,stop,
+ffbench.bc,main,18,6646,ollama/qwen2.5-coder:7b,128.306,0.041,passed,314,314,0.0,stop,
+ffbench.bc,fourn,13,8571,ollama/qwen2.5-coder:7b,177.94,,syntax_fail,450,450,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmp18d5sna9.ll:487:26: error: '%272' defined with type 'i64' but expected 'ptr'
+  store double %268, ptr %272, align 8
+                         ^"
+fpcmp.bc,AdvanceNumber,16,4948,ollama/qwen2.5-coder:7b,48.374,0.041,passed,130,130,0.0,stop,
+fpcmp.bc,CompareNumbers,17,7231,ollama/qwen2.5-coder:7b,100.728,1.458,unsupported,262,262,0.0,stop,
+fpcmp.bc,main,11,5791,ollama/qwen2.5-coder:7b,64.533,1.477,unsupported,174,174,0.0,stop,
+nussinov.bc,kernel_nussinov,16,8370,ollama/qwen2.5-coder:7b,105.945,0.041,passed,373,373,0.0,stop,
+nussinov.bc,kernel_nussinov_StrictFP,16,8370,ollama/qwen2.5-coder:7b,163.837,0.04,passed,373,373,0.0,stop,
+flops.bc,main,15,24689,ollama/qwen2.5-coder:7b,,,pending,1341,1341,0.0,call_error: ,
+fannkuch.bc,fannkuch,15,5674,ollama/qwen2.5-coder:7b,116.489,0.025,passed,294,294,0.0,stop,
+queens.bc,main,15,4669,ollama/qwen2.5-coder:7b,67.803,0.041,passed,177,177,0.0,stop,
+deriche.bc,kernel_deriche,13,11320,ollama/qwen2.5-coder:7b,222.946,0.046,passed,533,533,0.0,stop,
+deriche.bc,kernel_deriche_StrictFP,13,11333,ollama/qwen2.5-coder:7b,240.708,,syntax_fail,546,546,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpd1bywbsz.ll:686:3: error: instruction forward referenced with type 'i32'
+  %370 = sext i32 %370 to i64
+  ^"

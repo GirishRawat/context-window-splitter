@@ -1,0 +1,15 @@
+file_name,function_name,complexity,tokens,model,llm_latency_s,verification_latency_s,verdict,orig_instrs,final_instrs,reduction_pct,finish_reason,syntax_error
+ReedSolomon.bc,decode_rs,59,26321,ollama/qwen2.5-coder:3b,238.542,,syntax_fail,1217,1217,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmp8qz4z_vc.ll:352:3: error: instruction forward referenced with type 'i32'
+  %i699 = sext i32 %i699 to i64
+  ^"
+Puzzle.bc,Puzzle,49,14786,ollama/qwen2.5-coder:3b,246.674,,syntax_fail,672,672,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpy63q4ndk.ll:683:36: error: use of undefined value '%bb299'
+  br i1 %i270, label %bb271, label %bb299
+                                   ^"
+timeit.bc,main,36,12391,ollama/qwen2.5-coder:3b,172.394,30.075,unsupported,378,378,0.0,stop,
+timeit.bc,execute_target_process,27,9174,ollama/qwen2.5-coder:3b,94.606,30.135,unsupported,219,219,0.0,stop,
+timeit.bc,monitor_child_process,17,9380,ollama/qwen2.5-coder:3b,88.931,14.649,unsupported,224,224,0.0,stop,
+huffbench.bc,compdecomp,32,14725,ollama/qwen2.5-coder:3b,276.269,,syntax_fail,660,660,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpw3s37sg6.ll:484:36: error: use of undefined value '%bb295'
+  br i1 %i225, label %bb226, label %bb295
+                                   ^"
+whetstone.bc,main,30,14578,ollama/qwen2.5-coder:3b,,,pending,702,702,0.0,call_error: ,
+exptree.bc,recSearch,22,6506,ollama/qwen2.5-coder:3b,96.672,21.977,unsupported,239,239,0.0,stop,

@@ -91,3 +91,52 @@ declare double @atan2(noundef double, noundef double) willreturn
 @omega = constant 192 bytes, align 8
 @kp = const
 [planetpv] UNSUPPORTED (timeout or unable to prove)
+[_Z9quicksortIPd17less_than_functorEvT_S2_T0_] Syntax check failed
+[_Z9quicksortIPd24inline_less_than_functorEvT_S2_T0_] Syntax check failed
+[_ZNSt3__133__bitset_partition_partial_blocksB8ne190102INS_17_ClassicAlgPolicyERPFbddEPddEEvRT1_S7_T0_RT2_RySB_] Syntax check failed
+[_ZNSt3__124__swap_bitmap_pos_withinB8ne190102INS_17_ClassicAlgPolicyEPdEEvRT0_S4_RyS5_] Syntax check failed
+[_ZNSt3__118__bitset_partitionB8ne190102INS_17_ClassicAlgPolicyEPdR17less_than_functorEENS_4pairIT0_bEES6_S6_T1_] REJECTED (counterexample found)
+Re-running 33 previously-unsupported functions across 22 files
+
+  fpcmp.bc                   contains_non_printable_characters  unsupported -> passed
+  fbench.bc                  main                               unsupported -> syntax_fail
+  richards_benchmark.bc      handlerfn                          unsupported -> syntax_fail
+  revertBits.bc              main                               unsupported -> unsupported
+  ffbench.bc                 main                               unsupported -> syntax_fail
+  oourafft.bc                bitrv2                             unsupported -> syntax_fail
+  oourafft.bc                cftfsub                            unsupported -> syntax_fail
+  oourafft.bc                cftbsub                            unsupported -> unsupported
+  perlin.bc                  grad                               unsupported -> passed
+  correlation.bc             kernel_correlation                 unsupported -> syntax_fail
+  fdtd-2d.bc                 kernel_fdtd_2d_StrictFP            unsupported -> pending
+  floyd-warshall.bc          init_array                         unsupported -> passed
+  ludcmp.bc                  init_array                         unsupported -> syntax_fail
+  cholesky.bc                init_array                         unsupported -> pending
+  dry.bc                     Func2                              unsupported -> syntax_fail
+  fldry.bc                   Proc0                              unsupported -> pending
+  fldry.bc                   Func2                              unsupported -> pending
+  Treesort.bc                Insert                             unsupported -> rejected
+  Bubblesort.bc              Bubble                             unsupported -> unsupported
+[skip] sieve.bc: parse failed: Phase 1: input IR failed to parse/verify: LLVM IR parsing error
+<string>:1867:36
+  fasta.bc                   random_fasta                       unsupported -> passed
+  spectral-norm.bc           main                               unsupported -> syntax_fail
+  almabench.bc               planetpv                           unsupported -> unsupported
+  stepanov_abstraction.bc    _ZN9benchmark9quicksortIPddEEvT_S2 unsupported -> passed
+  functionobjects.bc         _Z18quicksort_functionPdS_PFbddE   unsupported -> passed
+  functionobjects.bc         _Z9quicksortIPdXadL_Z19less_than_f unsupported -> passed
+  functionobjects.bc         _Z9quicksortIPd17less_than_functor unsupported -> syntax_fail
+  functionobjects.bc         _Z9quicksortIPd24inline_less_than_ unsupported -> syntax_fail
+  functionobjects.bc         _Z9quicksortIPdEvT_S1_             unsupported -> passed
+  functionobjects.bc         _ZNSt3__133__bitset_partition_part unsupported -> syntax_fail
+  functionobjects.bc         _ZNSt3__124__swap_bitmap_pos_withi unsupported -> syntax_fail
+  functionobjects.bc         _ZNSt3__118__bitset_partitionB8ne1 unsupported -> rejected
+  functionobjects.bc         _ZNSt3__17__sort5B8ne190102INS_17_ unsupported -> passed
+
+=== SUMMARY (was unsupported, now) ===
+  syntax_fail    13
+  passed         9
+  unsupported    4
+  pending        4
+  rejected       2
+  re-run total: 32

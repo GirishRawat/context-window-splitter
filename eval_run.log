@@ -1584,3 +1584,322 @@ INFO: Phase 2: triage
 INFO: Phase 3: routing (identity stub)
 INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
 INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [_Z8radianceRK3RayiPt] LLM finished with reason: 'stop', length: 2273
+INFO: [_Z8radianceRK3RayiPt] Optimization returned cleanly from ollama/qwen2.5-coder:7b
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [main] LLM finished with reason: 'stop', length: 2947
+INFO: [main] Optimization returned cleanly from ollama/qwen2.5-coder:7b
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Verifying candidate for _Z8radianceRK3RayiPt...
+WARNING: [_Z8radianceRK3RayiPt] Syntax check failed
+INFO: Verifying candidate for main...
+WARNING: [main] Syntax check failed
+INFO: Phase 6: assembly
+INFO: [__cxx_global_var_init] falling back to original (pending)
+INFO: [_ZN3VecC1Eddd] falling back to original (pending)
+INFO: [_ZN6SphereC1Ed3VecS0_S0_6Refl_t] falling back to original (pending)
+INFO: [_ZNK3VecmlEd] falling back to original (pending)
+INFO: [_Z8radianceRK3RayiPt] falling back to original (syntax_fail)
+INFO: [_Z9intersectRK3RayRdRi] falling back to original (pending)
+INFO: [_ZNK3VecplERKS_] falling back to original (pending)
+INFO: [_ZNK3VecmiERKS_] falling back to original (pending)
+INFO: [_ZN3Vec4normEv] falling back to original (pending)
+INFO: [_ZNK3Vec3dotERKS_] falling back to original (pending)
+INFO: [_ZN3VecrmERS_] falling back to original (pending)
+INFO: [_ZNK3Vec4multERKS_] falling back to original (pending)
+INFO: [_ZN3RayC1E3VecS0_] falling back to original (pending)
+INFO: [main] falling back to original (syntax_fail)
+INFO: [_Z5clampd] falling back to original (pending)
+INFO: [_ZN3VecC2Eddd] falling back to original (pending)
+INFO: [_ZN6SphereC2Ed3VecS0_S0_6Refl_t] falling back to original (pending)
+INFO: [_ZNK6Sphere9intersectERK3Ray] falling back to original (pending)
+INFO: [_ZN3RayC2E3VecS0_] falling back to original (pending)
+INFO: [_GLOBAL__sub_I_smallpt.cpp] falling back to original (pending)
+INFO: Processing strcat.bc...
+INFO: Phase 1: parsing
+ERROR: Failed to process strcat.bc: Phase 1: input IR failed to parse/verify: LLVM IR parsing error
+<string>:660:47: error: expected value token
+  call void @_ZNKSt3__18ios_base6getlocEv(ptr dead_on_unwind writable sret(%"class.std::__1::locale") align 8 %5, ptr noundef %8)
+                                              ^
+
+INFO: Processing lists1.bc...
+INFO: Phase 1: parsing
+ERROR: Failed to process lists1.bc: Phase 1: input IR failed to parse/verify: LLVM IR parsing error
+<string>:2985:36: error: expected '(' in constantexpr
+  store ptr getelementptr inbounds inrange(-16, 24) ({ [5 x ptr] }, ptr @_ZTVSt12length_error, i32 0, i32 0, i32 2), ptr %5, align 8
+                                   ^
+
+INFO: Processing random.bc...
+INFO: Phase 1: parsing
+ERROR: Failed to process random.bc: Phase 1: input IR failed to parse/verify: LLVM IR parsing error
+<string>:193:47: error: expected value token
+  call void @_ZNKSt3__18ios_base6getlocEv(ptr dead_on_unwind writable sret(%"class.std::__1::locale") align 8 %5, ptr noundef %8)
+                                              ^
+
+INFO: Processing ackermann.bc...
+INFO: Phase 1: parsing
+ERROR: Failed to process ackermann.bc: Phase 1: input IR failed to parse/verify: LLVM IR parsing error
+<string>:1369:36: error: expected '(' in constantexpr
+  store ptr getelementptr inbounds inrange(-16, 24) ({ [5 x ptr] }, ptr @_ZTVSt12length_error, i32 0, i32 0, i32 2), ptr %5, align 8
+                                   ^
+
+INFO: Processing sieve.bc...
+INFO: Phase 1: parsing
+ERROR: Failed to process sieve.bc: Phase 1: input IR failed to parse/verify: LLVM IR parsing error
+<string>:1867:36: error: expected '(' in constantexpr
+  store ptr getelementptr inbounds inrange(-16, 24) ({ [5 x ptr] }, ptr @_ZTVSt12length_error, i32 0, i32 0, i32 2), ptr %5, align 8
+                                   ^
+
+INFO: Processing heapsort.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [_Z8heapsortiPd] LLM finished with reason: 'stop', length: 382
+INFO: [_Z8heapsortiPd] Optimization returned cleanly from ollama/qwen2.5-coder:3b
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Verifying candidate for _Z8heapsortiPd...
+WARNING: [_Z8heapsortiPd] Syntax check failed
+INFO: Phase 6: assembly
+INFO: [_Z10gen_randomd] falling back to original (pending)
+INFO: [_Z8heapsortiPd] falling back to original (syntax_fail)
+INFO: [main] falling back to original (pending)
+INFO: Processing nestedloop.bc...
+INFO: Phase 1: parsing
+ERROR: Failed to process nestedloop.bc: Phase 1: input IR failed to parse/verify: LLVM IR parsing error
+<string>:243:47: error: expected value token
+  call void @_ZNKSt3__18ios_base6getlocEv(ptr dead_on_unwind writable sret(%"class.std::__1::locale") align 8 %5, ptr noundef %8)
+                                              ^
+
+INFO: Processing lists.bc...
+INFO: Phase 1: parsing
+ERROR: Failed to process lists.bc: Phase 1: input IR failed to parse/verify: LLVM IR parsing error
+<string>:2543:47: error: expected value token
+  call void @_ZNKSt3__18ios_base6getlocEv(ptr dead_on_unwind writable sret(%"class.std::__1::locale") align 8 %5, ptr noundef %8)
+                                              ^
+
+INFO: Processing hello.bc...
+INFO: Phase 1: parsing
+ERROR: Failed to process hello.bc: Phase 1: input IR failed to parse/verify: LLVM IR parsing error
+<string>:1292:36: error: expected '(' in constantexpr
+  store ptr getelementptr inbounds inrange(-16, 24) ({ [5 x ptr] }, ptr @_ZTVSt12length_error, i32 0, i32 0, i32 2), ptr %5, align 8
+                                   ^
+
+INFO: Processing ary2.bc...
+INFO: Phase 1: parsing
+ERROR: Failed to process ary2.bc: Phase 1: input IR failed to parse/verify: LLVM IR parsing error
+<string>:472:155: error: expected value token
+  call void @_ZNSt3__122__make_exception_guardB8ne190102INS_6vectorIiNS_9allocatorIiEEE16__destroy_vectorEEENS_28__exception_guard_exceptionsIT_EES7_(ptr dead_on_unwind writable sret(%"struct.std::__1::__exception_guard_exceptions") align 8 %8, i64 %20)
+                                                                                                                                                          ^
+
+INFO: Processing ary3.bc...
+INFO: Phase 1: parsing
+ERROR: Failed to process ary3.bc: Phase 1: input IR failed to parse/verify: LLVM IR parsing error
+<string>:367:155: error: expected value token
+  call void @_ZNSt3__122__make_exception_guardB8ne190102INS_6vectorIiNS_9allocatorIiEEE16__destroy_vectorEEENS_28__exception_guard_exceptionsIT_EES7_(ptr dead_on_unwind writable sret(%"struct.std::__1::__exception_guard_exceptions") align 8 %8, i64 %20)
+                                                                                                                                                          ^
+
+INFO: Processing hash2.bc...
+INFO: Phase 1: parsing
+ERROR: Failed to process hash2.bc: Phase 1: input IR failed to parse/verify: LLVM IR parsing error
+<string>:504:127: error: expected value token
+  call void @_ZN9__gnu_cxx8hash_mapIPKciNS_4hashIS2_EE5eqstrNSt3__19allocatorINS6_4pairIKS2_iEEEEE16__construct_nodeERS9_(ptr dead_on_unwind writable sret(%"class.std::__1::unique_ptr.17") align 8 %9, ptr noundef %15, ptr noundef nonnull align 8 dereferenceable(8) %30)
+                                                                                                                              ^
+
+INFO: Processing methcall.bc...
+INFO: Phase 1: parsing
+ERROR: Failed to process methcall.bc: Phase 1: input IR failed to parse/verify: LLVM IR parsing error
+<string>:351:36: error: expected '(' in constantexpr
+  store ptr getelementptr inbounds inrange(-16, 24) ({ [5 x ptr] }, ptr @_ZTV6Toggle, i32 0, i32 0, i32 2), ptr %6, align 8
+                                   ^
+
+INFO: Processing ary.bc...
+INFO: Phase 1: parsing
+ERROR: Failed to process ary.bc: Phase 1: input IR failed to parse/verify: LLVM IR parsing error
+<string>:306:155: error: expected value token
+  call void @_ZNSt3__122__make_exception_guardB8ne190102INS_6vectorIiNS_9allocatorIiEEE16__destroy_vectorEEENS_28__exception_guard_exceptionsIT_EES7_(ptr dead_on_unwind writable sret(%"struct.std::__1::__exception_guard_exceptions") align 8 %8, i64 %20)
+                                                                                                                                                          ^
+
+INFO: Processing objinst.bc...
+INFO: Phase 1: parsing
+ERROR: Failed to process objinst.bc: Phase 1: input IR failed to parse/verify: LLVM IR parsing error
+<string>:453:36: error: expected '(' in constantexpr
+  store ptr getelementptr inbounds inrange(-16, 24) ({ [5 x ptr] }, ptr @_ZTV6Toggle, i32 0, i32 0, i32 2), ptr %6, align 8
+                                   ^
+
+INFO: Processing spellcheck.bc...
+INFO: Phase 1: parsing
+ERROR: Failed to process spellcheck.bc: Phase 1: input IR failed to parse/verify: LLVM IR parsing error
+<string>:511:36: error: expected '(' in constantexpr
+  store ptr getelementptr inbounds inrange(-24, 16) ({ [5 x ptr], [5 x ptr] }, ptr @_ZTVNSt3__114basic_ifstreamIcNS_11char_traitsIcEEEE, i32 0, i32 0, i32 3), ptr %10, align 8
+                                   ^
+
+INFO: Processing wordfreq.bc...
+INFO: Phase 1: parsing
+ERROR: Failed to process wordfreq.bc: Phase 1: input IR failed to parse/verify: LLVM IR parsing error
+<string>:1863:297: error: expected value token
+  call void @_ZNSt3__16__treeINS_12__value_typeIPKciEENS_19__map_value_compareIS3_S4_NS_4lessIS3_EELb1EEENS_9allocatorIS4_EEE16__construct_nodeIJRKNS_21piecewise_construct_tENS_5tupleIJOS3_EEENSG_IJEEEEEENS_10unique_ptrINS_11__tree_nodeIS4_PvEENS_22__tree_node_destructorINS9_ISN_EEEEEEDpOT_(ptr dead_on_unwind writable sret(%"class.std::__1::unique_ptr") align 8 %16, ptr noundef %18, ptr noundef nonnull align 1 dereferenceable(1) %27, ptr noundef nonnull align 8 dereferenceable(8) %28, ptr noundef nonnull align 1 dereferenceable(1) %29)
+                                                                                                                                                                                                                                                                                                        ^
+
+INFO: Processing moments.bc...
+INFO: Phase 1: parsing
+ERROR: Failed to process moments.bc: Phase 1: input IR failed to parse/verify: LLVM IR parsing error
+<string>:1490:36: error: expected '(' in constantexpr
+  store ptr getelementptr inbounds inrange(-16, 24) ({ [5 x ptr] }, ptr @_ZTVSt12length_error, i32 0, i32 0, i32 2), ptr %5, align 8
+                                   ^
+
+INFO: Processing fibo.bc...
+INFO: Phase 1: parsing
+ERROR: Failed to process fibo.bc: Phase 1: input IR failed to parse/verify: LLVM IR parsing error
+<string>:135:47: error: expected value token
+  call void @_ZNKSt3__18ios_base6getlocEv(ptr dead_on_unwind writable sret(%"class.std::__1::locale") align 8 %5, ptr noundef %8)
+                                              ^
+
+INFO: Processing matrix.bc...
+INFO: Phase 1: parsing
+ERROR: Failed to process matrix.bc: Phase 1: input IR failed to parse/verify: LLVM IR parsing error
+<string>:1698:36: error: expected '(' in constantexpr
+  store ptr getelementptr inbounds inrange(-16, 24) ({ [5 x ptr] }, ptr @_ZTVSt12length_error, i32 0, i32 0, i32 2), ptr %5, align 8
+                                   ^
+
+INFO: Processing sumcol.bc...
+INFO: Phase 1: parsing
+ERROR: Failed to process sumcol.bc: Phase 1: input IR failed to parse/verify: LLVM IR parsing error
+<string>:188:47: error: expected value token
+  call void @_ZNKSt3__18ios_base6getlocEv(ptr dead_on_unwind writable sret(%"class.std::__1::locale") align 8 %5, ptr noundef %8)
+                                              ^
+
+INFO: Processing wc.bc...
+INFO: Phase 1: parsing
+ERROR: Failed to process wc.bc: Phase 1: input IR failed to parse/verify: LLVM IR parsing error
+<string>:1500:36: error: expected '(' in constantexpr
+  store ptr getelementptr inbounds inrange(-16, 24) ({ [5 x ptr] }, ptr @_ZTVSt12length_error, i32 0, i32 0, i32 2), ptr %5, align 8
+                                   ^
+
+INFO: Processing reversefile.bc...
+INFO: Phase 1: parsing
+ERROR: Failed to process reversefile.bc: Phase 1: input IR failed to parse/verify: LLVM IR parsing error
+<string>:390:232: error: expected value token
+  call void @_ZNSt3__16__copyB8ne190102INS_17_ClassicAlgPolicyENS_16__deque_iteratorINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEPS8_RS8_PS9_lLl170EEESC_NS_16ostream_iteratorIS8_cS5_EEEENS_4pairIT0_T2_EESG_T1_SH_(ptr dead_on_unwind writable sret(%"struct.std::__1::pair.21") align 8 %8, [2 x i64] %12, [2 x i64] %13, [2 x i64] %14)
+                                                                                                                                                                                                                                       ^
+
+INFO: Processing hash.bc...
+INFO: Phase 1: parsing
+ERROR: Failed to process hash.bc: Phase 1: input IR failed to parse/verify: LLVM IR parsing error
+<string>:307:127: error: expected value token
+  call void @_ZN9__gnu_cxx8hash_mapIPKciNS_4hashIS2_EE5eqstrNSt3__19allocatorINS6_4pairIKS2_iEEEEE16__construct_nodeERS9_(ptr dead_on_unwind writable sret(%"class.std::__1::unique_ptr.17") align 8 %9, ptr noundef %15, ptr noundef nonnull align 8 dereferenceable(8) %30)
+                                                                                                                              ^
+
+INFO: Processing except.bc...
+INFO: Phase 1: parsing
+ERROR: Failed to process except.bc: Phase 1: input IR failed to parse/verify: LLVM IR parsing error
+<string>:1656:36: error: expected '(' in constantexpr
+  store ptr getelementptr inbounds inrange(-16, 24) ({ [5 x ptr] }, ptr @_ZTVSt12length_error, i32 0, i32 0, i32 2), ptr %5, align 8
+                                   ^
+
+INFO: Processing dry.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+ERROR: [Func2] LLM call to ollama/qwen2.5-coder:3b failed: 
+ERROR: [Proc0] LLM call to ollama/qwen2.5-coder:3b failed: 
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Phase 6: assembly
+INFO: [main] falling back to original (pending)
+INFO: [Proc0] falling back to original (pending)
+INFO: [Proc1] falling back to original (pending)
+INFO: [Proc2] falling back to original (pending)
+INFO: [Proc3] falling back to original (pending)
+INFO: [Proc4] falling back to original (pending)
+INFO: [Proc5] falling back to original (pending)
+INFO: [Proc6] falling back to original (pending)
+INFO: [Proc7] falling back to original (pending)
+INFO: [Proc8] falling back to original (pending)
+INFO: [Func1] falling back to original (pending)
+INFO: [Func2] falling back to original (pending)
+INFO: [Func3] falling back to original (pending)
+INFO: Processing fldry.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [Proc0] LLM finished with reason: 'stop', length: 3867
+INFO: [Proc0] Optimization returned cleanly from ollama/qwen2.5-coder:3b
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [Func2] LLM finished with reason: 'stop', length: 3349
+INFO: [Func2] Optimization returned cleanly from ollama/qwen2.5-coder:3b
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Verifying candidate for Proc0...
+WARNING: [Proc0] Syntax check failed
+INFO: Verifying candidate for Func2...
+WARNING: [Func2] Syntax check failed
+INFO: Phase 6: assembly
+INFO: [main] falling back to original (pending)
+INFO: [Proc0] falling back to original (syntax_fail)
+INFO: [Proc1] falling back to original (pending)
+INFO: [Proc2] falling back to original (pending)
+INFO: [Proc3] falling back to original (pending)
+INFO: [Proc4] falling back to original (pending)
+INFO: [Proc5] falling back to original (pending)
+INFO: [Proc6] falling back to original (pending)
+INFO: [Proc7] falling back to original (pending)
+INFO: [Proc8] falling back to original (pending)
+INFO: [Func1] falling back to original (pending)
+INFO: [Func2] falling back to original (syntax_fail)
+INFO: [Func3] falling back to original (pending)
+INFO: Processing Towers.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Phase 6: assembly
+INFO: [Initrand] falling back to original (pending)
+INFO: [Rand] falling back to original (pending)
+INFO: [Error] falling back to original (pending)
+INFO: [Makenull] falling back to original (pending)
+INFO: [Getelement] falling back to original (pending)
+INFO: [Push] falling back to original (pending)
+INFO: [Init] falling back to original (pending)
+INFO: [Pop] falling back to original (pending)
+INFO: [Move] falling back to original (pending)
+INFO: [tower] falling back to original (pending)
+INFO: [Towers] falling back to original (pending)
+INFO: [main] falling back to original (pending)
+INFO: Processing RealMM.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: Phase 4: reconstruction
+INFO: Phase 5: verification
+INFO: Phase 6: assembly
+INFO: [Initrand] falling back to original (pending)
+INFO: [Rand] falling back to original (pending)
+INFO: [rInitmatrix] falling back to original (pending)
+INFO: [rInnerproduct] falling back to original (pending)
+INFO: [Mm] falling back to original (pending)
+INFO: [main] falling back to original (pending)
+INFO: Processing Treesort.bc...
+INFO: Phase 1: parsing
+INFO: Phase 2: triage
+INFO: Phase 3: routing (identity stub)
+INFO: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+INFO: Ollama is running. Available models: ['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2:7b', 'deepseek-r1:1.5b']
+INFO: HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO: [Insert] LLM finished with reason: 'stop', length: 313
+INFO: [Insert] Optimization returned cleanly from ollama/qwen2.5-coder:3b

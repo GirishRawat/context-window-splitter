@@ -99,7 +99,7 @@ class LLMRoutingConfig:
     # --- Rate limiting / retry (used by the gemini/ path in p3_route.py) ---
     # Requests-per-minute cap enforced globally across all Gemini calls. Set
     # conservatively for the free tier; overridable via GEMINI_RPM.
-    requests_per_minute: int = 10
+    requests_per_minute: int = 5
     # Retry attempts on rate-limit (429) / transient errors before falling back.
     max_retries: int = 5
     # Base delay (seconds) for exponential backoff between retries.
@@ -107,26 +107,26 @@ class LLMRoutingConfig:
 
     def __post_init__(self):
         # Model id is overridable via GEMINI_MODEL (e.g. set to
-        # "gemini/gemini-2.0-flash" for higher free-tier throughput).
-        gemini_model = os.getenv("GEMINI_MODEL", "gemini/gemini-2.5-flash")
+        # "gemini/gemini-1.5-flash" for higher free-tier throughput).
+        gemini_model = os.getenv("GEMINI_MODEL", "gemini/gemini-3.5-flash")
         if self.tiers is None:
             self.tiers = {
                 "fast": ModelTier(
                     name="fast",
                     models=[gemini_model],
-                    max_concurrent=3,
+                    max_concurrent=1,
                     timeout_seconds=120
                 ),
                 "mid": ModelTier(
                     name="mid",
                     models=[gemini_model],
-                    max_concurrent=3,
+                    max_concurrent=1,
                     timeout_seconds=120
                 ),
                 "frontier": ModelTier(
                     name="frontier",
                     models=[gemini_model],
-                    max_concurrent=3,
+                    max_concurrent=1,
                     timeout_seconds=120
                 )
             }

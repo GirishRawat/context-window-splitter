@@ -116,7 +116,16 @@ def run_subset(build_dir: Path, targets: dict[str, set[str]], output_csv: Path, 
             continue
         ir_text = normalize_ir(ll_file.read_text())
 
-        parsed: ParsedModule = parse_module(ir_text)
+        try:
+            parsed: ParsedModule = parse_module(ir_text)
+        except RuntimeError as e:
+            # Seen on lists.bc: clang emits a newer-LLVM-only attribute
+            # (`dead_on_unwind writable sret(...)`) via a C++ stdlib call that
+            # llvmlite's LLVM-14-based parser rejects. Input-corpus issue, not
+            # an LLM-output issue -- skip this file's targets rather than
+            # kill the whole run, matching the other try/except guards here.
+            logger.error(f"{file_name}: Phase 1 parse failed ({e}), skipping this file")
+            continue
         triage_module(parsed, config)
 
         # Force every non-selected function to skip Phases 3-5.

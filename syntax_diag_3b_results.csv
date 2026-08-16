@@ -32,3 +32,25 @@ linpack-pc.bc,dgesl,10,7421,ollama/qwen2.5-coder:3b,123.995,17.682,unsupported,2
 linpack-pc.bc,dmxpy,11,14080,ollama/qwen2.5-coder:3b,143.086,,syntax_fail,732,732,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpvm6pxpkj.ll:288:44: error: '%98' defined with type 'float' but expected 'ptr'
   %107 = getelementptr inbounds float, ptr %98, i64 %106
                                            ^"
+smallpt.bc,_Z8radianceRK3RayiPt,18,22834,ollama/qwen2.5-coder:3b,,,pending,999,999,0.0,call_error: ,
+smallpt.bc,main,12,12441,ollama/qwen2.5-coder:3b,,,pending,510,510,0.0,call_error: ,
+ffbench.bc,main,18,6646,ollama/qwen2.5-coder:3b,145.382,1.429,passed,,,,stop,
+ffbench.bc,fourn,13,8571,ollama/qwen2.5-coder:3b,200.838,,syntax_fail,,,,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpmh1xn59c.ll:275:45: error: '%122' defined with type 'double' but expected 'ptr'
+  %127 = getelementptr inbounds double, ptr %122, i64 %126
+                                            ^"
+fpcmp.bc,AdvanceNumber,16,4948,ollama/qwen2.5-coder:3b,57.21,0.041,passed,130,130,0.0,stop,
+fpcmp.bc,CompareNumbers,17,7231,ollama/qwen2.5-coder:3b,118.169,,syntax_fail,262,262,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpbexw8idu.ll:447:151: error: expected value token
+  %206 = call i32 (ptr, ptr, ...) @fprintf(ptr noundef %195, ptr noundef @.str.14, ptr noundef %196, double noundef %197, double noundef %198, double noudef %202, double noundef %203, double noundef %204, double noundef %205) #9
+                                                                                                                                                      ^"
+fpcmp.bc,main,11,5791,ollama/qwen2.5-coder:3b,59.65,,syntax_fail,174,174,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpcr3pw720.ll:294:41: error: '%84' defined with type 'i32' but expected 'ptr'
+  %86 = getelementptr inbounds ptr, ptr %84, i64 %85
+                                        ^"
+nussinov.bc,kernel_nussinov,16,8370,ollama/qwen2.5-coder:3b,191.952,,syntax_fail,373,373,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpoc_cqn1j.ll:365:3: error: instruction forward referenced with type 'i64'
+  %190 = getelementptr inbounds [2500 x i32], ptr %186, i64 %190
+  ^"
+nussinov.bc,kernel_nussinov_StrictFP,16,8370,ollama/qwen2.5-coder:3b,183.594,,syntax_fail,373,373,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmp1wgok2jd.ll:365:3: error: instruction forward referenced with type 'i64'
+  %190 = getelementptr inbounds [2500 x i32], ptr %186, i64 %190
+  ^"
+flops.bc,main,15,24685,ollama/qwen2.5-coder:3b,,,pending,1341,1341,0.0,call_error: ,
+fannkuch.bc,fannkuch,15,5674,ollama/qwen2.5-coder:3b,136.881,0.041,passed,294,294,0.0,stop,
+queens.bc,main,15,4669,ollama/qwen2.5-coder:3b,40.746,8.907,unsupported,177,177,0.0,stop,

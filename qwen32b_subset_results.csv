@@ -26,3 +26,10 @@ nussinov.bc,kernel_nussinov_StrictFP,16,8370,ollama/qwen2.5-coder:32b,,,pending,
 flops.bc,main,15,24689,ollama/qwen2.5-coder:32b,,,pending,1341,1341,0.0
 fannkuch.bc,fannkuch,15,5674,ollama/qwen2.5-coder:32b,,,pending,294,294,0.0
 queens.bc,main,15,4669,ollama/qwen2.5-coder:32b,228.977,9.626,passed,,,,stop,
+deriche.bc,kernel_deriche,13,11318,ollama/qwen2.5-coder:32b,,,pending,533,533,0.0,call_error: ,
+deriche.bc,kernel_deriche_StrictFP,13,11331,ollama/qwen2.5-coder:32b,,,pending,546,546,0.0,call_error: ,
+misr.bc,main,13,5246,ollama/qwen2.5-coder:32b,297.473,0.045,passed,206,206,0.0,stop,
+misr.bc,simulate,13,6766,ollama/qwen2.5-coder:32b,,,pending,325,325,0.0,call_error: ,
+fbench.bc,main,12,8269,ollama/qwen2.5-coder:32b,,,pending,290,290,0.0,call_error: ,
+ludcmp.bc,init_array,12,6727,ollama/qwen2.5-coder:32b,,,pending,268,268,0.0,call_error: ,
+ludcmp.bc,kernel_ludcmp,10,6820,ollama/qwen2.5-coder:32b,,,pending,278,278,0.0,call_error: ,

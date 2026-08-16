@@ -1,0 +1,23 @@
+file_name,function_name,complexity,tokens,model,llm_latency_s,verification_latency_s,verdict,orig_instrs,final_instrs,reduction_pct,finish_reason,syntax_error
+Puzzle.bc,Place,5,3382,ollama/qwen2.5-coder:32b,108.003,,syntax_fail,80,80,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmp2a0nvkic.ll:180:1: error: expected instruction opcode
+30:                                               ; preds = %24, %15
+^"
+Puzzle.bc,Trial,6,3061,ollama/qwen2.5-coder:32b,51.206,0.677,passed,62,62,0.0,stop,
+Puzzle.bc,Puzzle,49,13301,ollama/qwen2.5-coder:32b,711.928,0.159,unsupported,672,672,0.0,stop,
+ReedSolomon.bc,rsdec_204,7,3210,ollama/qwen2.5-coder:32b,100.674,1.603,unsupported,,,,stop,
+ReedSolomon.bc,rsenc_204,6,2791,ollama/qwen2.5-coder:32b,72.246,1.497,unsupported,,,,stop,
+ReedSolomon.bc,generate_gf,5,3119,ollama/qwen2.5-coder:32b,83.169,,syntax_fail,,,,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmps3onmncf.ll:134:3: error: instruction expected to be numbered '%24' or greater
+  %22 = load i32, ptr %2, align 4
+  ^"
+ReedSolomon.bc,gen_poly,5,3167,ollama/qwen2.5-coder:32b,89.263,0.074,passed,,,,stop,
+ReedSolomon.bc,decode_rs,59,23597,ollama/qwen2.5-coder:32b,272.681,0.263,unsupported,,,,stop,
+ReedSolomon.bc,encode_rs,7,3452,ollama/qwen2.5-coder:32b,108.293,0.038,passed,,,,stop,
+cholesky.bc,init_array,11,6480,ollama/qwen2.5-coder:32b,226.136,20.362,unsupported,257,257,0.0,stop,
+cholesky.bc,kernel_cholesky,5,4559,ollama/qwen2.5-coder:32b,134.382,,syntax_fail,147,147,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpaq0zqr3f.ll:218:3: error: instruction forward referenced with type 'label'
+  %52 = add nsw i32 %51, 1
+  ^"
+cholesky.bc,kernel_cholesky_StrictFP,5,4541,ollama/qwen2.5-coder:32b,126.636,0.039,passed,147,147,0.0,stop,
+cholesky.bc,check_FP,5,3736,ollama/qwen2.5-coder:32b,68.075,,syntax_fail,97,97,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmp4ycg1004.ll:207:3: error: instruction expected to be numbered '%49' or greater
+  %45 = load ptr, ptr @__stderrp, align 8
+  ^"
+correlation.bc,kernel_correlation,11,7422,ollama/qwen2.5-coder:32b,315.996,10.86,passed,,,,stop,

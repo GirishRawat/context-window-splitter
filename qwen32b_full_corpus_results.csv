@@ -37,3 +37,20 @@ exptree.bc,doSearch,8,3106,ollama/qwen2.5-coder:32b,58.88,,syntax_fail,72,72,0.0
 fannkuch.bc,fannkuch,15,5674,ollama/qwen2.5-coder:32b,263.996,0.037,passed,294,294,0.0,stop,
 fbench.bc,main,12,8269,ollama/qwen2.5-coder:32b,302.1,1.583,unsupported,290,290,0.0,stop,
 fbench.bc,transit_surface,8,5581,ollama/qwen2.5-coder:32b,144.062,21.871,unsupported,183,183,0.0,stop,
+ffbench.bc,main,18,6646,ollama/qwen2.5-coder:32b,262.138,,syntax_fail,314,314,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmps_1r7s0k.ll:136:3: error: instruction expected to be numbered '%36' or greater
+  %34 = load ptr, ptr @__stderrp, align 8
+  ^"
+ffbench.bc,fourn,13,8571,ollama/qwen2.5-coder:32b,420.001,11.085,passed,450,450,0.0,stop,
+flops.bc,main,15,24685,ollama/qwen2.5-coder:32b,425.504,,syntax_fail,1341,1341,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmphhr470_z.ll:140:3: error: instruction expected to be numbered '%14' or greater
+  %12 = load i64, ptr %7, align 8
+  ^"
+fpcmp.bc,load_file,7,4511,ollama/qwen2.5-coder:32b,88.315,0.036,passed,98,98,0.0,stop,
+fpcmp.bc,diff_file,25,8352,ollama/qwen2.5-coder:32b,303.761,1.573,unsupported,325,325,0.0,stop,
+fpcmp.bc,AdvanceNumber,16,4948,ollama/qwen2.5-coder:32b,92.561,,syntax_fail,130,130,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmp7zn_0rec.ll:245:3: error: instruction forward referenced with type 'label'
+  %64 = call zeroext i1 @isDigitChar(i8 noundef signext %63)
+  ^"
+fpcmp.bc,CompareNumbers,17,7231,ollama/qwen2.5-coder:32b,202.215,,syntax_fail,262,262,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmp6lrr6x5e.ll:357:48: error: use of undefined value '%23'
+  call void @llvm.lifetime.start.p0(i64 8, ptr %23) #9
+                                               ^"
+fpcmp.bc,main,11,5791,ollama/qwen2.5-coder:32b,154.507,1.57,unsupported,174,174,0.0,stop,
+fpcmp.bc,contains_non_printable_characters,5,3598,ollama/qwen2.5-coder:32b,35.161,2.2,rejected,52,52,0.0,stop,

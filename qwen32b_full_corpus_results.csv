@@ -30,3 +30,10 @@ deriche.bc,kernel_deriche_StrictFP,13,11333,ollama/qwen2.5-coder:32b,509.5,,synt
 deriche.bc,check_FP,5,3949,ollama/qwen2.5-coder:32b,70.585,,syntax_fail,97,97,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpx9amsuyy.ll:218:3: error: instruction expected to be numbered '%49' or greater
   %45 = load ptr, ptr @__stderrp, align 8
   ^"
+exptree.bc,recSearch,22,5961,ollama/qwen2.5-coder:32b,214.865,15.611,unsupported,239,239,0.0,stop,
+exptree.bc,doSearch,8,3106,ollama/qwen2.5-coder:32b,58.88,,syntax_fail,72,72,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpoqe_xhr8.ll:164:1: error: expected instruction opcode
+27:                                               ; preds = %21, %7
+^"
+fannkuch.bc,fannkuch,15,5674,ollama/qwen2.5-coder:32b,263.996,0.037,passed,294,294,0.0,stop,
+fbench.bc,main,12,8269,ollama/qwen2.5-coder:32b,302.1,1.583,unsupported,290,290,0.0,stop,
+fbench.bc,transit_surface,8,5581,ollama/qwen2.5-coder:32b,144.062,21.871,unsupported,183,183,0.0,stop,

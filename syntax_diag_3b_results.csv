@@ -54,3 +54,33 @@ nussinov.bc,kernel_nussinov_StrictFP,16,8370,ollama/qwen2.5-coder:3b,183.594,,sy
 flops.bc,main,15,24685,ollama/qwen2.5-coder:3b,,,pending,1341,1341,0.0,call_error: ,
 fannkuch.bc,fannkuch,15,5674,ollama/qwen2.5-coder:3b,136.881,0.041,passed,294,294,0.0,stop,
 queens.bc,main,15,4669,ollama/qwen2.5-coder:3b,40.746,8.907,unsupported,177,177,0.0,stop,
+deriche.bc,kernel_deriche,13,11318,ollama/qwen2.5-coder:3b,260.325,,syntax_fail,533,533,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpyi7834im.ll:368:3: error: instruction forward referenced with type 'label'
+  %150 = icmp slt i32 %148, %149
+  ^"
+deriche.bc,kernel_deriche_StrictFP,13,11331,ollama/qwen2.5-coder:3b,225.044,,syntax_fail,546,546,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmp9vlsl0er.ll:490:3: error: instruction forward referenced with type 'i32'
+  %230 = sext i32 %230 to i64
+  ^"
+misr.bc,main,13,5246,ollama/qwen2.5-coder:3b,100.463,,syntax_fail,206,206,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpjkuxey1w.ll:346:3: error: instruction forward referenced with type 'i32'
+  %154 = sitofp i32 %154 to double
+  ^"
+misr.bc,simulate,13,6766,ollama/qwen2.5-coder:3b,133.912,,syntax_fail,325,325,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpa5nci07e.ll:375:3: error: instruction forward referenced with type 'ptr'
+  %199 = load i32, ptr %198, align 4
+  ^"
+fbench.bc,main,12,8269,ollama/qwen2.5-coder:3b,148.061,,syntax_fail,290,290,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpjp12uv9j.ll:383:3: error: instruction forward referenced with type 'i32'
+  %178 = sext i32 %178 to i64
+  ^"
+ludcmp.bc,init_array,12,6727,ollama/qwen2.5-coder:3b,123.417,10.477,passed,268,268,0.0,stop,
+ludcmp.bc,kernel_ludcmp,10,6820,ollama/qwen2.5-coder:3b,91.01,,syntax_fail,278,278,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmp8nqg23zl.ll:277:32: error: use of undefined value '%123'
+  br i1 %99, label %100, label %123
+                               ^"
+correlation.bc,kernel_correlation,11,7422,ollama/qwen2.5-coder:3b,152.311,,syntax_fail,341,341,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmp05u7u8a3.ll:425:3: error: instruction forward referenced with type 'i32'
+  %216 = sext i32 %216 to i64
+  ^"
+cholesky.bc,init_array,11,6482,ollama/qwen2.5-coder:3b,34.062,,syntax_fail,257,257,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpl9quyq1p.ll:451:3: error: instruction forward referenced with type 'i64'
+  %200 = getelementptr inbounds [2000 x double], ptr %197, i64 %200
+  ^"
+lu.bc,init_array,11,5862,ollama/qwen2.5-coder:3b,28.639,,syntax_fail,223,223,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpbjfp749n.ll:235:53: error: '%60' defined with type 'i32' but expected 'ptr'
+  %62 = getelementptr inbounds [2000 x double], ptr %60, i64 %61
+                                                    ^"
+himenobmtxpa.bc,set_param,11,3720,ollama/qwen2.5-coder:3b,12.568,0.035,passed,98,98,0.0,stop,
+mandel-text.bc,main,11,3824,ollama/qwen2.5-coder:3b,22.984,1.541,unsupported,192,192,0.0,stop,

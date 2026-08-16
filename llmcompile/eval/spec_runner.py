@@ -89,6 +89,22 @@ def process_spec_corpus(build_dir: Path, output_csv: Path, complexity_threshold:
             ir_text = ir_text.replace("uwtable(sync)", "uwtable")
             ir_text = re.sub(r"memory\([^)]+\)", "", ir_text)
             ir_text = re.sub(r"!llvm\.module\.flags.*", "", ir_text)
+
+            # Strip instruction-level alias/TBAA metadata attachments. Alive2
+            # cannot translate `!tbaa` (metadata kind 1), which Clang attaches to
+            # every load/store even at -O0, so it returns "Could not translate
+            # ... to Alive IR" (verdict UNSUPPORTED) for any memory-touching
+            # function -- even the identity transform. Stripping these here (on
+            # the input, before parsing) makes original_ir TBAA-free, so both the
+            # source and the Phase-4 candidate are translatable. This is applied
+            # to the reference the candidate is proven against, so it is sound:
+            # Alive2 simply assumes all memory may alias (conservative), which
+            # can only cause more rejections, never a false PASS.
+            ir_text = re.sub(r",\s*!tbaa\s+![0-9]+", "", ir_text)
+            ir_text = re.sub(r",\s*!tbaa\.struct\s+![0-9]+", "", ir_text)
+            ir_text = re.sub(r",\s*!range\s+![0-9]+", "", ir_text)
+            ir_text = re.sub(r",\s*!alias\.scope\s+![0-9]+", "", ir_text)
+            ir_text = re.sub(r",\s*!noalias\s+![0-9]+", "", ir_text)
                 
             # 2. Run the full compilation pipeline
             t0 = time.perf_counter()

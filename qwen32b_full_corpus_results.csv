@@ -153,3 +153,7 @@ nussinov.bc,check_FP,5,3607,ollama/qwen2.5-coder:32b,84.291,0.035,passed,,,,stop
 queens.bc,main,15,4669,ollama/qwen2.5-coder:32b,161.47,10.157,passed,,,,stop,
 queens.bc,find,8,3155,ollama/qwen2.5-coder:32b,81.764,0.026,passed,,,,stop,
 queens.bc,pboard,5,2311,ollama/qwen2.5-coder:32b,39.684,3.894,passed,,,,stop,
+smallpt.bc,_Z8radianceRK3RayiPt,18,22834,ollama/qwen2.5-coder:32b,,,pending,999,999,0.0,call_error: ,
+smallpt.bc,main,12,12441,ollama/qwen2.5-coder:32b,579.544,,syntax_fail,510,510,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmp8y4_z0p9.ll:269:3: error: instruction expected to be numbered '%101' or greater
+  %98 = phi ptr [ %94, %96 ], [ %99, %103 ]
+  ^"

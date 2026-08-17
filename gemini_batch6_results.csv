@@ -1,2 +1,20 @@
 file_name,function_name,complexity,tokens,model,llm_latency_s,verification_latency_s,verdict,orig_instrs,final_instrs,reduction_pct,finish_reason,syntax_error
 fbench.bc,transit_surface,8,5581,gemini/gemini-3.5-flash,212.643,2404.284,unsupported,183,183,0.0,stop,
+functionobjects.bc,_Z9summarizePKciiii,8,20794,gemini/gemini-3.5-flash,85.469,1.559,unsupported,191,191,0.0,stop,
+functionobjects.bc,_Z17summarize_simplefP7__sFILEPKc,5,19502,gemini/gemini-3.5-flash,43.681,1.525,unsupported,115,115,0.0,stop,
+functionobjects.bc,_Z9quicksortIPd17less_than_functorEvT_S2_T0_,6,18959,gemini/gemini-3.5-flash,70.718,1270.48,unsupported,85,85,0.0,stop,
+functionobjects.bc,_ZNSt3__126__insertion_sort_unguardedB8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEvT1_S6_T0_,5,18935,gemini/gemini-3.5-flash,31.644,3.455,rejected,84,84,0.0,stop,
+functionobjects.bc,_ZNSt3__17__sort3B8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEjT1_S6_S6_T0_,6,19054,gemini/gemini-3.5-flash,70.918,452.11,rejected,84,84,0.0,stop,
+functionobjects.bc,_ZNSt3__131__partition_with_equals_on_leftB8ne190102INS_17_ClassicAlgPolicyEPdRPFbddEEET0_S6_S6_T1_,11,19844,gemini/gemini-3.5-flash,87.496,1.548,unsupported,132,132,0.0,stop,
+functionobjects.bc,_ZNSt3__127__insertion_sort_incompleteB8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEbT1_S6_T0_,10,20957,gemini/gemini-3.5-flash,88.748,222.234,rejected,180,180,0.0,stop,
+functionobjects.bc,_ZNSt3__111__introsortINS_17_ClassicAlgPolicyER17less_than_functorPdLb0EEEvT1_S5_T0_NS_15iterator_traitsIS5_E15difference_typeEb,15,23776,gemini/gemini-3.5-flash,130.5,1.493,unsupported,286,286,0.0,stop,
+functionobjects.bc,_ZNSt3__17__sort3B8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEjT1_S5_S5_T0_,6,19039,gemini/gemini-3.5-flash,68.504,1363.117,unsupported,69,69,0.0,stop,
+functionobjects.bc,_ZNSt3__118__bitset_partitionB8ne190102INS_17_ClassicAlgPolicyEPdR17less_than_functorEENS_4pairIT0_bEES6_S6_T1_,14,21191,gemini/gemini-3.5-flash,99.627,,syntax_fail,168,168,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpxx1_22s3.ll:746:5: error: expected '=' after instruction id
+  %5_phi = phi ptr [ %0, %entry ], [ %28, %29 ]
+    ^"
+functionobjects.bc,_ZNSt3__127__insertion_sort_incompleteB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEbT1_S5_T0_,10,20960,gemini/gemini-3.5-flash,75.342,1207.386,unsupported,171,171,0.0,stop,
+functionobjects.bc,_ZNSt3__127__insertion_sort_incompleteB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEbT1_S5_T0_,10,20967,gemini/gemini-3.5-flash,82.96,,syntax_fail,171,171,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpmc4wz7m9.ll:834:16: error: expected instruction opcode
+  %prev.next = %i.curr
+               ^"
+linpack-pc.bc,matgen,7,5120,gemini/gemini-3.5-flash,52.212,2.358,passed,150,57,62.0,stop,
+fpcmp.bc,load_file,7,4511,gemini/gemini-3.5-flash,16.205,1203.021,unsupported,98,98,0.0,stop,

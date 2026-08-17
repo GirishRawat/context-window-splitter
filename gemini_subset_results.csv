@@ -77,3 +77,7 @@ smallpt.bc,_Z8radianceRK3RayiPt,18,22834,gemini/gemini-3.5-flash,241.12,1.617,un
 smallpt.bc,main,12,12441,gemini/gemini-3.5-flash,275.07,,syntax_fail,510,510,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpjxyz10nm.ll:246:7: error: expected '=' after instruction id
   %768_y = sub nsw i32 768, %y
       ^"
+ffbench.bc,main,18,6646,gemini/gemini-3.5-flash,136.747,,syntax_fail,314,314,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpkbwgg_q0.ll:175:3: error: multiple definition of local value named 'i.and'
+  %i.and = and i32 %i.v, 15
+  ^"
+ffbench.bc,fourn,13,8571,gemini/gemini-3.5-flash,152.585,1200.902,passed,450,148,67.11,stop,

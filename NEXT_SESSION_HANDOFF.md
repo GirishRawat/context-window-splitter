@@ -13,11 +13,36 @@ at `~/llvm_toolchain/...`) is **unchanged and still true**. Read it there; it is
 not repeated here. `JUPYTERHUB_AGENT_HANDOFF.md` is older still and is now
 mostly historical — treat it as background, not instructions.
 
-## 0. READ THIS FIRST: a mistake you must not repeat
+## 0. READ THIS FIRST: the user's standing git rules
+
+Two standing instructions from the user, both saved as a pinned memory. They
+apply to **every** session, every repo, indefinitely — not just to this project.
+
+### Rule 1 — commits must never be attributed to Claude
 
 The user asked, explicitly and early in the session, that commits land as
-**purely their own** — no `Co-Authored-By: Claude` trailer, so nothing shows up
-as a Claude contribution on their GitHub. This is saved as a pinned memory.
+**purely their own**. No `Co-Authored-By: Claude ... <noreply@anthropic.com>`
+trailer and no `Claude-Session:` trailer, so nothing shows up as a Claude
+contribution on their GitHub — the contribution history on their repositories
+should read as their own work.
+
+Write plain commit messages with no attribution lines, even though the default
+Claude Code workflow normally appends them. **This applies to commits made by
+any automation you set up, too** — not only to ones you type by hand.
+
+### Rule 2 — commit changes automatically and periodically
+
+The user does not want work sitting uncommitted in the working tree. They want
+Claude to **check periodically for changes and commit them automatically**,
+without being asked each time. Combined with Rule 1: those automatic commits
+must also be free of Claude attribution.
+
+In this project that's already implemented — see §1. If you set up similar
+automation elsewhere, copy its shape: scope the `git add` to specific known
+paths rather than `git add .`, so an unattended loop can never sweep up a stray
+artifact, a large file, or a credential.
+
+### Where this went wrong this session
 
 **Six commits from this session violated that instruction anyway** and are
 already pushed to `origin/main`:
@@ -44,16 +69,40 @@ Do **not** run that unprompted — it is a force-push to `main` and the user may
 prefer to leave it. Ask. Either way: **every commit you make must omit the
 trailer.**
 
-## 1. What's still running
+## 1. The auto-commit loop (this is Rule 2's implementation — keep it)
 
 ```
 PID 13689  bash ./scripts/auto_commit_results.sh 1800
 ```
 
-That's it. It's the scoped checkpoint loop (only ever stages `*_results.csv`,
-never `git add .`). Harmless to leave running, harmless to kill now that no eval
-is writing CSVs — `kill 13689` if you want a quiet tree. The eval PIDs from the
-previous handoff (12607, 13566) have all exited cleanly.
+That's the only thing still running. `scripts/auto_commit_results.sh` is the
+periodic auto-commit the user asked for in §0 Rule 2: every 30 minutes it stages
+changes, writes a plain `Auto-checkpoint eval results: <timestamp>` commit with a
+per-CSV progress summary in the body, and pushes to `origin/main`.
+
+**It is already compliant with Rule 1** — verified: every `Auto-checkpoint`
+commit in the history carries no `Co-Authored-By` and no `Claude-Session`
+trailer. If you ever modify this script, keep it that way.
+
+Two design points worth preserving if you extend it:
+
+- It stages **only** `git add -- '*_results.csv'`, never `git add .`. That's
+  deliberate (`scripts/auto_push.sh` does the broad thing) so an unattended loop
+  running for hours can't commit a stray artifact or a credential.
+- The interval is the first argument (`./scripts/auto_commit_results.sh 1800`),
+  not hardcoded — consistent with this project's no-magic-numbers rule (§8).
+
+Start it for any long unattended run:
+`nohup ./scripts/auto_commit_results.sh 1800 >> scratch/auto_commit.log 2>&1 &`
+
+Right now no eval is writing CSVs, so it's idling and logging
+`no result changes`. Harmless either way; `kill 13689` if you want it stopped.
+**If the user's intent is broader** — auto-committing *any* source change, not
+just result CSVs — that would mean widening the staged paths (e.g. adding
+`scripts/` and `*.md`), which is a real decision about what an unattended loop is
+allowed to commit. Ask before widening it rather than assuming.
+
+The eval PIDs from the previous handoff (12607, 13566) have all exited cleanly.
 
 ## 2. The overnight chain: all three arms complete
 
@@ -231,7 +280,10 @@ can currently distinguish "LLMs can optimise IR" from "one model got lucky once"
 
 ## 8. Rules of engagement (carried forward, still true)
 
-- **No `Co-Authored-By: Claude` trailer on commits.** See §0.
+- **No `Co-Authored-By: Claude` / `Claude-Session:` trailer on commits, ever —
+  including automated ones. Commit changes periodically and automatically
+  rather than leaving them uncommitted.** Both rules in full in §0; the
+  implementation is §1.
 - §2 of `README.md` (architectural constraints) is hard. Stop and flag if a task
   conflicts with it.
 - No hard-coded thresholds/timeouts — everything in `config.py`,

@@ -118,3 +118,48 @@ huffbench.bc,heap_adjust,5,3349,ollama/qwen2.5-coder:3b,13.065,,syntax_fail,100,
   %i45 = getelementptr inbounds i64, ptr %i38, i64 %i43
                                                    ^"
 huffbench.bc,main,6,2957,ollama/qwen2.5-coder:3b,6.323,1.591,unsupported,73,73,0.0,stop,
+linpack-pc.bc,main,21,17458,ollama/qwen2.5-coder:3b,,,pending,738,738,0.0,call_error: ,
+linpack-pc.bc,matgen,7,5488,ollama/qwen2.5-coder:3b,20.324,0.035,passed,150,150,0.0,stop,
+linpack-pc.bc,dgefa,8,7650,ollama/qwen2.5-coder:3b,37.3,21.095,unsupported,267,267,0.0,stop,
+linpack-pc.bc,dgesl,10,8102,ollama/qwen2.5-coder:3b,41.101,,syntax_fail,287,287,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmp96ip_v5v.ll:223:3: error: instruction forward referenced with type 'i32'
+  %i49 = sext i32 %i49 to i64
+  ^"
+linpack-pc.bc,dmxpy,11,15810,ollama/qwen2.5-coder:3b,90.315,,syntax_fail,732,732,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmp5szstel4.ll:289:45: error: '%i96' defined with type 'float' but expected 'ptr'
+  %i105 = getelementptr inbounds float, ptr %i96, i64 %i104
+                                            ^"
+linpack-pc.bc,idamax,8,5168,ollama/qwen2.5-coder:3b,17.161,0.036,passed,135,135,0.0,stop,
+linpack-pc.bc,dscal,6,4389,ollama/qwen2.5-coder:3b,11.411,0.035,passed,90,90,0.0,stop,
+linpack-pc.bc,daxpy,9,5289,ollama/qwen2.5-coder:3b,17.801,0.045,passed,140,140,0.0,stop,
+linpack-pc.bc,ddot,8,5195,ollama/qwen2.5-coder:3b,16.964,0.039,passed,135,135,0.0,stop,
+lu.bc,init_array,11,6371,ollama/qwen2.5-coder:3b,31.695,10.274,passed,223,223,0.0,stop,
+lu.bc,kernel_lu,6,4779,ollama/qwen2.5-coder:3b,19.25,0.04,passed,142,142,0.0,stop,
+lu.bc,kernel_lu_StrictFP,6,4761,ollama/qwen2.5-coder:3b,19.018,0.034,passed,142,142,0.0,stop,
+lu.bc,check_FP,5,3923,ollama/qwen2.5-coder:3b,12.725,0.044,passed,97,97,0.0,stop,
+ludcmp.bc,init_array,12,7334,ollama/qwen2.5-coder:3b,39.018,10.485,passed,268,268,0.0,stop,
+ludcmp.bc,kernel_ludcmp,10,7472,ollama/qwen2.5-coder:3b,36.756,,syntax_fail,278,278,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpq5vfw39d.ll:281:55: error: '%i100' defined with type 'i32' but expected 'ptr'
+  %i102 = getelementptr inbounds [2000 x double], ptr %i100, i64 %i101
+                                                      ^"
+ludcmp.bc,kernel_ludcmp_StrictFP,10,7436,ollama/qwen2.5-coder:3b,33.935,,syntax_fail,278,278,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmppui6oko6.ll:281:55: error: '%i100' defined with type 'i32' but expected 'ptr'
+  %i102 = getelementptr inbounds [2000 x double], ptr %i100, i64 %i101
+                                                      ^"
+mandel-text.bc,main,11,4205,ollama/qwen2.5-coder:3b,25.397,1.555,unsupported,192,192,0.0,stop,
+misr.bc,main,13,5689,ollama/qwen2.5-coder:3b,30.901,13.136,unsupported,206,206,0.0,stop,
+misr.bc,simulate,13,7455,ollama/qwen2.5-coder:3b,46.328,,syntax_fail,325,325,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: assembly parsed, but does not verify as correct!
+Only PHI nodes may reference their own value!
+  %i149 = getelementptr inbounds %struct.cells, ptr %i149, i32 0, i32 0
+Only PHI nodes may reference their own value!
+  %i210 = getelementptr inbounds %struct.cells, ptr %i210, i32 0, i32 0
+Only PHI nodes may reference their own value!
+  %i229 = getelementptr inbounds %struct.cells, ptr %i229, i32 0, i32 1
+Only PHI nodes may reference their own value!
+  %i250 = getelementptr inbounds %struct.cells, ptr %i250, i32 0, i32 2"
+nussinov.bc,kernel_nussinov,16,9276,ollama/qwen2.5-coder:3b,59.727,,syntax_fail,373,373,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpfwe4dgua.ll:356:3: error: instruction forward referenced with type 'i32'
+  %i180 = sext i32 %i180 to i64
+  ^"
+nussinov.bc,kernel_nussinov_StrictFP,16,9276,ollama/qwen2.5-coder:3b,59.537,,syntax_fail,373,373,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpzcko0ydv.ll:356:3: error: instruction forward referenced with type 'i32'
+  %i180 = sext i32 %i180 to i64
+  ^"
+nussinov.bc,check_FP,5,3821,ollama/qwen2.5-coder:3b,13.386,0.034,passed,99,99,0.0,stop,
+queens.bc,main,15,5029,ollama/qwen2.5-coder:3b,24.846,7.603,unsupported,177,177,0.0,stop,
+queens.bc,find,8,3358,ollama/qwen2.5-coder:3b,12.834,0.033,passed,103,103,0.0,stop,
+queens.bc,pboard,5,2413,ollama/qwen2.5-coder:3b,,,pending,50,50,0.0,call_error: ,

@@ -8,6 +8,32 @@ results, regenerated the figures, fixed a plotting bug that broke the LaTeX
 build, and rewrote the dissertation and README to match the current numbers
 instead of the stale "zero verified optimizations on real code" framing.
 
+> **Late update, same day**: the Gemini-arm session's batches 6 and 7 (both
+> still running when the dissertation-rewrite session above did its numbers)
+> have since finished. **All 7 Gemini batches are now complete** — every
+> function in the 114-function corpus (except the permanently-unparseable
+> `lists.bc`) has a Gemini attempt on record. Final numbers, regenerated via
+> `python3 -m scripts.analyze_final_results`: **931 completed attempts, 247
+> passed, 24 verified non-zero reductions project-wide** (up from this
+> section's 888/237/14). Gemini specifically: **116 completed, 26 passed, 20
+> wins, 17.2% win rate** (up from 63/15/10/15.9%). The 4 batches added 10 more
+> named wins after this file was written: `cholesky.bc::check_FP` 72.16%,
+> `Puzzle.bc::Trial` 53.23%, `linpack-pc.bc::daxpy` 63.57%,
+> `linpack-pc.bc::matgen` 62.00%, `nussinov.bc::check_FP` 67.68%,
+> `functionobjects.bc::_Z9quicksortIPdXadL_Z19less_than_function2ddEEEvT_S1_`
+> 58.54%, `functionobjects.bc::_Z9quicksortIPdNSt3__14lessIdEEEvT_S4_T0_`
+> 57.65%, `exptree.bc::doSearch` 33.33%, `linpack-pc.bc::idamax` 62.22%,
+> `linpack-pc.bc::ddot` 64.44%. Notably, `fpcmp.bc::diff_file` — the original
+> historic 60.67% win — was re-attempted in batch 7 and came back
+> `unsupported`, **not reproducing**; this is a second confirmed instance of
+> `temperature=0.0` non-determinism in this pipeline (the first was
+> `ludcmp.bc::init_array`, 4.10% once, 0.00% on rerun), worth stating as an
+> explicit limitation in any write-up that cites that number. The README and
+> `template.tex` numbers below were not regenerated against this final count —
+> whoever picks this up next should re-run `analyze_final_results` and
+> `make_result_figs`, and update both documents one more time before treating
+> the numbers below as current.
+
 ## 0. Standing git rules (unchanged, still true)
 
 1. **No `Co-Authored-By: Claude` / `Claude-Session:` trailer on any commit,

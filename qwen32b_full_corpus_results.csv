@@ -157,3 +157,7 @@ smallpt.bc,_Z8radianceRK3RayiPt,18,22834,ollama/qwen2.5-coder:32b,,,pending,999,
 smallpt.bc,main,12,12441,ollama/qwen2.5-coder:32b,579.544,,syntax_fail,510,510,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmp8y4_z0p9.ll:269:3: error: instruction expected to be numbered '%101' or greater
   %98 = phi ptr [ %94, %96 ], [ %99, %103 ]
   ^"
+timeit.bc,main,36,11513,ollama/qwen2.5-coder:32b,397.74,52.003,unsupported,378,378,0.0,stop,
+timeit.bc,execute_target_process,27,8710,ollama/qwen2.5-coder:32b,213.108,33.857,unsupported,219,219,0.0,stop,
+timeit.bc,monitor_child_process,18,8895,ollama/qwen2.5-coder:32b,225.779,0.042,passed,224,224,0.0,stop,
+whetstone.bc,main,30,13131,ollama/qwen2.5-coder:32b,735.383,22.266,unsupported,702,702,0.0,stop,

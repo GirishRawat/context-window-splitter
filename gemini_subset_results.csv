@@ -68,3 +68,12 @@ Instruction does not dominate all uses!
   %first.phi = phi ptr [ %0, %entry ], [ %partition.left, %partition.equals.on.left ], [ %first.phi, %loop.backedge.right.only ], [ %partition.right.ptr.plus.1, %loop.backedge.left.only ], [ %partition.right.ptr.plus.1, %recurse.and.loop ]"
 functionobjects.bc,_ZNSt3__111__introsortINS_17_ClassicAlgPolicyER24inline_less_than_functorPdLb0EEEvT1_S5_T0_NS_15iterator_traitsIS5_E15difference_typeEb,15,23795,gemini/gemini-3.5-flash,127.101,1.425,unsupported,286,286,0.0,stop,
 functionobjects.bc,_ZNSt3__118__bitset_partitionB8ne190102INS_17_ClassicAlgPolicyEPdR24inline_less_than_functorEENS_4pairIT0_bEES6_S6_T1_,14,21198,gemini/gemini-3.5-flash,120.21,1.584,unsupported,168,168,0.0,stop,
+linpack-pc.bc,main,21,16067,gemini/gemini-3.5-flash,161.597,,syntax_fail,738,738,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmp44ovb49d.ll:339:50: error: expected ',' after select value
+  %passes.next = select i1 %cmp_neg, i32 %passes * 2, i32 %passes
+                                                 ^"
+linpack-pc.bc,dgesl,10,7421,gemini/gemini-3.5-flash,75.005,1314.625,unsupported,287,287,0.0,stop,
+linpack-pc.bc,dmxpy,11,14080,gemini/gemini-3.5-flash,188.005,32.923,unsupported,732,732,0.0,stop,
+smallpt.bc,_Z8radianceRK3RayiPt,18,22834,gemini/gemini-3.5-flash,241.12,1.617,unsupported,999,999,0.0,stop,
+smallpt.bc,main,12,12441,gemini/gemini-3.5-flash,275.07,,syntax_fail,510,510,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpjxyz10nm.ll:246:7: error: expected '=' after instruction id
+  %768_y = sub nsw i32 768, %y
+      ^"

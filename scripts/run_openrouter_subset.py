@@ -32,7 +32,7 @@ from pathlib import Path
 
 import llvmlite.binding as llvm
 
-from llmcompile.models import ParsedModule
+from llmcompile.models import ParsedModule, Verdict
 from llmcompile.config import get_config
 from llmcompile.phases.p1_parse import parse_module
 from llmcompile.phases.p2_triage import triage_module
@@ -164,24 +164,47 @@ def run_subset(build_dir: Path, targets: dict[str, set[str]], output_csv: Path, 
         # confirmed reproducible on queens.bc::main). It is an eval-harness
         # metrics bug, not a correctness-gate bug -- Alive2 already proved the
         # candidate is a refinement over its own original_ir/candidate_ir pair
-        # in Phase 5, independent of this re-parse. Left uninvestigated
-        # (needs a separate look at p6_assemble.py's body substitution); this
-        # try/except only keeps one bad file from killing the whole run,
-        # matching the existing clang try/except above.
+        # in Phase 5, independent of this re-parse.
         try:
             orig_counts = get_instruction_counts(parsed.source_ir)
             final_counts = get_instruction_counts(parsed.final_module_ir)
-            counting_failed = False
         except Exception as e:
             logger.error(f"{file_name}: instruction counting on the assembled "
-                         f"module failed ({e}); recording verdicts with instrs=None")
+                         f"module failed ({e}); falling back to per-function "
+                         f"counting via each record's own standalone IR")
             orig_counts, final_counts = {}, {}
-            counting_failed = True
+            # Each record's original_ir/candidate_ir is independently
+            # assemblable by Phase 1 design (README §9, decision 2), so this
+            # sidesteps the whole-module re-parse bug entirely: count each
+            # selected function on its own rather than the stitched module.
+            for record in parsed.functions:
+                if record.name not in remaining:
+                    continue
+                try:
+                    orig_counts.update(get_instruction_counts(record.original_ir))
+                except Exception as e2:
+                    logger.error(f"{file_name}: per-function count failed for "
+                                 f"original_ir of {record.name} ({e2})")
+                # Final body is the candidate only if PASSED; otherwise Phase 6
+                # reinserts the original body, so final == orig (reduction 0),
+                # matching the whole-module path's fallback semantics below.
+                final_ir_source = record.candidate_ir if record.verdict == Verdict.PASSED else record.original_ir
+                if final_ir_source is not None:
+                    try:
+                        final_counts.update(get_instruction_counts(final_ir_source))
+                    except Exception as e2:
+                        logger.error(f"{file_name}: per-function count failed for "
+                                     f"final IR of {record.name} ({e2})")
 
         for record in parsed.functions:
             if record.name not in remaining:
                 continue
-            if counting_failed:
+            # Look up by name regardless of whether the whole-module count
+            # succeeded or the per-function fallback above ran -- either way
+            # a name missing from orig_counts means it truly couldn't be
+            # counted (e.g. the per-function fallback itself errored), not
+            # just that the whole-module path was skipped.
+            if record.name not in orig_counts:
                 orig_inst = final_inst = reduction_pct = None
             else:
                 orig_inst = orig_counts.get(record.name, 0)

@@ -49,8 +49,17 @@ _PATTERNS = [
     ("SSA_TYPE_MISMATCH", re.compile(r"defined with type .* but expected", re.IGNORECASE)),
     ("INVALID_LABEL_REF", re.compile(r"is not a basic block", re.IGNORECASE)),
     ("UNDECLARED_REFERENCE", re.compile(r"undefined value", re.IGNORECASE)),
+    # Found reviewing the full-corpus baseline-vs-instnamed comparison: a
+    # genuinely different KIND of failure from everything else here. llvm-as's
+    # syntax parser accepts the text -- this is its separate semantic
+    # verifier rejecting it ("assembly parsed, but does not verify as
+    # correct!"). Seen concretely as a copied `speculatable` function
+    # attribute becoming invalid once reattached to call sites the model
+    # introduced/modified. Not an SSA-numbering issue at all.
+    ("INVALID_ATTRIBUTE", re.compile(r"attribute may not apply to call sites", re.IGNORECASE)),
     ("MALFORMED_SYNTAX", re.compile(
-        r"expected value token|expected type|expected instruction opcode|expected '='", re.IGNORECASE)),
+        r"expected value token|expected type|expected instruction opcode|"
+        r"expected '='|expected ','|expected comma", re.IGNORECASE)),
     ("SSA_REUSE", re.compile(r"multiple definition of", re.IGNORECASE)),
     ("STRUCTURAL", re.compile(r"expected top-level entity|unterminated", re.IGNORECASE)),
 ]

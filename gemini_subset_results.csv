@@ -19,3 +19,6 @@ Instruction does not dominate all uses!
   %i.recd.next = add nsw i32 %i.recd, 1
   %i.recd = phi i32 [ 0, %else.syn ], [ 0, %else.l.gt.8 ], [ 0, %else.syn.ne.l ], [ %i.recd.next, %loop.recd.init.body ]"
 Puzzle.bc,Puzzle,49,13301,gemini/gemini-3.5-flash,64.774,0.089,unsupported,672,672,0.0,stop,
+timeit.bc,main,36,11507,gemini/gemini-3.5-flash,123.2,1015.928,unsupported,378,378,0.0,stop,
+timeit.bc,execute_target_process,27,8704,gemini/gemini-3.5-flash,60.373,61.213,unsupported,219,219,0.0,stop,
+timeit.bc,monitor_child_process,18,8881,gemini/gemini-3.5-flash,82.398,1201.054,unsupported,224,224,0.0,stop,

@@ -12,7 +12,7 @@
 set -uo pipefail
 cd "$(dirname "$0")/.."
 
-INTERVAL="${1:-1800}"
+INTERVAL="${1:-2700}"
 
 while true; do
   # Only ever stage known result files.
@@ -36,15 +36,15 @@ for f in sorted(glob.glob("*_results.csv")):
 print("; ".join(bits))
 PY
 )
-    git commit -q -m "Auto-checkpoint eval results: $(date -Is)
+    git commit -q -m "Checkpoint eval results: $(date '+%Y-%m-%d %H:%M')
 
 ${summary}
 
-Automated periodic checkpoint from scripts/auto_commit_results.sh while
-long unattended eval runs are in flight. Scoped to *_results.csv only."
-    git push -q origin main && echo "[$(date -Is)] pushed: ${summary}"
+Periodic checkpoint from scripts/auto_commit_results.sh while long
+unattended eval runs are in flight. Scoped to *_results.csv only."
+    git push -q origin main && echo "[$(date '+%Y-%m-%d %H:%M')] pushed: ${summary}"
   else
-    echo "[$(date -Is)] no result changes"
+    echo "[$(date '+%Y-%m-%d %H:%M')] no result changes"
   fi
 
   sleep "${INTERVAL}"

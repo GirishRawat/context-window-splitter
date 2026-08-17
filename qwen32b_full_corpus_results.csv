@@ -113,3 +113,5 @@ functionobjects.bc,_ZNSt3__19__sift_upB8ne190102INS_17_ClassicAlgPolicyER24inlin
   %44 = load ptr, ptr %9, align 8
   ^"
 functionobjects.bc,_ZNSt3__133__bitset_partition_partial_blocksB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPddEEvRT1_S6_T0_RT2_RySA_,10,20702,ollama/qwen2.5-coder:32b,202.585,1.525,unsupported,,,,stop,
+himenobmtxpa.bc,jacobi,8,28707,ollama/qwen2.5-coder:32b,,,pending,1464,1464,0.0,call_error: ,
+himenobmtxpa.bc,set_param,11,3722,ollama/qwen2.5-coder:32b,90.414,1.738,passed,98,98,0.0,stop,

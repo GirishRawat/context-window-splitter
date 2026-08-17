@@ -1,0 +1,41 @@
+file_name,function_name,complexity,tokens,model,llm_latency_s,verification_latency_s,verdict,orig_instrs,final_instrs,reduction_pct,finish_reason,syntax_error
+Puzzle.bc,Place,5,3382,ollama/qwen2.5-coder:3b,13.744,0.041,passed,80,80,0.0,stop,
+Puzzle.bc,Trial,6,3061,ollama/qwen2.5-coder:3b,7.405,0.041,passed,62,62,0.0,stop,
+Puzzle.bc,Puzzle,49,13301,ollama/qwen2.5-coder:3b,87.465,,syntax_fail,672,672,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: assembly parsed, but does not verify as correct!
+Only PHI nodes may reference their own value!
+  %350 = mul nsw i32 8, %350"
+ReedSolomon.bc,rsdec_204,7,3210,ollama/qwen2.5-coder:3b,13.792,1.779,unsupported,115,115,0.0,stop,
+ReedSolomon.bc,rsenc_204,6,2791,ollama/qwen2.5-coder:3b,10.196,1.471,unsupported,92,92,0.0,stop,
+ReedSolomon.bc,generate_gf,5,3119,ollama/qwen2.5-coder:3b,12.643,0.043,passed,106,106,0.0,stop,
+ReedSolomon.bc,gen_poly,5,3167,ollama/qwen2.5-coder:3b,13.078,0.039,passed,107,107,0.0,stop,
+ReedSolomon.bc,decode_rs,59,23597,ollama/qwen2.5-coder:3b,20.913,,syntax_fail,1217,1217,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpmt3v1xgx.ll:140:31: error: use of undefined value '%76'
+  br i1 %19, label %20, label %76
+                              ^"
+ReedSolomon.bc,encode_rs,7,3452,ollama/qwen2.5-coder:3b,15.415,0.038,passed,124,124,0.0,stop,
+cholesky.bc,init_array,11,6480,ollama/qwen2.5-coder:3b,34.246,,syntax_fail,257,257,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpbdkgwbrn.ll:451:3: error: instruction forward referenced with type 'i64'
+  %200 = getelementptr inbounds [2000 x double], ptr %197, i64 %200
+  ^"
+cholesky.bc,kernel_cholesky,5,4559,ollama/qwen2.5-coder:3b,18.133,,syntax_fail,147,147,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpz18a_rzl.ll:270:3: error: instruction forward referenced with type 'i64'
+  %90 = getelementptr inbounds [2000 x double], ptr %87, i64 %90
+  ^"
+cholesky.bc,kernel_cholesky_StrictFP,5,4541,ollama/qwen2.5-coder:3b,17.914,,syntax_fail,147,147,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmp59v3h1pi.ll:270:3: error: instruction forward referenced with type 'i64'
+  %90 = getelementptr inbounds [2000 x double], ptr %87, i64 %90
+  ^"
+cholesky.bc,check_FP,5,3736,ollama/qwen2.5-coder:3b,11.637,0.041,passed,97,97,0.0,stop,
+correlation.bc,kernel_correlation,11,7422,ollama/qwen2.5-coder:3b,45.224,,syntax_fail,341,341,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmp4maral5j.ll:425:3: error: instruction forward referenced with type 'i32'
+  %216 = sext i32 %216 to i64
+  ^"
+deriche.bc,kernel_deriche,13,11320,ollama/qwen2.5-coder:3b,76.544,,syntax_fail,533,533,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmp8_5vm8ho.ll:368:3: error: instruction forward referenced with type 'label'
+  %150 = icmp slt i32 %148, %149
+  ^"
+deriche.bc,kernel_deriche_StrictFP,13,11333,ollama/qwen2.5-coder:3b,76.43,,syntax_fail,546,546,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpizgug8ti.ll:372:3: error: instruction forward referenced with type 'label'
+  %154 = icmp slt i32 %152, %153
+  ^"
+deriche.bc,check_FP,5,3949,ollama/qwen2.5-coder:3b,11.963,0.041,passed,97,97,0.0,stop,
+exptree.bc,recSearch,22,5961,ollama/qwen2.5-coder:3b,30.72,0.04,passed,239,239,0.0,stop,
+exptree.bc,doSearch,8,3106,ollama/qwen2.5-coder:3b,8.708,0.04,passed,72,72,0.0,stop,
+fannkuch.bc,fannkuch,15,5674,ollama/qwen2.5-coder:3b,36.75,0.042,passed,294,294,0.0,stop,
+fbench.bc,main,12,8269,ollama/qwen2.5-coder:3b,43.029,,syntax_fail,290,290,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpebafjjb0.ll:383:3: error: instruction forward referenced with type 'i32'
+  %178 = sext i32 %178 to i64
+  ^"
+fbench.bc,transit_surface,8,5581,ollama/qwen2.5-coder:3b,20.814,0.041,passed,183,183,0.0,stop,

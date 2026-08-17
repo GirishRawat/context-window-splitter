@@ -1,378 +1,177 @@
-# Agent Handoff — 2026-08-17 (Gemini frontier-arm session)
+# Agent Handoff — 2026-08-17 (dissertation rewrite session)
 
-**To the next agent**: this replaces the 2026-08-17 "overnight monitoring session"
-version of this file. That session finished the local-model full-corpus chain and
-handed off with the Gemini arm as the single highest-value remaining experiment,
-blocked only on an API key. This session got that key (several, in fact) and used
-it to find and fix two real infrastructure bugs, then ran the Gemini arm across
-**seven sequential/parallel batches, four of which are still running** as this is
-written. The headline result changed completely: Gemini went from 1 win in 7
-completed attempts to **10 wins in 63 completed attempts (15.9% win rate)**, and
-the project's all-time verified-win count went from 5 to 14.
-
-**Read §1 first if anything looks like it's hanging — it almost certainly isn't.**
+**To the next agent**: this replaces the prior "Gemini frontier-arm session"
+version of this file. That session got the Gemini arm from n=7 to n=63 and
+fixed two infrastructure bugs (§2 of the old handoff, still true, summarized
+below). This session did not run new evals — it consumed that session's
+results, regenerated the figures, fixed a plotting bug that broke the LaTeX
+build, and rewrote the dissertation and README to match the current numbers
+instead of the stale "zero verified optimizations on real code" framing.
 
 ## 0. Standing git rules (unchanged, still true)
 
-Same two rules as always, from a pinned user memory, apply to every session/repo:
+1. **No `Co-Authored-By: Claude` / `Claude-Session:` trailer on any commit,
+   ever** — confirmed again by reading the last 3 commits' full messages
+   before writing this session's commits.
+2. **Commit periodically and automatically, without being asked**, per
+   `scripts/auto_commit_results.sh` (45min interval, still the convention —
+   check `ps aux | grep auto_commit` for whether it's still running).
 
-1. **No `Co-Authored-By: Claude` / `Claude-Session:` trailer on any commit, ever**
-   — including automated ones. Every commit this session was written without them;
-   verify this stayed true if you keep committing.
-2. **Commit periodically and automatically, without being asked.** Implemented by
-   `scripts/auto_commit_results.sh` (see §5 for changes made to it this session).
+The 3 commits (`f0bcb66`, `6e37ca5`, `c16285e`) that carry Claude attribution
+trailers are still on `main` by the user's explicit choice, unchanged. Do not
+raise it again unless the user does.
 
-The previous handoff flagged 3 commits (`f0bcb66`, `6e37ca5`, `c16285e`) that still
-carry Claude attribution trailers on `main`, and noted the user was informed and
-chose not to rewrite history. **This session, asked directly, the user again chose
-to leave those 3 commits as-is.** Do not raise it again unless the user does.
+## 1. What this session actually did
 
-## 1. What's running right now — check before assuming anything is stuck
+1. **Installed a plugin**: `avoid-ai-writing` from
+   `conorbronsdon/avoid-ai-writing` via `/plugin marketplace add` +
+   `/plugin install`. Unrelated to the eval pipeline, just infrastructure —
+   mentioned here only because it's now in `.claude/` and it's what triggered
+   loading the writing-style skill before drafting the dissertation prose.
+2. **Regenerated figures** (`python3 -m scripts.make_result_figs --out-dir
+   figures`) against the current, complete result set — the fig3
+   "capability cliff" scatter plot had never been rendered since the
+   Gemini-arm session added ~15 new win points.
+3. **Found and fixed a real bug in `scripts/make_result_figs.py`
+   (`fig3_capability_cliff`)**: the win-label vertical stacking used a
+   *linear* formula (`ymax * (1.9 - 0.32*i)`) on a *log-scale* y-axis. Past
+   ~6 wins this goes negative, and matplotlib silently produces a PDF with a
+   `MediaBox` height of ~196,000 points (should be ~280). This didn't error
+   in matplotlib — it errored downstream, in `tectonic`, with `! Dimension
+   too large` when the figure was included in the LaTeX build. Fixed by
+   switching to log-space-even spacing (`top * (bot/top)**(i/(n-1))`) and
+   widening the figure slightly (3.4in → 4.4in tall) to fit 14 labels
+   legibly. **If you regenerate this figure again and the PDF is suddenly
+   huge or `tectonic` fails on it, check this function first** — it's an
+   easy trap to reintroduce if the label-stacking logic gets touched again
+   without re-deriving why it's log-space.
+4. **Rewrote `Thesis Dissertation/Template/template.tex`** (the paper
+   compiles with `tectonic`, IEEE conference format, now 10 pages). The old
+   draft is preserved as `template.tex.bak-20260817-192046` in the same
+   directory — **not committed**, it's a local safety copy, delete it
+   whenever or leave it, your call, but don't assume it's tracked in git.
+   Major content changes, all cross-checked against
+   `scripts/analyze_final_results.py` output and hand-written verification
+   queries against the registered CSVs (see §3 for the exact numbers and
+   how they were derived):
+   - New Section V, "Two Defects in the Trusted Scaffolding" — the `!tbaa`
+     verifier ceiling and the SMT-timeout-never-passed-through bug, framed
+     as a general lesson about proposer-verifier systems (a broken verifier
+     and an incapable proposer produce the same empty results table; an
+     identity transform is the cheap way to tell them apart).
+   - Results section rewritten around **888 completed attempts**, 237
+     proven refinements, **14 verified wins** (10 Gemini, mean 64.8%
+     reduction; 4 Qwen 3B, all on the instnamer ablation arm, none on raw
+     `-O0`), with the pass≠win distinction stated prominently (223/237
+     passes are 0% no-op echoes — reporting pass count as win count
+     overstates by 17x).
+   - New subsections: SSA-bookkeeping failure taxonomy (§ "Why Candidates
+     Fail to Parse"), the instnamer ablation with the honest p=0.057
+     framing and the corrected (non-replicating) within-bucket claim, the
+     capability-cliff scatter (complexity/tokens, not context length,
+     predicts failure), and a latency table showing verification now
+     *dominates* inference cost for the Gemini arm (346s mean vs 96s) —
+     this **inverts** the old paper's "verification is nearly free" claim,
+     which was true only because the SMT-timeout bug meant verification
+     was never actually run to completion.
+   - Limitations section expanded: the 6 unknown-magnitude wins, the
+     `temperature=0.0` non-determinism (`ludcmp.bc::init_array` won 4.10%
+     once and reran at 0.00%), the discarded `pct_of_o2_gap_closed` metric.
+5. **Caught and fixed a number I got wrong on first pass**: I initially
+   wrote "13 candidates were ever refuted (rejected) by Alive2" by
+   pattern-matching against the old handoff's "5 functions ever rejected"
+   framing without recomputing it. Actually counting `rejected` verdicts
+   across every CSV `scripts/analyze_final_results.py` registers gives
+   **18**, not 13 and not 5 (the old number was stale even before this
+   session — the Gemini batches added more rejections). Fixed in the two
+   places it appeared (Results section and Conclusion). **Lesson repeated
+   from `MORNING.md`, now a second time in this project's history: print
+   the number, don't infer it from a prior session's framing, even when the
+   framing has held before.**
+6. **Updated `README.md` §9 "Evaluation Findings"** to match — it still said
+   "Verified optimisation on real code has happened exactly once" and used
+   436 as the completed-attempt denominator (both true of an earlier
+   session, neither true now). Rewrote with the current 888/237/14 numbers,
+   the two scaffolding-bug writeups, the pass≠win caveat, the per-model
+   table, the instnamer ablation summary, and the inverted latency finding.
+   Added a pointer to the dissertation file at the end of the section.
 
-Four background pipelines are mid-run as this handoff is written. **Sustained high
-CPU on an `alive-tv` process is normal, not a hang** — this session's biggest fix
-(§2) means verification now legitimately takes up to an hour on hard candidates,
-where it used to fail in under a second.
+## 2. The two infrastructure bugs (carried forward from the prior session,
+   now also documented in the paper itself — read `template.tex` §V for the
+   full writeup, this is just the pointer)
 
-```bash
-# process health
-for P in <check current PIDs — see below>; do ps -p $P; done
-# proof-in-progress check: sustained ~99% CPU = working, not stuck
-ps -o pid,etime,%cpu,args -C alive-tv
-```
+1. `alive-tv`'s own `--smt-to`/`--smt-max-mem` were never passed through —
+   fixed in `llmcompile/verification/alive.py` + `config.py`
+   (`smt_timeout`, `smt_max_mem_mb`, env: `SMT_TIMEOUT`, `SMT_MAX_MEM_MB`).
+2. Alive2 cannot translate `!tbaa` metadata, which Clang attaches to every
+   `-O0` load/store — fixed by stripping `!tbaa`/`!tbaa.struct`/`!range`/
+   `!alias.scope`/`!noalias` in normalization (multiple scripts, see
+   `grep -rn tbaa scripts llmcompile`). See the `tbaa-verifier-ceiling`
+   memory file for the original diagnosis (identity-transform proof).
 
-| Batch | PID (at handoff time) | Log | Output CSV | Subset file |
-|---|---|---|---|---|
-| 4 | 51116 | `gemini_batch4.log` | `gemini_batch4_results.csv` | `gemini_batch4_subset.csv` |
-| 5 | 51807 | `gemini_batch5.log` | `gemini_batch5_results.csv` | `gemini_batch5_subset.csv` |
-| 6 | 52537 | `gemini_batch6.log` | `gemini_batch6_results.csv` | `gemini_batch6_subset.csv` |
-| 7 | 52675 | `gemini_batch7.log` | `gemini_batch7_results.csv` | `gemini_batch7_subset.csv` |
+Neither needs further work right now; both are load-bearing facts for the
+results, not open threads.
 
-PIDs will be stale by the time you read this if they've since exited — check
-`ps aux | grep run_openrouter_subset` for what's actually alive. Batch 3
-(`gemini_subset_results.csv`, built from `target_subset.csv`) **completed** this
-session with 6 wins; treat it as done, do not re-run it.
+## 3. Numbers this session verified by hand (don't re-derive, just trust
+   these, they were computed directly from the CSVs `analyze_final_results.py`
+   registers, not inferred from prose)
 
-**A `/loop`-style cron job (ID `08e98ac7`, every 10 minutes) is posting a live
-status table into this chat session** as a running commentary while these batches
-finish. It is **session-only** — it dies when this Claude session ends, is not
-written to disk, and auto-expires after 7 days regardless. If you are a fresh
-agent reading this file cold, that job is not running for you; recreate it with
-`/loop 10m <describe the batches to check>` if you want the same behavior, or
-just poll the table above manually.
+- Completed attempts: **888** (of 7,999 rows across real-corpus CSVs, 88.9%
+  pending/error).
+- Verdict totals across the 18 registered result CSVs: `passed=237`,
+  `unsupported=185`, `syntax_fail=448`, `rejected=18`, `pending=7043`,
+  `error=68`. Gate-rejected total (`syntax_fail+rejected+unsupported`) =
+  **651**.
+- `finish_reason` over the 521 completed attempts that have it recorded:
+  501 `stop`, 0 `length` (zero truncation, at any sample size collected so
+  far).
+- Syntax-failure taxonomy over the 5 arms `make_result_figs.py`'s fig1
+  plots (`syntax_diag_3b/7b_results.csv`, `qwen32b_subset_results.csv`,
+  `syntax_diag_3b_instnamed_results.csv`, `gemini_subset_results.csv`): 195
+  rows loaded, 67 `syntax_fail`, 65 with captured diagnostics (2 pre-date
+  the `syntax_error` instrumentation). Local-only failures (54 of the 67)
+  are ~70% SSA-bookkeeping by the categorizer's bucketing.
+- `sbase_results.csv` tokens: n=311, mean 4,627, **median 3,883** (the old
+  README quoted the mean as if it were representative; the paper's table
+  now uses the median for consistency with the other corpus rows, which
+  are also medians).
+- By-model win rates (Table in both README and paper): qwen3b 431 compl./
+  0.9% win, qwen7b 217/0.0%, qwen32b 124/0.0% (lowest syntax_fail of any
+  arm at 21%, still zero wins), gemini 73/13.7%.
 
-**All four batches were built from disjoint, programmatically-verified-non-
-overlapping 20-ish-function subsets of the 114-function full corpus**, deliberately
-distinct from `target_subset.csv` (batch 3) and from each other. Once batch 7
-finishes, **every function in the 114-function corpus (except `lists.bc`, which
-can never be parsed — see below) will have received at least one Gemini attempt.**
-Batch 7 is intentionally the *last* 15 functions of the corpus — nothing is left
-to pick after it.
+If you add new result CSVs, **register them in
+`scripts/analyze_final_results.py`'s file list first** (this has bitten the
+project twice already per the prior handoff) and then re-derive any number
+above that's affected before quoting it in either doc.
 
-## 2. Two real infrastructure bugs found and fixed this session
+## 4. Repo state as this is written
 
-Both were silently discarding provable candidates for the entire project history
-up to this point. Both are now fixed, tested, committed, and pushed.
+Working tree before this session's commit:
+- Modified: `figures/fig{1,2,3}_*.{pdf,png}` (regenerated), `northminicode_subset_results.csv`
+  (1-line change, pre-existing from before this session, not touched by
+  this session's work — leave as-is, not this session's concern), plus
+  `scripts/make_result_figs.py` (the log-space fix), `README.md`, and
+  `Thesis Dissertation/Template/template.tex` + the 3 figure PDFs copied
+  into that directory + a new `template.pdf` build output.
+- Untracked: `.claude/` (the plugin install from earlier in the session —
+  check whether the user wants this committed or gitignored; it wasn't
+  addressed this session, just noting it's there).
+- Not committed as of this handoff being written — the next action is to
+  commit and push everything above except deciding on `.claude/`.
 
-### 2a. `alive-tv`'s own internal SMT timeout/memory cap were never passed through
+## 5. Immediate next steps for whoever picks this up
 
-`llmcompile/verification/alive.py`'s `verify_refinement()` built its `alive-tv`
-command with just `[binary, src_path, tgt_path]` — no `--smt-to` or
-`--smt-max-mem` flag, ever, on any prior run in this project's history. Alive2's
-own binary silently falls back to **its own defaults: 10000ms SMT-query timeout,
-1024MB memory cap** — completely independent of and much tighter than whatever
-`alive_tv_timeout` (a subprocess-level `subprocess.run(timeout=...)` guard) was
-configured to. This is why so many `unsupported` verdicts across the whole
-project's history had suspiciously *fast* `verification_latency_s` (well under
-whatever the outer timeout was): the outer timeout was never the real constraint.
-
-Fixed in commit `94cd7a4`: added a dedicated `smt_timeout` field (finishing off a
-field that was already declared in `config.py` but marked "Reserved" and never
-wired up) and a new `smt_max_mem_mb` field, both env-overridable
-(`SMT_TIMEOUT`, `SMT_MAX_MEM_MB`), both now actually passed as
-`--smt-to=<seconds*1000>` / `--smt-max-mem=<MB>` to the `alive-tv` invocation.
-Defaults: `smt_timeout=120s`, `smt_max_mem_mb=4096`. Today's runs used much more
-generous env overrides (`SMT_TIMEOUT=1200`, `SMT_MAX_MEM_MB=16384`) since this
-machine has 335GB RAM and 48 cores with near-zero baseline load — see §6 for why
-that headroom matters if you raise it further.
-
-**This fix alone is responsible for most of today's wins.** Every `unsupported`
-verdict that used to resolve in under a second now genuinely gets 20 minutes and
-16GB to attempt a real proof, and a large fraction of Gemini's real,
-substantively-different candidates turned out to be provable once given that
-room — they were not being rejected by Alive2, they were never being *tried*.
-
-### 2b. Phase 6 instruction-counting bug: silently blanked out reduction% on PASSED wins
-
-Separately, `scripts/run_openrouter_subset.py`'s per-file instruction counting
-re-parses the *whole assembled module* (`parsed.final_module_ir`) with llvmlite,
-and this re-parse fails on some stitched modules even though `llvm-as` and Alive2
-both accepted the same candidate fine per-function (a known llvmlite/Phase 6
-interaction bug, first documented by a *previous* session, never root-caused).
-Previously this just blanked every function in that file to `reduction=None`,
-including genuinely `PASSED`, Alive2-proven wins — first observed today on
-`functionobjects.bc` in batch 4, where **4 real wins landed with unknown
-magnitude** (still `verdict=passed` in the CSV, just no percentage).
-
-Fixed in commit `59daf0a`: on whole-module count failure, fall back to counting
-each selected function **standalone**, via its own `original_ir` /
-`candidate_ir` — both independently assemblable by Phase 1 design (this is
-exactly the property Phase 1's `test_each_function_is_independently_assemblable`
-test already guarantees), so this sidesteps the whole-module re-parse bug
-entirely rather than needing to fix Phase 6 itself.
-
-**This only affects files processed *after* the fix landed.** The 4 already-blank
-`functionobjects.bc` wins in `gemini_batch4_results.csv` were already committed
-before the fix and are **not recoverable** without re-running the LLM call — and
-re-running is not safe to assume gives the same candidate, because this pipeline
-has already shown non-determinism at `temperature=0.0` in a previous session
-(`ludcmp.bc::init_array` won 4.10% in one run and reran at 0.00% in another,
-same settings). Report those as "verified win, magnitude unknown," don't guess
-a number, and don't spend quota trying to recover it unless the user asks.
-
-**Update while writing this handoff**: batch 5 (PID 51807, launched 16:52, well
-before this bug was found and fixed) hit the identical bug on its own
-`functionobjects.bc` pass and added a 5th-through-6th blank win
-(`_ZNSt3__17__sort5...`) — **6 unknown-magnitude wins total as of this writing**
-(5 in batch 4, 1 in batch 5), not 4. Both of those batches were already running
-with the old code in memory when the fix landed, so neither benefits from it
-retroactively. **Batches 6 and 7 were launched after the fix was written to disk**
-(confirm by checking whether their start time in the log is after commit
-`59daf0a`'s timestamp), so they should get real numbers even if they hit
-`functionobjects.bc` again — verify this assumption once they reach that file.
-
-## 3. Headline numbers (regenerate first, always)
-
-Run `python3 -m scripts.analyze_final_results` — it self-updates as CSVs land, and
-it was itself fixed this session (see §4). As of this handoff:
-
-- **878 completed attempts** across all real-corpus CSVs (up from 822 last session)
-- **236 `verdict=passed`** (up from 222)
-- **14 verified non-zero reductions** (up from 5) — full list:
-
-| function | reduction | model |
-|---|---|---|
-| `fpcmp.bc::diff_file` | 60.67% | gemini (prior session) |
-| `ffbench.bc::fourn` | 67.11% | gemini (this session) |
-| `nussinov.bc::kernel_nussinov` | 81.23% | gemini (this session) |
-| `nussinov.bc::kernel_nussinov_StrictFP` | 81.23% | gemini (this session) |
-| `fannkuch.bc::fannkuch` | 58.16% | gemini (this session) |
-| `lu.bc::init_array` | 65.92% | gemini (this session) |
-| `himenobmtxpa.bc::set_param` | 57.14% | gemini (this session) |
-| `cholesky.bc::kernel_cholesky` | 62.59% | gemini (this session) |
-| `cholesky.bc::kernel_cholesky_StrictFP` | 57.82% | gemini (this session) |
-| `ludcmp.bc::kernel_ludcmp_StrictFP` | 55.76% | gemini (this session) |
-| `cholesky.bc::init_array` | 5.06% | qwen3b instnamed (prior session) |
-| `ludcmp.bc::init_array` | 4.10% | qwen3b instnamed (prior session) |
-| `fannkuch.bc::fannkuch` | 0.34% | qwen3b instnamed ×2 (prior session, same result twice) |
-
-Plus **6 more Gemini wins with unknown magnitude** (§2b — 5 in batch 4, 1 in
-batch 5, both pre-fix) not in this table since they have no reduction% to
-report — total genuinely-verified-PASSED-with-actual-optimization count is
-**14 with numbers + 6 without = 20**, and batches 5/6/7 are still running and
-will add more.
-
-**By-model, Gemini specifically**: 63 completed, 15 `passed`, **10 with non-zero
-reduction, 15.9% win rate** — up from the prior session's headline "1/7, 14.3%".
-This is now a real, statistically meaningful hit-rate rather than n=7 anecdote,
-and it is the single biggest evidential shift in the project's history: local
-models are still at effectively 0% (qwen 3b: 0.9%, 7b: 0.0%, 32b: 0.0%), Gemini
-is at 15.9%. The gap is not subtle.
-
-**The safety gate still holds perfectly**: 642 candidates rejected
-(syntax_fail + rejected + unsupported), **0** invalid candidates ever reached a
-final module. This has never once failed across the project's entire history,
-across every model, every session. This is still the load-bearing claim.
-
-## 4. Other fixes this session
-
-- **`scripts/analyze_final_results.py`'s hardcoded file list** — same class of bug
-  the *previous* handoff already found and fixed once (it's a recurring trap: new
-  CSVs silently don't count until registered by hand). Registered
-  `gemini_batch4/5/6/7_results.csv` in commit `b654fd2`. **If you add an 8th batch
-  or any new result CSV, register it here too, immediately** — this has now bitten
-  the project twice.
-- **`scripts/auto_commit_results.sh`**: per explicit user request, changed the
-  default interval from 1800s (30min) to **2700s (45min)**, and changed the commit
-  message from `"Auto-checkpoint eval results: <ISO8601>"` to
-  `"Checkpoint eval results: <YYYY-MM-DD HH:MM>"` — dropped the word "Auto" and
-  switched to a plainer timestamp. Commit `9232970`. The currently-running loop
-  (check `ps aux | grep auto_commit`) is on the new version; if you restart it,
-  the new default (2700) applies automatically, no need to pass it explicitly.
-
-## 5. Provider/model research this session (verified empirically, not just from docs)
-
-Full detail in `/home/jovyan/.claude/plans/please-research-if-we-curious-peacock.md`
-(a plan-mode research doc, not yet fully executed — read it before proposing
-provider/model changes). Key facts, several confirmed by live API calls rather
-than trusting blog summaries (which were unreliable/contradictory):
-
-- **Gemini free-tier quota is per-model-per-project, not per-API-key.** Confirmed
-  empirically: a key fully exhausted (`limit: 20`, `429 RESOURCE_EXHAUSTED`) on
-  `gemini-3.5-flash` **immediately succeeded** on `gemini-3.6-flash` with the same
-  key. The 429 body's `quotaId` literally says
-  `GenerateRequestsPerDayPerProjectPerModel-FreeTier`. Extra keys *inside the same
-  Google Cloud project* would NOT add capacity (Google's own docs: "Rate limits
-  are applied per project, not per API key") — the reason today's 7 different keys
-  all worked is that they are on distinct projects/accounts.
-- **There is no free-tier Pro-model upgrade available.** `gemini-3.1-pro-preview`
-  and `gemini-pro-latest` both returned `limit: 0` on every key tested — hard
-  free-tier block, not just a low quota. Frontier-Pro access needs billing.
-- **Available free-tier flash models** (tested live): `gemini-3.5-flash` (current
-  default, all of today's wins), `gemini-3.6-flash`, `gemini-3.7-flash` (newer,
-  intermittent 503 high-demand at test time), `gemini-3.5-flash-lite`,
-  `gemini-3.1-flash-lite`, `gemini-3-flash-preview`. `gemini-2.5-flash`/`-pro` are
-  404 "no longer available to new users."
-- **Decision made this session, asked directly of the user: stay on
-  `gemini-3.5-flash`, finish the whole corpus on one model before considering any
-  other model or provider**, to keep the win-rate denominator uncontaminated by a
-  model-choice confound. Do not silently switch `GEMINI_MODEL` without asking.
-- **OpenRouter** (docs, not blog posts): free models (`:free` suffix) get
-  **20 requests/minute, 50/day unfunded, rising to 1000/day after a one-time ≥$10
-  lifetime credit purchase**. No `OPENROUTER_API_KEY` is configured on this
-  machine. Notable free models available: `nvidia/nemotron-3-ultra-550b-a55b:free`
-  (550B params, 1M context — genuinely frontier-scale) and several coding-specific
-  ones. **Switching provider or model requires zero code changes** — confirmed by
-  reading `llmcompile/config.py` (`LLM_BACKEND`/`GEMINI_MODEL`/`OPENROUTER_MODEL`
-  env vars) and `p3_route.py` (Gemini and OpenRouter share one LiteLLM dispatch
-  path, identical retry/rate-limit logic). This was explicitly deferred as a
-  **separate arm, after** the single-model Gemini corpus is complete — not decided
-  against, just sequenced after.
-
-## 6. Operational notes for running further batches
-
-- **Toolchain**: `clang`/`llvm-as`/`opt` are at
-  `~/llvm_toolchain/llvm-project/llvm/build/bin` — must be on `PATH` explicitly
-  (`export PATH="$HOME/llvm_toolchain/llvm-project/llvm/build/bin:$PATH"`), it is
-  **not** on the default shell `PATH`. `alive-tv` is at
-  `~/llvm_toolchain/alive2/build/alive-tv`, auto-detected by `config.py` if it
-  exists at that path (no PATH export needed for it specifically).
-- **The exact env-var recipe used for every batch today**, safe to reuse:
-  ```bash
-  export PATH="$HOME/llvm_toolchain/llvm-project/llvm/build/bin:$PATH"
-  export GEMINI_API_KEY=<key>
-  export ALIVE_TV_TIMEOUT=3600      # outer subprocess kill-switch (hard cap)
-  export LLM_TIMEOUT_SECONDS=300    # per Gemini API call
-  export SMT_TIMEOUT=1200           # alive-tv's own SMT-query timeout (§2a)
-  export SMT_MAX_MEM_MB=16384       # alive-tv's own SMT memory cap (§2a)
-  LLM_BACKEND=gemini PYTHONUNBUFFERED=1 nohup python3 -m scripts.run_openrouter_subset \
-    --build-dir eval_subset_corpus_sanitized \
-    --subset <subset.csv> --max-functions 20 \
-    --output-csv <output.csv> > <log> 2>&1 &
-  ```
-- **Machine has huge headroom**: 335GB RAM free, 48 cores, load average ~2 even
-  with 3-4 concurrent `alive-tv` processes each capped at 16GB. Running more
-  batches in parallel is safe; CPU contention just means proofs take longer
-  wall-clock, nothing fails or starves.
-- **Building a non-overlapping subset** (the pattern used for batches 4-7):
-  ```python
-  import csv, random
-  def load(path): return {(r['file_name'], r['function_name']) for r in csv.DictReader(open(path))}
-  touched = load('target_subset.csv') | load('gemini_batch4_subset.csv') | ...  # every prior subset
-  full = list(csv.DictReader(open('full_corpus_subset.csv')))
-  remaining = [r for r in full if (r['file_name'], r['function_name']) not in touched and r['file_name'] != 'lists.bc']
-  # random.shuffle(remaining); pick 20; write to a new subset CSV
-  ```
-  Always verify zero-overlap programmatically before launching, not by inspection
-  — `functionobjects.bc` alone has 20+ functions and it's easy to eyeball wrong.
-- **`lists.bc` is permanently unparseable** — a Phase 1 parse failure (newer-LLVM
-  attribute `dead_on_unwind writable sret(...)` that llvmlite's LLVM-14-based
-  parser rejects), documented since a much earlier session. Exclude it from every
-  subset; the runner already logs and skips it gracefully if it slips through, but
-  don't waste a slot on it.
-- **Rate-limit retry behavior you'll see constantly, all of it expected**: LiteLLM
-  retries 429/503 up to 5 times with exponential backoff (4s, 8s, 16s, 32s, 60s).
-  A function that exhausts all 5 falls back to `verdict=pending` gracefully — this
-  is not a bug, don't intervene, just let it resume on the next invocation (the
-  runner's resume logic treats any row already in the CSV, including `pending`,
-  as "done" — so if you want to retry `pending` rows specifically, delete just
-  those rows from the CSV first, as was done between batch 2 and batch 3 today).
-- **A genuinely hard proof can run 45-60 minutes** and still resolve, not hang —
-  confirmed today on batch 4's `dgefa`, which ran past 55 minutes at sustained
-  ~99% CPU before this handoff was written. `ALIVE_TV_TIMEOUT=3600` (1 hour) is
-  the hard ceiling; below that, elapsed time alone is not evidence of a stall —
-  check CPU%.
-
-## 7. Files worth knowing about (new/changed this session)
-
-- `scripts/run_openrouter_subset.py` — the per-function counting fallback (§2b).
-- `llmcompile/verification/alive.py`, `llmcompile/config.py` — the `--smt-to`/
-  `--smt-max-mem` fix (§2a). New config fields: `VerificationConfig.smt_timeout`,
-  `VerificationConfig.smt_max_mem_mb`, env-overridable via `SMT_TIMEOUT` /
-  `SMT_MAX_MEM_MB`.
-- `scripts/analyze_final_results.py` — run first, always (§4 caveat: register new
-  CSVs here immediately, don't let it go stale again).
-- `scripts/auto_commit_results.sh` — 45min interval, plain timestamp (§4).
-- `gemini_batch{4,5,6,7}_subset.csv` / `gemini_batch{4,5,6,7}_results.csv` — this
-  session's non-overlapping subsets and their (partially in-progress) results.
-- `/home/jovyan/.claude/plans/please-research-if-we-curious-peacock.md` — the
-  provider/model research doc (§5), plan-mode output, not fully executed as a
-  formal plan (the user redirected mid-plan-review to ask live status questions
-  instead of approving/rejecting it) but its research findings are correct and
-  citable as-is.
-- **Not committed**: `gemini_batch{1,2}*.log.bak` and
-  `gemini_subset_results_batch{1,2}*.csv.bak` — scratch diagnostic backups from
-  debugging the timeout/memory bugs early this session (§2a). Left untracked
-  deliberately, same as prior sessions' convention of not committing scratch
-  artifacts. Safe to delete once you've confirmed you don't need them, or leave
-  them, your call.
-
-## 8. Immediate next steps for whoever picks this up
-
-1. **Check batch health first** (§1) — if all 4 are done, great, run
-   `python3 -m scripts.analyze_final_results` for final numbers and skip to 2.
-   If some are still running, either wait or just start working alongside them
-   (they're independent processes, safe to leave running).
-2. **Once all of batches 4-7 finish**, the entire 114-function corpus (minus
-   `lists.bc`) has a Gemini attempt on record. Recompute the true Gemini win rate
-   (should be ≥18/~110 completed, i.e. ≥16%, likely higher as batches 5-7 are
-   still landing wins as this is written) and update this file's §3 table with
-   final numbers.
-3. **Update `README.md` §"Evaluation Findings"** — it still says Gemini is "1/7"
-   and states the 0%-local/win-rate framing from before this session. That framing
-   (syntax vs optimization separate thresholds) is still true for local models but
-   is no longer the *whole* story — Gemini crossing to 15.9%+ is now the headline,
-   and the mechanistic story (SSA-numbering bookkeeping cliff explains local-model
-   failure) doesn't yet explain *why* the verification-gate bugs (§2a) mattered so
-   much more for Gemini's candidates than local models' mostly-no-op ones — that's
-   worth investigating and writing up: did local models even generate enough
-   genuinely different candidates for the SMT-timeout bug to matter, or is this
-   purely a Gemini-arm story?
-4. **Regenerate figures**: `python3 -m scripts.make_result_figs --out-dir figures`
-   — fig3's win annotation logic already generalizes to mark every verified win
-   across all plotted arms (a previous session's fix), so it should Just Work with
-   the new data, but verify the 15+ new points render sanely rather than
-   overlapping/illegible on a subset plot built for far fewer.
-5. **The 4-with-unknown-magnitude wins (§2b)** — decide with the user whether to
-   report them as "verified win, magnitude unknown" in any write-up, or to leave
-   them out of headline tables entirely. Both are honest; the project's existing
-   convention (§3's table) is to only tabulate wins with a known number, so they're
-   currently uncounted in the "14" — but they are real, Alive2-proven, non-zero
-   (implicitly — a `passed` verdict with literally 0 change would have hit the
-   whole-module counter fine, it's specifically the *changed* ones that this
-   particular llvmlite bug tends to trip on) wins that should be mentioned as a
-   caveat wherever the "14" number is quoted.
-6. **Track F (best-of-k sampling)** and **Track G (P2 cleanup items)** from the
-   dissertation roadmap (`/home/jovyan/.claude/plans/based-on-what-we-cached-yao.md`,
-   still the governing 2-month plan) remain untouched and are still reasonable
-   next work once the Gemini corpus is fully landed and written up.
-
-## 9. Rules of engagement (carried forward, still true)
-
-- §2 of `README.md` (architectural constraints) is hard. Stop and flag if a task
-  conflicts with it.
-- No hard-coded thresholds/timeouts — everything in `config.py`, env-overridable.
-  This session added two more (`SMT_TIMEOUT`, `SMT_MAX_MEM_MB`) to that pattern —
-  keep doing this for any new tunable.
-- Committing a partially-filled CSV mid-run is this project's established
-  convention, not a mistake — don't be alarmed by "unfinished" data in git, and
-  feel free to commit mid-run results yourself rather than waiting for completion.
-- **Never write a live API key into a committed file, ever** — this session
-  handled 7 different Gemini keys purely via shell env vars, never persisted to
-  disk in any file that gets committed. If you're tempted to hardcode one "just
-  for this run," don't — export it instead.
-- `/home/jovyan` is a 24GB persistent volume — never put anything large there.
-  `/tmp` is large and effectively persistent on this pod.
-- Git credentials are stored (`~/.git-credentials`, mode 600); `git push` works.
-- Working tree has some untracked scratch `.bak` files (§7) as of this handoff;
-  everything else is committed and pushed.
+1. Decide on `.claude/` — commit, gitignore, or leave untracked. Not
+   resolved this session.
+2. If the auto-commit loop isn't running, consider restarting it
+   (`scripts/auto_commit_results.sh`) if more eval runs are planned.
+3. The Gemini-arm session's remaining open threads (best-of-k sampling,
+   preserving alias metadata through a matched toolchain instead of
+   stripping it, wider frontier-model coverage) are all still open and are
+   now also listed in the paper's "Future Work" section — that's the
+   canonical place to check what's next, not this file, going forward.
+4. If `poppler` (`brew install poppler`) gets installed, worth re-rendering
+   `template.pdf` page-by-page to visually confirm table/figure placement
+   past page 1 — this session could only visually verify page 1 via `sips`
+   and trusted `tectonic`'s clean compile (0 errors, only underfull-hbox
+   warnings) for the rest.

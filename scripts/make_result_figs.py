@@ -254,7 +254,7 @@ def fig3_capability_cliff(data: dict[str, list[dict]], out: Path, csv_dir: Path)
         print("  fig3: no plottable rows, skipped")
         return
 
-    fig, ax = plt.subplots(figsize=(6.2, 3.4))
+    fig, ax = plt.subplots(figsize=(6.2, 4.4))
     for v in VERDICT_ORDER:
         if v not in pts:
             continue
@@ -289,14 +289,16 @@ def fig3_capability_cliff(data: dict[str, list[dict]], out: Path, csv_dir: Path)
         seen.add(key)
         win_pts.append((c, t, r.get("function_name", "?"), red))
 
-    # Stack every label in a fixed column along the left margin, evenly spaced
-    # in log-space top-to-bottom, so labels never collide regardless of how
-    # close their source points are to each other (they were: init_array and
-    # fannkuch sit within ~15% token-count of each other).
-    ymax = max(t for _, t, _, _ in win_pts) if win_pts else 1
-    ymin = min(t for _, t, _, _ in win_pts) if win_pts else 1
+    # Stack every label in a fixed column, spaced evenly in LOG space so the
+    # spacing stays positive no matter how many wins there are. An earlier
+    # linear version (ymax * (1.9 - 0.32*i)) went negative past 6 wins, which
+    # on a log axis blows the figure's height up to ~200k points.
+    win_pts.sort(key=lambda w: -w[3])
+    all_t = [t for _, t, _, _ in win_pts] or [1.0]
+    top, bot = max(all_t) * 2.6, min(all_t) * 0.34
     label_x = 11.5  # just right of the triage-threshold line, clear of the cloud
-    label_ys = [ymax * (1.9 - 0.32 * i) for i in range(len(win_pts))] if win_pts else []
+    n = len(win_pts)
+    label_ys = [top * (bot / top) ** (i / max(n - 1, 1)) for i in range(n)]
 
     for i, (c, t, name, red) in enumerate(win_pts):
         # Plot the point itself, not just the ring -- a win's own arm may not

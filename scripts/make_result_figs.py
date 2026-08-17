@@ -262,27 +262,54 @@ def fig3_capability_cliff(data: dict[str, list[dict]], out: Path, csv_dir: Path)
         ax.scatter(xs, ys, s=26, alpha=0.75, edgecolors="white", linewidths=0.6,
                    color=VERDICT_COLOR[v], label=f"{VERDICT_LABEL[v].replace(chr(10),' ')} (n={len(xs)})")
 
-    # The single verified non-zero reduction on real code, wherever it lives.
-    for r in load(csv_dir / "spec_results_gemini.csv"):
-        if r["verdict"] == "passed" and r.get("reduction_pct") not in ("", None):
-            try:
-                if float(r["reduction_pct"]) <= 0:
-                    continue
-                c, t = float(r["complexity"]), float(r["tokens"])
-            except (ValueError, TypeError):
+    # Every verified non-zero reduction on real code, across ALL arms plotted
+    # here plus Gemini (which lives in its own CSV, not one of `data`'s ARMS).
+    # Earlier versions of this figure hardcoded only the Gemini win -- wrong
+    # once the overnight instnamer runs produced 4 local-model wins (2 of
+    # which are inside the "3b + instnamer" arm already plotted above as
+    # ordinary green dots, indistinguishable from a 0%-reduction pass).
+    win_rows = list(load(csv_dir / "spec_results_gemini.csv"))
+    for rows in data.values():
+        win_rows.extend(rows)
+    seen = set()
+    win_pts = []
+    for r in win_rows:
+        if r.get("verdict") != "passed" or r.get("reduction_pct") in ("", None):
+            continue
+        try:
+            red = float(r["reduction_pct"])
+            if red <= 0:
                 continue
-            # Plot the point itself, not just the ring -- this win lives in
-            # spec_results_gemini.csv, which is not one of the plotted arms, so
-            # without this the highlight ring encircles empty space.
-            ax.scatter([c], [t], s=52, color=C_GREEN, edgecolors="white",
-                       linewidths=0.8, zorder=6, marker="D",
-                       label="Verified reduction (Gemini)")
-            ax.scatter([c], [t], s=210, facecolors="none", edgecolors=C_GREEN,
-                       linewidths=1.8, zorder=5)
-            ax.annotate(f"{r['function_name']}  −{float(r['reduction_pct']):.0f}%\n(only verified win)",
-                        xy=(c, t), xytext=(c * 0.42, t * 1.55), fontsize=7,
-                        color="#1a1a1a",
-                        arrowprops=dict(arrowstyle="->", color=C_GREEN, lw=1.1))
+            c, t = float(r["complexity"]), float(r["tokens"])
+        except (ValueError, TypeError):
+            continue
+        key = (r.get("file_name"), r.get("function_name"), round(red, 2))
+        if key in seen:  # same function can appear in >1 arm (e.g. both instnamed runs)
+            continue
+        seen.add(key)
+        win_pts.append((c, t, r.get("function_name", "?"), red))
+
+    # Stack every label in a fixed column along the left margin, evenly spaced
+    # in log-space top-to-bottom, so labels never collide regardless of how
+    # close their source points are to each other (they were: init_array and
+    # fannkuch sit within ~15% token-count of each other).
+    ymax = max(t for _, t, _, _ in win_pts) if win_pts else 1
+    ymin = min(t for _, t, _, _ in win_pts) if win_pts else 1
+    label_x = 11.5  # just right of the triage-threshold line, clear of the cloud
+    label_ys = [ymax * (1.9 - 0.32 * i) for i in range(len(win_pts))] if win_pts else []
+
+    for i, (c, t, name, red) in enumerate(win_pts):
+        # Plot the point itself, not just the ring -- a win's own arm may not
+        # otherwise distinguish it from a 0%-reduction pass at this marker size.
+        ax.scatter([c], [t], s=52, color=C_GREEN, edgecolors="white",
+                   linewidths=0.8, zorder=6, marker="D",
+                   label="Verified reduction" if i == 0 else None)
+        ax.scatter([c], [t], s=210, facecolors="none", edgecolors=C_GREEN,
+                   linewidths=1.8, zorder=5)
+        ax.annotate(f"{name}  −{red:.0f}%" if red >= 1 else f"{name}  −{red:.1f}%",
+                    xy=(c, t), xytext=(label_x, label_ys[i]), fontsize=7,
+                    color="#1a1a1a",
+                    arrowprops=dict(arrowstyle="->", color=C_GREEN, lw=1.1))
 
     ax.axvline(5, color=C_GREY, ls="--", lw=0.9)
     ax.text(5.25, ax.get_ylim()[1] * 0.97, "triage threshold", fontsize=6.5,
@@ -291,7 +318,8 @@ def fig3_capability_cliff(data: dict[str, list[dict]], out: Path, csv_dir: Path)
     ax.set_ylabel("Token count")
     ax.set_yscale("log")
     ax.legend(frameon=False, fontsize=7, loc="lower right")
-    ax.set_title("The capability cliff: verified optimisation is a point, not a region",
+    ax.set_title(f"The capability cliff: verified optimisation is rare ({len(win_pts)} of "
+                 f"{sum(len(v[0]) for v in pts.values())} completed attempts shown)",
                  fontsize=9.5, pad=8)
     fig.tight_layout()
     fig.savefig(out / "fig3_capability_cliff.pdf", bbox_inches="tight")

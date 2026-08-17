@@ -9,10 +9,12 @@ superseded where the two disagree.**
 replicated independently across two corpora) — but the WITHIN-syntax_fail
 failure-mode shift does not replicate cleanly, so "removing the counter
 relocates rather than eliminates the deficit" (the subset-only conclusion
-below) is not the full story. And for the first time in the project, this arm
-produced two verified non-zero reductions from a LOCAL model — but on
+below) is not the full story. And across both the subset and full-corpus
+instnamed arms, this is the first time ANY local model has produced a
+verified non-zero reduction — 4 total (0 on either baseline arm) — but on
 instnamer-modified input, not raw `-O0`, which matters for how the claim is
-stated.**
+stated. One of the subset arm's original numbers was wrong on first write-up
+(claimed 0 wins where there were 2) — corrected below, not hidden.**
 
 ## Why this experiment exists
 
@@ -87,8 +89,21 @@ that makes an invalid reference *unrepresentable*, or an IR-native model.
    reach Alive2 at all — consistent with the mechanism working — but they then
    fail to be proven. Passing the parser is not the same as being provable.
 
-**The optimisation ceiling did not move:** 6 candidates were proven correct, and
-as in every other local-model run, **zero reduced instruction count**.
+**Correction (caught by `scripts/analyze_final_results.py` after the
+full-corpus run landed, not caught at the time)**: this section originally
+claimed "6 candidates were proven correct... zero reduced instruction count",
+by pattern-matching against every other local-model run rather than actually
+checking `reduction_pct` on these 6 rows. That claim was **wrong**. Two of
+the six are genuine non-zero reductions: `fannkuch.bc::fannkuch` (0.34%,
+294→293 instrs) and `ludcmp.bc::init_array` (4.10%, 268→257 instrs). Both
+`finish_reason=stop`, no `syntax_error`, formally proven by Alive2. **The
+subset instnamed arm has 2 wins, not 0** — see "Full-corpus replication"
+below, where the full-corpus instnamed arm independently produced 2 more
+(one of which, `fannkuch.bc::fannkuch`, is the identical function with the
+identical 0.34% result — the two runs cross-validate each other). The
+*baseline* arm (raw `-O0`, no instnaming) genuinely has 0 wins in both the
+subset and full-corpus versions — that part was correct. Lesson: don't state
+a number without printing it, even when it matches the expected pattern.
 
 ## Full-corpus replication (114 functions, ~110 completed/arm)
 
@@ -148,34 +163,43 @@ narrower claim: naming reduces the *overall* syntax-failure rate, but exactly
 *which* SSA-bookkeeping symptom dominates the remainder is noisy at these
 sample sizes and should not be over-interpreted from either single run.
 
-### First verified non-zero reductions from a LOCAL model — with a scope caveat
+### First verified non-zero reductions from a LOCAL model — and the pattern is clean
 
-The full-corpus instnamed arm produced **two** `passed` candidates with
-non-zero `reduction_pct` — the first ever from a local model in this
-project's history (every prior local-model result, across 3b/7b/32b and both
-corpora, was 0 wins):
+Across every result CSV in the project (see `scripts/analyze_final_results.py`),
+there are now **4 verified non-zero reductions from local models — every
+single one on an instnamed arm, zero on either baseline arm**:
 
-| file | function | reduction | orig → final instrs |
-|---|---|---|---|
-| `cholesky.bc` | `init_array` | 5.06% | 257 → 244 |
-| `fannkuch.bc` | `fannkuch` | 0.34% | 294 → 293 |
+| corpus | arm | file | function | reduction |
+|---|---|---|---|---|
+| subset (40 fn) | baseline | — | — | **0 wins** |
+| subset (40 fn) | instnamed | `fannkuch.bc` | `fannkuch` | 0.34% |
+| subset (40 fn) | instnamed | `ludcmp.bc` | `init_array` | 4.10% |
+| full corpus (114 fn) | baseline | — | — | **0 wins** |
+| full corpus (114 fn) | instnamed | `fannkuch.bc` | `fannkuch` | 0.34% |
+| full corpus (114 fn) | instnamed | `cholesky.bc` | `init_array` | 5.06% |
 
-Both are formally proven by Alive2 (that proof is the actual correctness
-guarantee — no manual verification needed), both have `finish_reason=stop`
-(not truncation), and manually diffing `init_array`'s candidate against its
-original confirms genuine block/loop restructuring around the
-diagonal-initialization pattern in a 2000×2000 array pair, not a metrics
-artifact.
+`fannkuch.bc::fannkuch` appears as an **identical win in both instnamed
+runs** — same function, same corpus (both draw from
+`eval_subset_corpus_instnamed`), same 0.34% result — which cross-validates
+the pipeline's determinism rather than being two independent data points.
+All four are formally proven by Alive2 (that proof is the actual correctness
+guarantee — no manual verification needed) with `finish_reason=stop` (not
+truncation) and no `syntax_error`. Manually diffing `cholesky.bc::init_array`'s
+candidate against its original confirmed genuine block/loop restructuring
+around the diagonal-initialization pattern in a 2000×2000 array pair, not a
+metrics artifact.
 
-**Scope caveat — state this precisely, do not overclaim**: both wins occurred
-on the **instnamer-modified corpus**, not raw `-O0` input. Per README §2 this
-arm is an explicit comparison, not the main pipeline. The correct claim is
-"first verified non-zero reduction from a local model **on named-SSA
-input**" — not "on `-O0` IR" unqualified. Whether this generalizes to raw
-`-O0` input is untested; the subset baseline-vs-instnamed comparison (§ above)
-had 0 wins in both arms, so this may be corpus-composition-dependent (small,
-simple functions in `functionobjects.bc`) rather than a naming effect per se.
-That distinction is itself worth a follow-up run if time allows.
+**The pattern this leaves is cleaner than it first looked**: 0/2 baseline
+arms produced a win, 2/2 instnamed arms did, independently, across two
+different populations. State it as "verified non-zero reductions from local
+models have so far only occurred on instnamer-modified input, never on raw
+`-O0`" — that is a precise, defensible claim the data actually supports,
+stronger than my first pass at this section (which wrongly asserted the
+subset baseline-vs-instnamed comparison had 0 wins in *both* arms — it did
+not; see the correction in "Result: headline rate" above). Per README §2
+this remains an explicit comparison arm, not the main pipeline, so the
+correct framing is still "on named-SSA input" rather than an unqualified
+claim about `-O0` IR.
 
 ## Reproducing
 
@@ -206,14 +230,12 @@ still consumes unmodified `-O0` IR.
 ~~Run both arms over the full 114-function corpus~~ — **done**, see
 "Full-corpus replication" above. Remaining open threads, in order of value:
 
-1. **Does the win rate generalize to raw `-O0` input?** Both wins so far are
-   on instnamer-modified input. Running the *subset* baseline arm's non-zero
-   winners (there are none) vs re-checking whether any *full-corpus baseline*
-   (non-instnamed) `passed` rows were misclassified as 0.00% would settle
-   this cheaply — just re-check `qwen3b_full_corpus_results.csv` for any
-   near-zero-but-nonzero reduction that got rounded away (none were found this
-   session, but worth a second look with `--verbose` on
-   `analyze_final_results.py`).
+1. ~~Does the win rate generalize to raw `-O0` input?~~ — **checked**: 0/2
+   baseline arms (subset and full corpus, both non-instnamed) produced any
+   win, verified directly against `reduction_pct > 0` (not a display-rounding
+   question). All 4 local-model wins are on instnamed arms. Whether this
+   holds at larger N than 2 wins/arm is the real open question now — the
+   pattern is clean but the counts are still small.
 2. Reconcile *why* the bucket-composition shift didn't replicate — is it
    genuinely noisy at n≈25-40 failures per arm, or is `functionobjects.bc`'s
    C++-template-heavy composition doing something specific to

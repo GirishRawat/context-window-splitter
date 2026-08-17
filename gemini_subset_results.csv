@@ -22,3 +22,42 @@ Puzzle.bc,Puzzle,49,13301,gemini/gemini-3.5-flash,64.774,0.089,unsupported,672,6
 timeit.bc,main,36,11507,gemini/gemini-3.5-flash,123.2,1015.928,unsupported,378,378,0.0,stop,
 timeit.bc,execute_target_process,27,8704,gemini/gemini-3.5-flash,60.373,61.213,unsupported,219,219,0.0,stop,
 timeit.bc,monitor_child_process,18,8881,gemini/gemini-3.5-flash,82.398,1201.054,unsupported,224,224,0.0,stop,
+huffbench.bc,compdecomp,32,13291,gemini/gemini-3.5-flash,245.207,,syntax_fail,660,660,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: assembly parsed, but does not verify as correct!
+PHI node entries do not match predecessors!
+  %inner_iv = phi i64 [ 0, %loop6.body ], [ %inner_iv.next, %loop6.inner.body ]
+label %loop6.body
+label %loop6.inner.step
+Instruction does not dominate all uses!
+  %inner_iv.next = add i64 %inner_iv, 1
+  %inner_iv = phi i64 [ 0, %loop6.body ], [ %inner_iv.next, %loop6.inner.body ]
+Instruction does not dominate all uses!
+  %mask.next = lshr i64 %mask, 1
+  %mask = phi i64 [ %mask_init, %loop6.body ], [ %mask.next, %loop6.inner.body ]
+Instruction does not dominate all uses!
+  %curr_byte_inner.next = select i1 %cmp_and, i8 %curr_byte_step.or, i8 %curr_byte_step
+  %curr_byte_inner = phi i8 [ %current_byte, %loop6.body ], [ %curr_byte_inner.next, %loop6.inner.body ]
+Instruction does not dominate all uses!
+  %bit_idx_inner.next = phi i32 [ %bit_idx_step, %loop6.inner.step ]
+  %bit_idx_inner = phi i32 [ %bit_index, %loop6.body ], [ %bit_idx_inner.next, %loop6.inner.body ]
+Instruction does not dominate all uses!
+  %bit_cnt_inner.next = phi i64 [ %bit_cnt_step, %loop6.inner.step ]
+  %bit_cnt_inner = phi i64 [ %bit_count, %loop6.body ], [ %bit_cnt_inner.next, %loop6.inner.body ]
+PHI nodes not grouped at top of basic block!
+  %bit_idx_inner.next = phi i32 [ %bit_idx_step, %loop6.inner.step ]
+label %loop6.inner.step
+PHI node entries do not match predecessors!
+  %inner_iv8 = phi i64 [ %iv8, %loop8.body ], [ %inner_iv8.dec, %loop8.inner.cond ]
+label %loop8.inner.cond
+label %loop8.inner.step
+PHI node entries do not match predecessors!
+  %decoded_count = phi i64 [ 0, %loop9.end ], [ %decoded_count.next, %loop10.latch ]
+label %loop10.latch
+label %loop10.latch.cont
+Instruction does not dominate all uses!
+  %mask10.next = phi i64 [ %mask10.shifted, %loop10.mask_shift ], [ 128, %loop10.mask_reset ]
+  %mask10 = phi i64 [ 128, %loop9.end ], [ %mask10.next, %loop10.latch ]
+Instruction does not dominate all uses!
+  %ptr_compressed.next = phi ptr [ %ptr_compressed, %loop10.mask_shift ], [ %ptr_compressed.inc, %loop10.mask_reset ]
+  %ptr_compressed = phi ptr [ %malloc_ptr, %loop9.end ], [ %ptr_compressed.next, %loop10.latch ]"
+whetstone.bc,main,30,13131,gemini/gemini-3.5-flash,170.077,1.465,unsupported,702,702,0.0,stop,
+exptree.bc,recSearch,22,5961,gemini/gemini-3.5-flash,67.864,45.734,rejected,239,239,0.0,stop,

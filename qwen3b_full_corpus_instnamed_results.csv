@@ -19,3 +19,26 @@ cholesky.bc,check_FP,5,3944,ollama/qwen2.5-coder:3b,13.014,0.045,passed,97,97,0.
 correlation.bc,kernel_correlation,11,8208,ollama/qwen2.5-coder:3b,50.396,,syntax_fail,341,341,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmp6ara5mel.ll:464:3: error: instruction forward referenced with type 'i32'
   %i240 = sext i32 %i240 to i64
   ^"
+deriche.bc,kernel_deriche,13,12467,ollama/qwen2.5-coder:3b,77.564,,syntax_fail,533,533,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmptkqt90s7.ll:493:3: error: instruction forward referenced with type 'i64'
+  %i230 = getelementptr inbounds [2160 x float], ptr %i227, i64 0, i64 %i230
+  ^"
+deriche.bc,kernel_deriche_StrictFP,13,12506,ollama/qwen2.5-coder:3b,77.653,,syntax_fail,546,546,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpftjb0zlf.ll:516:3: error: instruction forward referenced with type 'i64'
+  %i250 = getelementptr inbounds [2160 x float], ptr %i247, i64 0, i64 %i250
+  ^"
+deriche.bc,check_FP,5,4168,ollama/qwen2.5-coder:3b,13.408,0.04,passed,97,97,0.0,stop,
+exptree.bc,recSearch,22,6506,ollama/qwen2.5-coder:3b,34.213,23.377,unsupported,239,239,0.0,stop,
+exptree.bc,doSearch,8,3269,ollama/qwen2.5-coder:3b,9.661,0.04,passed,72,72,0.0,stop,
+fannkuch.bc,fannkuch,15,6312,ollama/qwen2.5-coder:3b,40.612,2.9,passed,294,293,0.34,stop,
+fbench.bc,main,12,8818,ollama/qwen2.5-coder:3b,46.835,1.548,unsupported,290,290,0.0,stop,
+fbench.bc,transit_surface,8,5932,ollama/qwen2.5-coder:3b,23.235,0.038,passed,183,183,0.0,stop,
+ffbench.bc,main,18,7327,ollama/qwen2.5-coder:3b,45.095,1.499,passed,314,314,0.0,stop,
+ffbench.bc,fourn,13,9511,ollama/qwen2.5-coder:3b,65.215,,syntax_fail,450,450,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpkqaqafvb.ll:276:46: error: '%i120' defined with type 'double' but expected 'ptr'
+  %i125 = getelementptr inbounds double, ptr %i120, i64 %i124
+                                             ^"
+flops.bc,main,15,27343,ollama/qwen2.5-coder:3b,,,pending,1341,1341,0.0,call_error: ,
+fpcmp.bc,load_file,7,4714,ollama/qwen2.5-coder:3b,13.576,0.035,passed,98,98,0.0,stop,
+fpcmp.bc,diff_file,25,9081,ollama/qwen2.5-coder:3b,47.182,1.514,unsupported,325,325,0.0,stop,
+fpcmp.bc,AdvanceNumber,16,5294,ollama/qwen2.5-coder:3b,17.574,0.034,passed,130,130,0.0,stop,
+fpcmp.bc,CompareNumbers,17,7825,ollama/qwen2.5-coder:3b,37.572,1.513,unsupported,262,262,0.0,stop,
+fpcmp.bc,main,11,6174,ollama/qwen2.5-coder:3b,23.87,1.521,unsupported,174,174,0.0,stop,
+fpcmp.bc,contains_non_printable_characters,5,3724,ollama/qwen2.5-coder:3b,6.836,0.044,passed,52,52,0.0,stop,

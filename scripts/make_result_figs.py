@@ -74,9 +74,9 @@ MODEL_COLOR = {
 }
 
 BUCKET_ORDER = [
-    "SSA_FORWARD_REF", "SSA_TYPE_MISMATCH", "SSA_SELF_REFERENCE",
-    "INVALID_LABEL_REF", "UNDECLARED_REFERENCE", "MALFORMED_SYNTAX",
-    "SSA_REUSE", "STRUCTURAL", "TRUNCATED", "OTHER",
+    "SSA_FORWARD_REF", "SSA_NUMBER_TOO_LOW", "SSA_TYPE_MISMATCH",
+    "SSA_SELF_REFERENCE", "INVALID_LABEL_REF", "UNDECLARED_REFERENCE",
+    "MALFORMED_SYNTAX", "SSA_REUSE", "STRUCTURAL", "TRUNCATED", "OTHER",
 ]
 
 NON_ATTEMPT = {"pending", "error"}
@@ -86,7 +86,7 @@ NON_ATTEMPT = {"pending", "error"}
 ARMS = [
     ("qwen2.5-coder:3b",  "syntax_diag_3b_results.csv"),
     ("qwen2.5-coder:7b",  "syntax_diag_7b_results.csv"),
-    ("qwen2.5-coder:32b", "qwen32b_subset_results.csv"),
+    ("qwen2.5-coder:32b", "qwen32b_full_corpus_results.csv"),
     ("3b + instnamer",    "syntax_diag_3b_instnamed_results.csv"),
     ("gemini-3.5-flash",  "gemini_subset_results.csv"),
 ]

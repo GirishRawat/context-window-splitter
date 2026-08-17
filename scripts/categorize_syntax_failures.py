@@ -39,6 +39,13 @@ from pathlib import Path
 _PATTERNS = [
     ("SSA_SELF_REFERENCE", re.compile(r"may reference their own value", re.IGNORECASE)),
     ("SSA_FORWARD_REF", re.compile(r"forward referenced", re.IGNORECASE)),
+    # The inverse symptom: found at 32b scale (10/11 of that model's OTHER
+    # bucket, near-identical wording), not seen at 3b/7b. Same root cause --
+    # incoherent SSA numbering -- but here the model reuses/repeats a smaller
+    # number instead of continuing the sequence, so llvm-as reports the next
+    # instruction needed a HIGHER number than it got, rather than an
+    # as-yet-undefined one. E.g. `%45 = load ...` where %49+ was required.
+    ("SSA_NUMBER_TOO_LOW", re.compile(r"expected to be numbered .* or greater", re.IGNORECASE)),
     ("SSA_TYPE_MISMATCH", re.compile(r"defined with type .* but expected", re.IGNORECASE)),
     ("INVALID_LABEL_REF", re.compile(r"is not a basic block", re.IGNORECASE)),
     ("UNDECLARED_REFERENCE", re.compile(r"undefined value", re.IGNORECASE)),

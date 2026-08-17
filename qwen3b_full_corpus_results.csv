@@ -211,3 +211,13 @@ nussinov.bc,check_FP,5,3607,ollama/qwen2.5-coder:3b,12.209,0.041,passed,99,99,0.
 queens.bc,main,15,4669,ollama/qwen2.5-coder:3b,22.667,9.496,unsupported,177,177,0.0,stop,
 queens.bc,find,8,3155,ollama/qwen2.5-coder:3b,11.657,0.356,passed,103,103,0.0,stop,
 queens.bc,pboard,5,2311,ollama/qwen2.5-coder:3b,5.991,0.044,passed,50,50,0.0,stop,
+smallpt.bc,_Z8radianceRK3RayiPt,18,22834,ollama/qwen2.5-coder:3b,,,pending,999,999,0.0,call_error: ,
+smallpt.bc,main,12,12441,ollama/qwen2.5-coder:3b,,,pending,510,510,0.0,call_error: ,
+timeit.bc,main,36,11513,ollama/qwen2.5-coder:3b,55.397,,syntax_fail,378,378,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmps1ds2w4_.ll:390:3: error: instruction forward referenced with type 'i32'
+  %100 = icmp eq i32 %98, %100
+  ^"
+timeit.bc,execute_target_process,27,8710,ollama/qwen2.5-coder:3b,29.977,0.039,passed,219,219,0.0,stop,
+timeit.bc,monitor_child_process,18,8895,ollama/qwen2.5-coder:3b,31.569,0.035,passed,224,224,0.0,stop,
+whetstone.bc,main,30,13131,ollama/qwen2.5-coder:3b,92.739,,syntax_fail,702,702,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpwq_bq960.ll:465:3: error: instruction forward referenced with type 'label'
+  %235 = load double, ptr %19, align 8
+  ^"

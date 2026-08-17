@@ -83,10 +83,23 @@ NON_ATTEMPT = {"pending", "error"}
 
 # label -> results CSV. Missing files are skipped, so this runs before every
 # arm has finished.
+#
+# DELIBERATELY all on the same 40-function target_subset.csv population, not
+# the 114-function full corpus. The full-corpus 32b run measured a materially
+# different syntax_fail rate on its own population (37.3% for 3b, vs 67.6% on
+# the subset) because that corpus is dominated by functionobjects.bc's 47
+# small, easy C++ template instantiations -- a corpus-composition effect, not
+# a model-capability effect. Point ANY arm here at full-corpus data and this
+# chart silently starts conflating "bigger model" with "easier functions".
+# The full-corpus CSVs (qwen32b_full_corpus_results.csv,
+# qwen3b_full_corpus_results.csv, qwen3b_full_corpus_instnamed_results.csv)
+# exist for their own self-contained same-corpus comparison (baseline vs
+# instnamed, or model vs model, each pair on identical inputs) via
+# categorize_syntax_failures.py directly -- not for this chart.
 ARMS = [
     ("qwen2.5-coder:3b",  "syntax_diag_3b_results.csv"),
     ("qwen2.5-coder:7b",  "syntax_diag_7b_results.csv"),
-    ("qwen2.5-coder:32b", "qwen32b_full_corpus_results.csv"),
+    ("qwen2.5-coder:32b", "qwen32b_subset_results.csv"),
     ("3b + instnamer",    "syntax_diag_3b_instnamed_results.csv"),
     ("gemini-3.5-flash",  "gemini_subset_results.csv"),
 ]

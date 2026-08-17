@@ -120,3 +120,27 @@ huffbench.bc,heap_adjust,5,3126,ollama/qwen2.5-coder:32b,82.228,,syntax_fail,100
   %46 = getelementptr inbounds i64, ptr %39, i64 %45
                                         ^"
 huffbench.bc,main,6,2805,ollama/qwen2.5-coder:32b,52.221,1.477,unsupported,73,73,0.0,stop,
+linpack-pc.bc,main,21,16067,ollama/qwen2.5-coder:32b,,,pending,,,,call_error: ,
+linpack-pc.bc,matgen,7,5120,ollama/qwen2.5-coder:32b,117.563,0.265,passed,,,,stop,
+linpack-pc.bc,dgefa,8,7030,ollama/qwen2.5-coder:32b,238.777,0.038,passed,,,,stop,
+linpack-pc.bc,dgesl,10,7421,ollama/qwen2.5-coder:32b,263.428,0.041,passed,,,,stop,
+linpack-pc.bc,dmxpy,11,14080,ollama/qwen2.5-coder:32b,344.097,21.577,unsupported,,,,stop,
+linpack-pc.bc,idamax,8,4848,ollama/qwen2.5-coder:32b,108.807,0.024,passed,,,,stop,
+linpack-pc.bc,dscal,6,4169,ollama/qwen2.5-coder:32b,42.93,,syntax_fail,,,,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpf264kw_0.ll:181:3: error: instruction forward referenced with type 'label'
+  %21 = icmp slt i32 %20, %18
+  ^"
+linpack-pc.bc,daxpy,9,4959,ollama/qwen2.5-coder:32b,112.797,0.04,passed,,,,stop,
+linpack-pc.bc,ddot,8,4883,ollama/qwen2.5-coder:32b,78.031,,syntax_fail,,,,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpgw7ea2ba.ll:191:3: error: instruction expected to be numbered '%27' or greater
+  %24 = load i32, ptr %9, align 4
+  ^"
+lu.bc,init_array,11,5862,ollama/qwen2.5-coder:32b,204.914,0.042,passed,223,223,0.0,stop,
+lu.bc,kernel_lu,6,4445,ollama/qwen2.5-coder:32b,122.845,,syntax_fail,142,142,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpino9g1rp.ll:217:3: error: instruction forward referenced with type 'label'
+  %52 = add nsw i32 %51, 1
+  ^"
+lu.bc,kernel_lu_StrictFP,6,4427,ollama/qwen2.5-coder:32b,121.176,0.038,passed,142,142,0.0,stop,
+lu.bc,check_FP,5,3716,ollama/qwen2.5-coder:32b,71.571,,syntax_fail,97,97,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpdi6lwvho.ll:206:3: error: instruction expected to be numbered '%49' or greater
+  %45 = load ptr, ptr @__stderrp, align 8
+  ^"
+ludcmp.bc,init_array,12,6727,ollama/qwen2.5-coder:32b,252.711,0.036,passed,268,268,0.0,stop,
+ludcmp.bc,kernel_ludcmp,10,6820,ollama/qwen2.5-coder:32b,258.007,0.037,passed,278,278,0.0,stop,
+ludcmp.bc,kernel_ludcmp_StrictFP,10,6784,ollama/qwen2.5-coder:32b,256.185,0.042,passed,278,278,0.0,stop,

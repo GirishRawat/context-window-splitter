@@ -1,1 +1,2 @@
 file_name,function_name,complexity,tokens,model,llm_latency_s,verification_latency_s,verdict,orig_instrs,final_instrs,reduction_pct,finish_reason,syntax_error
+fbench.bc,transit_surface,8,5581,gemini/gemini-3.5-flash,212.643,2404.284,unsupported,183,183,0.0,stop,

@@ -95,3 +95,15 @@ deriche.bc,kernel_deriche,13,11320,gemini/gemini-3.5-flash,127.259,,syntax_fail,
 deriche.bc,kernel_deriche_StrictFP,13,11333,gemini/gemini-3.5-flash,149.362,,syntax_fail,546,546,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmplbguiuu2.ll:169:9: error: expected instruction opcode
   %a1 = %k
         ^"
+misr.bc,main,13,5246,gemini/gemini-3.5-flash,48.955,1204.598,unsupported,206,206,0.0,stop,
+misr.bc,simulate,13,6766,gemini/gemini-3.5-flash,111.178,,syntax_fail,325,325,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: assembly parsed, but does not verify as correct!
+PHI nodes not grouped at top of basic block!
+  %sum1.inner.next = phi i32 [ %sum1.step, %inner.step ]
+label %inner.latch
+PHI nodes not grouped at top of basic block!
+  %sum1.div.next = phi i32 [ %sum1.inner, %inner.cond ]
+label %div.latch
+PHI nodes not grouped at top of basic block!
+  %sum1.rem.next = phi i32 [ %sum1.step.rem, %rem.step ]
+label %rem.latch"
+fbench.bc,main,12,8269,gemini/gemini-3.5-flash,130.703,1.642,unsupported,290,290,0.0,stop,

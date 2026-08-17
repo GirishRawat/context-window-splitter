@@ -227,11 +227,19 @@ class VerificationConfig:
     # ALIVE_TV_TIMEOUT.
     alive_tv_timeout: int = 120
 
-    # SMT solver timeout. Reserved: intended to be passed to alive-tv (e.g.
-    # --smt-to) once the exact flag/units are pinned against the Alive2 build.
-    # Until then the subprocess-level alive_tv_timeout is the hard guard, so we
-    # do NOT pass an unverified flag that could break every real invocation.
-    smt_timeout: int = 20
+    # alive-tv's own internal SMT-query timeout (its --smt-to flag, seconds
+    # here, converted to ms when invoked). This is independent of
+    # alive_tv_timeout above, which only bounds the outer subprocess -- without
+    # this, alive-tv silently falls back to its own 10000ms default regardless
+    # of alive_tv_timeout, and the solver gives up long before the process-level
+    # guard ever matters. Keep this <= alive_tv_timeout. Override with SMT_TIMEOUT.
+    smt_timeout: int = 120
+
+    # alive-tv's own internal SMT solver memory cap in MB (its --smt-max-mem
+    # flag). Alive2's own default is 1024MB, which a larger/more substantive
+    # candidate diff can exhaust well before any timeout is reached. Override
+    # with SMT_MAX_MEM_MB.
+    smt_max_mem_mb: int = 4096
 
     def __post_init__(self):
         # Auto-detection only fills in paths left at their default sentinel.
@@ -288,6 +296,8 @@ class VerificationConfig:
         for env_name, attr in (
             ("ALIVE_TV_TIMEOUT", "alive_tv_timeout"),
             ("LLVM_AS_TIMEOUT", "llvm_as_timeout"),
+            ("SMT_TIMEOUT", "smt_timeout"),
+            ("SMT_MAX_MEM_MB", "smt_max_mem_mb"),
         ):
             raw = os.getenv(env_name)
             if raw:

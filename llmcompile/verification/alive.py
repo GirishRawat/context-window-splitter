@@ -83,11 +83,13 @@ def verify_refinement(original_ir: str, candidate_ir: str, config: VerificationC
         
         cmd = [
             config.alive_tv_path,
-            # alive-tv's internal SMT-query timeout defaults to 10000ms and is
-            # independent of the subprocess-level alive_tv_timeout below --
-            # without this flag, complex candidates hit Alive2's own 10s cap
-            # and come back UNSUPPORTED long before the outer timeout matters.
-            f"--smt-to={config.alive_tv_timeout * 1000}",
+            # alive-tv's internal SMT-query timeout/memory cap default to
+            # 10000ms / 1024MB and are independent of the subprocess-level
+            # alive_tv_timeout below -- without these flags, complex candidates
+            # hit Alive2's own tight defaults and come back UNSUPPORTED long
+            # before the outer timeout (or this machine's real memory) matters.
+            f"--smt-to={config.smt_timeout * 1000}",
+            f"--smt-max-mem={config.smt_max_mem_mb}",
             f_src.name,
             f_tgt.name
         ]

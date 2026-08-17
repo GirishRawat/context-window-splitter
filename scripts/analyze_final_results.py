@@ -52,6 +52,8 @@ KNOWN_FILES = [
     ("syntax_diag_7b_results.csv",         "curated subset, qwen2.5-coder:7b",    False),
     ("syntax_diag_3b_instnamed_results.csv", "curated subset, 3b, INSTNAMED arm", False),
     ("qwen32b_full_corpus_results.csv",    "full corpus, qwen2.5-coder:32b",      False),
+    ("qwen3b_full_corpus_results.csv",     "full corpus, qwen2.5-coder:3b, baseline", False),
+    ("qwen3b_full_corpus_instnamed_results.csv", "full corpus, qwen2.5-coder:3b, INSTNAMED arm", False),
     ("gemini_subset_results.csv",          "curated subset via Gemini",           False),
 ]
 

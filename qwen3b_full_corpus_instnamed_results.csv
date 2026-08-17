@@ -1,0 +1,21 @@
+file_name,function_name,complexity,tokens,model,llm_latency_s,verification_latency_s,verdict,orig_instrs,final_instrs,reduction_pct,finish_reason,syntax_error
+Puzzle.bc,Place,5,3556,ollama/qwen2.5-coder:3b,12.055,0.033,passed,80,80,0.0,stop,
+Puzzle.bc,Trial,6,3197,ollama/qwen2.5-coder:3b,8.128,0.039,passed,62,62,0.0,stop,
+Puzzle.bc,Puzzle,49,14786,ollama/qwen2.5-coder:3b,112.92,,syntax_fail,672,672,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmplqbpc2_j.ll:579:3: error: instruction forward referenced with type 'i32'
+  %i220 = sext i32 %i220 to i64
+  ^"
+ReedSolomon.bc,rsdec_204,7,3459,ollama/qwen2.5-coder:3b,15.159,1.482,unsupported,115,115,0.0,stop,
+ReedSolomon.bc,rsenc_204,6,2988,ollama/qwen2.5-coder:3b,11.32,1.614,unsupported,92,92,0.0,stop,
+ReedSolomon.bc,generate_gf,5,3321,ollama/qwen2.5-coder:3b,13.997,0.039,passed,106,106,0.0,stop,
+ReedSolomon.bc,gen_poly,5,3380,ollama/qwen2.5-coder:3b,14.32,0.039,passed,107,107,0.0,stop,
+ReedSolomon.bc,decode_rs,59,26321,ollama/qwen2.5-coder:3b,81.802,,syntax_fail,1217,1217,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmp7m8f_27y.ll:352:3: error: instruction forward referenced with type 'i32'
+  %i699 = sext i32 %i699 to i64
+  ^"
+ReedSolomon.bc,encode_rs,7,3713,ollama/qwen2.5-coder:3b,17.119,0.044,passed,124,124,0.0,stop,
+cholesky.bc,init_array,11,7063,ollama/qwen2.5-coder:3b,35.428,10.321,passed,257,244,5.06,stop,
+cholesky.bc,kernel_cholesky,5,4901,ollama/qwen2.5-coder:3b,20.181,0.041,passed,147,147,0.0,stop,
+cholesky.bc,kernel_cholesky_StrictFP,5,4883,ollama/qwen2.5-coder:3b,20.378,0.139,passed,147,147,0.0,stop,
+cholesky.bc,check_FP,5,3944,ollama/qwen2.5-coder:3b,13.014,0.045,passed,97,97,0.0,stop,
+correlation.bc,kernel_correlation,11,8208,ollama/qwen2.5-coder:3b,50.396,,syntax_fail,341,341,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmp6ara5mel.ll:464:3: error: instruction forward referenced with type 'i32'
+  %i240 = sext i32 %i240 to i64
+  ^"

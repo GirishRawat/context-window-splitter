@@ -163,3 +163,13 @@ nussinov.bc,check_FP,5,3821,ollama/qwen2.5-coder:3b,13.386,0.034,passed,99,99,0.
 queens.bc,main,15,5029,ollama/qwen2.5-coder:3b,24.846,7.603,unsupported,177,177,0.0,stop,
 queens.bc,find,8,3358,ollama/qwen2.5-coder:3b,12.834,0.033,passed,103,103,0.0,stop,
 queens.bc,pboard,5,2413,ollama/qwen2.5-coder:3b,,,pending,50,50,0.0,call_error: ,
+smallpt.bc,_Z8radianceRK3RayiPt,18,24788,ollama/qwen2.5-coder:3b,,,pending,999,999,0.0,call_error: ,
+smallpt.bc,main,12,13467,ollama/qwen2.5-coder:3b,89.244,0.044,unsupported,510,510,0.0,stop,
+timeit.bc,main,36,12397,ollama/qwen2.5-coder:3b,62.146,42.649,unsupported,378,378,0.0,stop,
+timeit.bc,execute_target_process,27,9180,ollama/qwen2.5-coder:3b,32.304,,syntax_fail,219,219,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmppi1capq5.ll:247:34: error: use of undefined value '%bb32'
+  br i1 %i11, label %bb12, label %bb32
+                                 ^"
+timeit.bc,monitor_child_process,17,9394,ollama/qwen2.5-coder:3b,34.852,0.037,passed,224,224,0.0,stop,
+whetstone.bc,main,30,14578,ollama/qwen2.5-coder:3b,103.256,,syntax_fail,702,702,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpyuy5o_os.ll:468:69: error: '%i229' defined with type 'i32' but expected 'i64'
+  call void @POUT(i64 noundef %i226, i64 noundef %i228, i64 noundef %i229, double noundef %i231, double noundef %i232, double noundef %i233, double noundef %i234)
+                                                                    ^"

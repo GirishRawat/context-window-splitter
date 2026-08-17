@@ -20,3 +20,14 @@ functionobjects.bc,_ZNSt3__133__bitset_partition_partial_blocksB8ne190102INS_17_
 lu.bc,kernel_lu,6,4443,gemini/gemini-3.5-flash,53.0,1274.852,unsupported,142,142,0.0,stop,
 lu.bc,kernel_lu_StrictFP,6,4425,gemini/gemini-3.5-flash,51.578,1471.559,unsupported,142,142,0.0,stop,
 lu.bc,check_FP,5,3714,gemini/gemini-3.5-flash,21.462,1.572,unsupported,97,97,0.0,stop,
+ReedSolomon.bc,rsenc_204,6,2791,gemini/gemini-3.5-flash,19.124,1.521,unsupported,92,92,0.0,stop,
+ReedSolomon.bc,generate_gf,5,3119,gemini/gemini-3.5-flash,58.083,,syntax_fail,106,106,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmphp79gnfg.ll:143:3: error: multiple definition of local value named 'xor3'
+  %xor3 = xor i32 %undef_val2, %shl
+  ^"
+ReedSolomon.bc,encode_rs,7,3452,gemini/gemini-3.5-flash,40.278,0.065,unsupported,124,124,0.0,stop,
+cholesky.bc,check_FP,5,3738,gemini/gemini-3.5-flash,16.632,54.773,passed,97,27,72.16,stop,
+Puzzle.bc,Place,5,3382,gemini/gemini-3.5-flash,27.174,,syntax_fail,80,80,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpxy934qpw.ll:142:5: error: expected '=' after instruction id
+  %0_ext = sext i32 %0 to i64
+    ^"
+Puzzle.bc,Trial,6,3061,gemini/gemini-3.5-flash,23.258,0.644,passed,62,29,53.23,stop,
+linpack-pc.bc,daxpy,9,4959,gemini/gemini-3.5-flash,24.254,126.718,passed,140,51,63.57,stop,

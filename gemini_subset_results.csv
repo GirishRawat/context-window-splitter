@@ -107,3 +107,14 @@ PHI nodes not grouped at top of basic block!
   %sum1.rem.next = phi i32 [ %sum1.step.rem, %rem.step ]
 label %rem.latch"
 fbench.bc,main,12,8269,gemini/gemini-3.5-flash,130.703,1.642,unsupported,290,290,0.0,stop,
+ludcmp.bc,init_array,12,6727,gemini/gemini-3.5-flash,93.015,2400.657,unsupported,268,268,0.0,stop,
+ludcmp.bc,kernel_ludcmp,10,6820,gemini/gemini-3.5-flash,67.787,,syntax_fail,278,278,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpxnucjn6s.ll:178:58: error: invalid getelementptr indices
+  %A_k1_j1_ptr = getelementptr inbounds [2000 x double], ptr %1, i64 %k1, i64 0, i64 %j1
+                                                         ^"
+correlation.bc,kernel_correlation,11,7422,gemini/gemini-3.5-flash,104.474,14.945,unsupported,341,341,0.0,stop,
+cholesky.bc,init_array,11,6482,gemini/gemini-3.5-flash,78.412,,syntax_fail,257,257,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpnnmhlp9_.ll:283:3: error: multiple definition of local value named 'ptr.tmp.i.j'
+  %ptr.tmp.i.j = getelementptr inbounds [2000 x double], ptr %copy.row.tmp, i64 0, i64 %copy.idx.j
+  ^"
+lu.bc,init_array,11,5862,gemini/gemini-3.5-flash,69.298,134.042,passed,223,76,65.92,stop,
+himenobmtxpa.bc,set_param,11,3722,gemini/gemini-3.5-flash,25.762,30.913,passed,98,42,57.14,stop,
+mandel-text.bc,main,11,3824,gemini/gemini-3.5-flash,38.373,1.458,unsupported,192,192,0.0,stop,

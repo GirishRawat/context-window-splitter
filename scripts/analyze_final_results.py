@@ -55,6 +55,10 @@ KNOWN_FILES = [
     ("qwen3b_full_corpus_results.csv",     "full corpus, qwen2.5-coder:3b, baseline", False),
     ("qwen3b_full_corpus_instnamed_results.csv", "full corpus, qwen2.5-coder:3b, INSTNAMED arm", False),
     ("gemini_subset_results.csv",          "curated subset via Gemini",           False),
+    ("gemini_batch4_results.csv",          "full corpus via Gemini, batch 4 (in progress)", False),
+    ("gemini_batch5_results.csv",          "full corpus via Gemini, batch 5 (in progress)", False),
+    ("gemini_batch6_results.csv",          "full corpus via Gemini, batch 6 (in progress)", False),
+    ("gemini_batch7_results.csv",          "full corpus via Gemini, batch 7 (in progress)", False),
 ]
 
 

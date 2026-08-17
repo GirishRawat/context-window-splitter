@@ -83,8 +83,11 @@ def verify_refinement(original_ir: str, candidate_ir: str, config: VerificationC
         
         cmd = [
             config.alive_tv_path,
-            # optional SMT timeout (Alive2 often supports --smt-to or --timeout)
-            # using standard positional arguments for now
+            # alive-tv's internal SMT-query timeout defaults to 10000ms and is
+            # independent of the subprocess-level alive_tv_timeout below --
+            # without this flag, complex candidates hit Alive2's own 10s cap
+            # and come back UNSUPPORTED long before the outer timeout matters.
+            f"--smt-to={config.alive_tv_timeout * 1000}",
             f_src.name,
             f_tgt.name
         ]
@@ -114,7 +117,7 @@ def verify_refinement(original_ir: str, candidate_ir: str, config: VerificationC
 
             else:
                 # Alive2 timed out internally, crashed, unsupported instruction, etc.
-                logger.warning(f"alive-tv undecided or unsupported. Output:\n{output[:500]}")
+                logger.warning(f"alive-tv undecided or unsupported. Full output:\n{output}")
                 return Verdict.UNSUPPORTED, None
                 
         except FileNotFoundError:

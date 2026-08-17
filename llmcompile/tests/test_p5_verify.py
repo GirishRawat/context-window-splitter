@@ -215,8 +215,10 @@ def test_verify_refinement_passes_source_then_target(mock_run, mock_config):
     captured = {}
 
     def _run(cmd, *args, **kwargs):
-        # cmd == [alive_tv_path, source_path, target_path]
-        with open(cmd[1]) as s, open(cmd[2]) as t:
+        # cmd == [alive_tv_path, ..., source_path, target_path] -- source and
+        # target are always the last two positional args, regardless of any
+        # flags (e.g. --smt-to) inserted between the binary and the paths.
+        with open(cmd[-2]) as s, open(cmd[-1]) as t:
             captured["src"] = s.read()
             captured["tgt"] = t.read()
         return MagicMock(stdout="Transformation seems to be correct!\n", stderr="", returncode=0)

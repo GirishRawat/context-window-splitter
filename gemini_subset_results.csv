@@ -1,1 +1,21 @@
 file_name,function_name,complexity,tokens,model,llm_latency_s,verification_latency_s,verdict,orig_instrs,final_instrs,reduction_pct,finish_reason,syntax_error
+ReedSolomon.bc,decode_rs,59,23597,gemini/gemini-3.5-flash,273.916,,syntax_fail,1217,1217,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: assembly parsed, but does not verify as correct!
+PHI node entries do not match predecessors!
+  %r = phi i32 [ 1, %loop.init.elp.end ], [ %r.next, %loop.r.backedge ]
+label %loop.r.backedge
+label %loop.r.cond.l
+PHI node entries do not match predecessors!
+  %i.err = phi i32 [ 0, %loop.z.end ], [ %i.err.next, %loop.err.init.body ]
+label %loop.err.init.body
+label %loop.err.init.inc
+Instruction does not dominate all uses!
+  %i.err.next = add nsw i32 %i.err, 1
+  %i.err = phi i32 [ 0, %loop.z.end ], [ %i.err.next, %loop.err.init.body ]
+PHI node entries do not match predecessors!
+  %i.recd = phi i32 [ 0, %else.syn ], [ 0, %else.l.gt.8 ], [ 0, %else.syn.ne.l ], [ %i.recd.next, %loop.recd.init.body ]
+label %loop.recd.init.body
+label %loop.recd.init.inc
+Instruction does not dominate all uses!
+  %i.recd.next = add nsw i32 %i.recd, 1
+  %i.recd = phi i32 [ 0, %else.syn ], [ 0, %else.l.gt.8 ], [ 0, %else.syn.ne.l ], [ %i.recd.next, %loop.recd.init.body ]"
+Puzzle.bc,Puzzle,49,13301,gemini/gemini-3.5-flash,64.774,0.089,unsupported,672,672,0.0,stop,

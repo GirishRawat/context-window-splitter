@@ -74,3 +74,140 @@ fpcmp.bc,CompareNumbers,17,7231,ollama/qwen2.5-coder:3b,34.087,,syntax_fail,262,
                                                                                                                                                       ^"
 fpcmp.bc,main,11,5791,ollama/qwen2.5-coder:3b,21.704,1.43,unsupported,174,174,0.0,stop,
 fpcmp.bc,contains_non_printable_characters,5,3598,ollama/qwen2.5-coder:3b,6.217,0.038,passed,52,52,0.0,stop,
+functionobjects.bc,_Z9summarizePKciiii,8,20794,ollama/qwen2.5-coder:3b,32.062,,syntax_fail,191,191,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: assembly parsed, but does not verify as correct!
+Only PHI nodes may reference their own value!
+  %142 = getelementptr inbounds %struct.one_result, ptr %142, i64 0"
+functionobjects.bc,_Z17summarize_simplefP7__sFILEPKc,5,19502,ollama/qwen2.5-coder:3b,19.639,1.532,unsupported,115,115,0.0,stop,
+functionobjects.bc,_Z18quicksort_functionPdS_PFbddE,6,18888,ollama/qwen2.5-coder:3b,14.223,0.054,passed,88,88,0.0,stop,
+functionobjects.bc,_Z9quicksortIPdPFbddEEvT_S3_T0_,6,18892,ollama/qwen2.5-coder:3b,14.182,0.046,passed,88,88,0.0,stop,
+functionobjects.bc,main,21,26661,ollama/qwen2.5-coder:3b,83.295,,syntax_fail,501,501,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmphkc48lv3.ll:841:12: error: '%90' is not a basic block
+  br label %90
+           ^"
+functionobjects.bc,_Z9quicksortIPdXadL_Z19less_than_function2ddEEEvT_S1_,6,18830,ollama/qwen2.5-coder:3b,12.198,,syntax_fail,82,82,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmp4cx8iwjg.ll:812:25: error: use of undefined value '%53'
+  store double %52, ptr %53, align 8
+                        ^"
+functionobjects.bc,_Z9quicksortIPd17less_than_functorEvT_S2_T0_,6,18959,ollama/qwen2.5-coder:3b,14.604,0.043,passed,85,85,0.0,stop,
+functionobjects.bc,_Z9quicksortIPd24inline_less_than_functorEvT_S2_T0_,6,18966,ollama/qwen2.5-coder:3b,14.65,0.049,passed,85,85,0.0,stop,
+functionobjects.bc,_Z9quicksortIPdNSt3__14lessIdEEEvT_S4_T0_,6,18982,ollama/qwen2.5-coder:3b,14.848,0.048,passed,85,85,0.0,stop,
+functionobjects.bc,_Z9quicksortIPdEvT_S1_,6,18762,ollama/qwen2.5-coder:3b,11.874,,syntax_fail,82,82,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpmlxdudoj.ll:812:25: error: use of undefined value '%53'
+  store double %52, ptr %53, align 8
+                        ^"
+functionobjects.bc,_ZNSt3__111__introsortINS_17_ClassicAlgPolicyERPFbddEPdLb0EEEvT1_S6_T0_NS_15iterator_traitsIS6_E15difference_typeEb,15,23731,ollama/qwen2.5-coder:3b,54.565,,syntax_fail,292,292,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpg9o3rw1o.ll:904:3: error: instruction forward referenced with type 'ptr'
+  %110 = call i32 @_ZNSt3__17__sort3B8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEjT1_S6_S6_T0_(ptr noundef %103, ptr noundef %106, ptr noundef %108, ptr noundef nonnull align 8 dereferenceable(8) %110)
+  ^"
+functionobjects.bc,_ZNSt3__116__insertion_sortB8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEvT1_S6_T0_,6,18978,ollama/qwen2.5-coder:3b,14.828,0.055,passed,87,87,0.0,stop,
+functionobjects.bc,_ZNSt3__126__insertion_sort_unguardedB8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEvT1_S6_T0_,5,18935,ollama/qwen2.5-coder:3b,14.029,0.05,passed,84,84,0.0,stop,
+functionobjects.bc,_ZNSt3__17__sort3B8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEjT1_S6_S6_T0_,6,19054,ollama/qwen2.5-coder:3b,15.223,0.048,passed,84,84,0.0,stop,
+functionobjects.bc,_ZNSt3__131__partition_with_equals_on_leftB8ne190102INS_17_ClassicAlgPolicyEPdRPFbddEEET0_S6_S6_T1_,11,19844,ollama/qwen2.5-coder:3b,19.771,,syntax_fail,132,132,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmparwe5dx6.ll:786:31: error: use of undefined value '%49'
+  br i1 %40, label %41, label %49
+                              ^"
+functionobjects.bc,_ZNSt3__118__bitset_partitionB8ne190102INS_17_ClassicAlgPolicyEPdRPFbddEEENS_4pairIT0_bEES7_S7_T1_,14,21194,ollama/qwen2.5-coder:3b,33.361,,syntax_fail,180,180,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmp94qd87eg.ll:804:3: error: instruction forward referenced with type 'label'
+  %55 = phi i1 [ false, %42 ], [ %53, %47 ]
+  ^"
+functionobjects.bc,_ZNSt3__132__partition_with_equals_on_rightB8ne190102INS_17_ClassicAlgPolicyEPdRPFbddEEENS_4pairIT0_bEES7_S7_T1_,10,20026,ollama/qwen2.5-coder:3b,23.589,0.045,passed,137,137,0.0,stop,
+functionobjects.bc,_ZNSt3__127__insertion_sort_incompleteB8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEbT1_S6_T0_,10,20957,ollama/qwen2.5-coder:3b,31.226,0.046,passed,180,180,0.0,stop,
+functionobjects.bc,_ZNSt3__17__sort5B8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEvT1_S6_S6_S6_S6_T0_,5,18646,ollama/qwen2.5-coder:3b,11.991,0.045,passed,59,59,0.0,stop,
+functionobjects.bc,_ZNSt3__111__sift_downB8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEvT1_OT0_NS_15iterator_traitsIS6_E15difference_typeES6_,11,19870,ollama/qwen2.5-coder:3b,22.224,0.043,passed,140,140,0.0,stop,
+functionobjects.bc,_ZNSt3__19__sift_upB8ne190102INS_17_ClassicAlgPolicyERPFbddEPdEEvT1_S6_OT0_NS_15iterator_traitsIS6_E15difference_typeE,5,18700,ollama/qwen2.5-coder:3b,12.186,0.038,passed,71,71,0.0,stop,
+functionobjects.bc,_ZNSt3__133__bitset_partition_partial_blocksB8ne190102INS_17_ClassicAlgPolicyERPFbddEPddEEvRT1_S7_T0_RT2_RySB_,10,20706,ollama/qwen2.5-coder:3b,29.788,,syntax_fail,200,200,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpj7j0y4ws.ll:912:3: error: instruction forward referenced with type 'ptr'
+  %122 = load i64, ptr %122, align 8
+  ^"
+functionobjects.bc,_ZNSt3__124__swap_bitmap_pos_withinB8ne190102INS_17_ClassicAlgPolicyEPdEEvRT0_S4_RyS5_,7,19314,ollama/qwen2.5-coder:3b,17.436,0.045,passed,110,110,0.0,stop,
+functionobjects.bc,_ZNSt3__111__introsortINS_17_ClassicAlgPolicyER17less_than_functorPdLb0EEEvT1_S5_T0_NS_15iterator_traitsIS5_E15difference_typeEb,15,23776,ollama/qwen2.5-coder:3b,57.365,,syntax_fail,286,286,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: assembly parsed, but does not verify as correct!
+Only PHI nodes may reference their own value!
+  %119 = getelementptr inbounds double, ptr %119, i64 2"
+functionobjects.bc,_ZNSt3__116__insertion_sortB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEvT1_S5_T0_,6,18972,ollama/qwen2.5-coder:3b,14.498,0.043,passed,81,81,0.0,stop,
+functionobjects.bc,_ZNSt3__126__insertion_sort_unguardedB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEvT1_S5_T0_,5,18929,ollama/qwen2.5-coder:3b,13.047,0.038,passed,78,78,0.0,stop,
+functionobjects.bc,_ZNSt3__17__sort3B8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEjT1_S5_S5_T0_,6,19039,ollama/qwen2.5-coder:3b,13.815,25.26,unsupported,69,69,0.0,stop,
+functionobjects.bc,_ZNSt3__131__partition_with_equals_on_leftB8ne190102INS_17_ClassicAlgPolicyEPdR17less_than_functorEET0_S5_S5_T1_,11,19826,ollama/qwen2.5-coder:3b,20.151,,syntax_fail,114,114,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmp7eksbcs4.ll:789:1: error: expected ',' after true destination
+40:                                               ; preds = %35, %30
+^"
+functionobjects.bc,_ZNSt3__118__bitset_partitionB8ne190102INS_17_ClassicAlgPolicyEPdR17less_than_functorEENS_4pairIT0_bEES6_S6_T1_,14,21191,ollama/qwen2.5-coder:3b,31.844,1.56,unsupported,168,168,0.0,stop,
+functionobjects.bc,_ZNSt3__132__partition_with_equals_on_rightB8ne190102INS_17_ClassicAlgPolicyEPdR17less_than_functorEENS_4pairIT0_bEES6_S6_T1_,10,20011,ollama/qwen2.5-coder:3b,21.754,0.046,passed,122,122,0.0,stop,
+functionobjects.bc,_ZNSt3__127__insertion_sort_incompleteB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEbT1_S5_T0_,10,20960,ollama/qwen2.5-coder:3b,30.155,11.301,unsupported,171,171,0.0,stop,
+functionobjects.bc,_ZNSt3__17__sort5B8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEvT1_S5_S5_S5_S5_T0_,5,18637,ollama/qwen2.5-coder:3b,10.599,0.042,passed,47,47,0.0,stop,
+functionobjects.bc,_ZNSt3__111__sift_downB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEvT1_OT0_NS_15iterator_traitsIS5_E15difference_typeES5_,11,19858,ollama/qwen2.5-coder:3b,20.718,0.043,passed,128,128,0.0,stop,
+functionobjects.bc,_ZNSt3__19__sift_upB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPdEEvT1_S5_OT0_NS_15iterator_traitsIS5_E15difference_typeE,5,18694,ollama/qwen2.5-coder:3b,11.04,0.043,passed,65,65,0.0,stop,
+functionobjects.bc,_ZNSt3__133__bitset_partition_partial_blocksB8ne190102INS_17_ClassicAlgPolicyER17less_than_functorPddEEvRT1_S6_T0_RT2_RySA_,10,20700,ollama/qwen2.5-coder:3b,29.016,,syntax_fail,194,194,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpdxztah_1.ll:906:3: error: instruction forward referenced with type 'ptr'
+  %116 = load i64, ptr %116, align 8
+  ^"
+functionobjects.bc,_ZNSt3__111__introsortINS_17_ClassicAlgPolicyER24inline_less_than_functorPdLb0EEEvT1_S5_T0_NS_15iterator_traitsIS5_E15difference_typeEb,15,23795,ollama/qwen2.5-coder:3b,57.066,,syntax_fail,286,286,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: assembly parsed, but does not verify as correct!
+Only PHI nodes may reference their own value!
+  %109 = getelementptr inbounds double, ptr %109, i64 1
+Only PHI nodes may reference their own value!
+  %115 = getelementptr inbounds double, ptr %115, i64 -2
+Only PHI nodes may reference their own value!
+  %119 = getelementptr inbounds double, ptr %119, i64 2
+Only PHI nodes may reference their own value!
+  %125 = getelementptr inbounds double, ptr %125, i64 -3"
+functionobjects.bc,_ZNSt3__116__insertion_sortB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEvT1_S5_T0_,6,18974,ollama/qwen2.5-coder:3b,14.378,0.039,passed,81,81,0.0,stop,
+functionobjects.bc,_ZNSt3__126__insertion_sort_unguardedB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEvT1_S5_T0_,5,18931,ollama/qwen2.5-coder:3b,12.592,0.037,passed,78,78,0.0,stop,
+functionobjects.bc,_ZNSt3__17__sort3B8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEjT1_S5_S5_T0_,6,19044,ollama/qwen2.5-coder:3b,13.473,20.438,unsupported,69,69,0.0,stop,
+functionobjects.bc,_ZNSt3__131__partition_with_equals_on_leftB8ne190102INS_17_ClassicAlgPolicyEPdR24inline_less_than_functorEET0_S5_S5_T1_,11,19832,ollama/qwen2.5-coder:3b,19.708,,syntax_fail,114,114,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpc7zjcr8h.ll:789:1: error: expected ',' after true destination
+40:                                               ; preds = %35, %30
+^"
+functionobjects.bc,_ZNSt3__118__bitset_partitionB8ne190102INS_17_ClassicAlgPolicyEPdR24inline_less_than_functorEENS_4pairIT0_bEES6_S6_T1_,14,21198,ollama/qwen2.5-coder:3b,31.468,1.566,unsupported,168,168,0.0,stop,
+functionobjects.bc,_ZNSt3__132__partition_with_equals_on_rightB8ne190102INS_17_ClassicAlgPolicyEPdR24inline_less_than_functorEENS_4pairIT0_bEES6_S6_T1_,10,20016,ollama/qwen2.5-coder:3b,21.159,0.046,passed,122,122,0.0,stop,
+functionobjects.bc,_ZNSt3__127__insertion_sort_incompleteB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEbT1_S5_T0_,10,20967,ollama/qwen2.5-coder:3b,29.685,0.043,passed,171,171,0.0,stop,
+functionobjects.bc,_ZNSt3__17__sort5B8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEvT1_S5_S5_S5_S5_T0_,5,18642,ollama/qwen2.5-coder:3b,10.197,0.051,passed,47,47,0.0,stop,
+functionobjects.bc,_ZNSt3__111__sift_downB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEvT1_OT0_NS_15iterator_traitsIS5_E15difference_typeES5_,11,19862,ollama/qwen2.5-coder:3b,20.487,0.05,passed,128,128,0.0,stop,
+functionobjects.bc,_ZNSt3__19__sift_upB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPdEEvT1_S5_OT0_NS_15iterator_traitsIS5_E15difference_typeE,5,18696,ollama/qwen2.5-coder:3b,10.622,0.054,passed,65,65,0.0,stop,
+functionobjects.bc,_ZNSt3__133__bitset_partition_partial_blocksB8ne190102INS_17_ClassicAlgPolicyER24inline_less_than_functorPddEEvRT1_S6_T0_RT2_RySA_,10,20702,ollama/qwen2.5-coder:3b,28.655,,syntax_fail,194,194,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpqqknszs5.ll:906:3: error: instruction forward referenced with type 'ptr'
+  %116 = load i64, ptr %116, align 8
+  ^"
+himenobmtxpa.bc,jacobi,8,28707,ollama/qwen2.5-coder:3b,,,pending,1464,1464,0.0,call_error: ,
+himenobmtxpa.bc,set_param,11,3722,ollama/qwen2.5-coder:3b,12.95,0.033,passed,98,98,0.0,stop,
+huffbench.bc,compdecomp,32,13291,ollama/qwen2.5-coder:3b,98.095,,syntax_fail,660,660,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpk9_yijoi.ll:138:39: error: expected value token
+  call void @llvm.lifetime.start.p0(i1, ptr nocapture) #8
+                                      ^"
+huffbench.bc,heap_adjust,5,3126,ollama/qwen2.5-coder:3b,11.673,1.494,unsupported,100,100,0.0,stop,
+huffbench.bc,main,6,2805,ollama/qwen2.5-coder:3b,8.908,1.206,unsupported,73,73,0.0,stop,
+linpack-pc.bc,main,21,16067,ollama/qwen2.5-coder:3b,102.244,,syntax_fail,738,738,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpm3qai6pe.ll:533:56: error: '%251' defined with type 'i32' but expected 'ptr'
+  %252 = call i32 (ptr, ptr, ...) @fprintf(ptr noundef %251, ptr noundef @.str.15, i32 noundef %252, double noundef 0.000000e+00) #6
+                                                       ^"
+linpack-pc.bc,matgen,7,5120,ollama/qwen2.5-coder:3b,18.17,,syntax_fail,150,150,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: assembly parsed, but does not verify as correct!
+Only PHI nodes may reference their own value!
+  %110 = add nsw i32 %108, %110"
+linpack-pc.bc,dgefa,8,7030,ollama/qwen2.5-coder:3b,33.51,0.042,passed,267,267,0.0,stop,
+linpack-pc.bc,dgesl,10,7421,ollama/qwen2.5-coder:3b,28.946,,syntax_fail,287,287,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpoimc_hem.ll:274:31: error: use of undefined value '%132'
+  br i1 %87, label %88, label %132
+                              ^"
+linpack-pc.bc,dmxpy,11,14080,ollama/qwen2.5-coder:3b,102.415,,syntax_fail,732,732,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpo70qtl6c.ll:288:44: error: '%98' defined with type 'float' but expected 'ptr'
+  %107 = getelementptr inbounds float, ptr %98, i64 %106
+                                           ^"
+linpack-pc.bc,idamax,8,4848,ollama/qwen2.5-coder:3b,15.602,0.038,passed,135,135,0.0,stop,
+linpack-pc.bc,dscal,6,4169,ollama/qwen2.5-coder:3b,3.087,,syntax_fail,90,90,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmp0h5_8wf_.ll:169:3: error: instruction expected to be numbered '%68' or greater
+  %9 = load i32, ptr %5, align 4
+  ^"
+linpack-pc.bc,daxpy,9,4959,ollama/qwen2.5-coder:3b,15.954,0.038,passed,140,140,0.0,stop,
+linpack-pc.bc,ddot,8,4883,ollama/qwen2.5-coder:3b,15.723,0.046,passed,135,135,0.0,stop,
+lu.bc,init_array,11,5862,ollama/qwen2.5-coder:3b,27.088,,syntax_fail,223,223,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpavs6t1tx.ll:402:3: error: instruction forward referenced with type 'i64'
+  %170 = getelementptr inbounds [2000 x double], ptr %167, i64 %170
+  ^"
+lu.bc,kernel_lu,6,4445,ollama/qwen2.5-coder:3b,16.936,,syntax_fail,142,142,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpbaxv5pvr.ll:162:31: error: use of undefined value '%122'
+  br i1 %11, label %12, label %122
+                              ^"
+lu.bc,kernel_lu_StrictFP,6,4427,ollama/qwen2.5-coder:3b,17.162,0.129,passed,142,142,0.0,stop,
+lu.bc,check_FP,5,3716,ollama/qwen2.5-coder:3b,11.665,0.039,passed,97,97,0.0,stop,
+ludcmp.bc,init_array,12,6727,ollama/qwen2.5-coder:3b,35.263,10.475,passed,268,268,0.0,stop,
+ludcmp.bc,kernel_ludcmp,10,6820,ollama/qwen2.5-coder:3b,28.562,,syntax_fail,278,278,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmp2bbgzvkk.ll:303:3: error: instruction forward referenced with type 'i32'
+  %118 = sext i32 %118 to i64
+  ^"
+ludcmp.bc,kernel_ludcmp_StrictFP,10,6784,ollama/qwen2.5-coder:3b,27.806,,syntax_fail,278,278,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmphas_ol73.ll:312:3: error: instruction forward referenced with type 'i32'
+  %118 = sext i32 %118 to i64
+  ^"
+mandel-text.bc,main,11,3824,ollama/qwen2.5-coder:3b,23.152,1.561,unsupported,192,192,0.0,stop,
+misr.bc,main,13,5246,ollama/qwen2.5-coder:3b,28.588,12.859,unsupported,206,206,0.0,stop,
+misr.bc,simulate,13,6766,ollama/qwen2.5-coder:3b,37.371,,syntax_fail,325,325,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpcgtz3w3d.ll:375:3: error: instruction forward referenced with type 'ptr'
+  %199 = load i32, ptr %198, align 4
+  ^"
+nussinov.bc,kernel_nussinov,16,8372,ollama/qwen2.5-coder:3b,53.411,,syntax_fail,373,373,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpaswkgin3.ll:365:3: error: instruction forward referenced with type 'i64'
+  %190 = getelementptr inbounds [2500 x i32], ptr %186, i64 %190
+  ^"
+nussinov.bc,kernel_nussinov_StrictFP,16,8372,ollama/qwen2.5-coder:3b,53.381,,syntax_fail,373,373,0.0,stop,"/home/jovyan/llvm_toolchain/llvm-project/llvm/build/bin/llvm-as: /tmp/tmpi84e9z17.ll:365:3: error: instruction forward referenced with type 'i64'
+  %190 = getelementptr inbounds [2500 x i32], ptr %186, i64 %190
+  ^"
+nussinov.bc,check_FP,5,3607,ollama/qwen2.5-coder:3b,12.209,0.041,passed,99,99,0.0,stop,
+queens.bc,main,15,4669,ollama/qwen2.5-coder:3b,22.667,9.496,unsupported,177,177,0.0,stop,
+queens.bc,find,8,3155,ollama/qwen2.5-coder:3b,11.657,0.356,passed,103,103,0.0,stop,
+queens.bc,pboard,5,2311,ollama/qwen2.5-coder:3b,5.991,0.044,passed,50,50,0.0,stop,

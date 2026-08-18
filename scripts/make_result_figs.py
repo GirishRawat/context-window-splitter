@@ -254,7 +254,15 @@ def fig3_capability_cliff(data: dict[str, list[dict]], out: Path, csv_dir: Path)
         print("  fig3: no plottable rows, skipped")
         return
 
-    fig, ax = plt.subplots(figsize=(6.2, 4.4))
+    # Two panels: the scatter plot, and a dedicated key sidebar for the win
+    # labels. An in-plot text box only stays collision-free with the data by
+    # hand-checking which pixels happen to be empty for the CURRENT dataset --
+    # true here, not guaranteed the next time a batch of wins lands. A
+    # separate axes for the key can never overlap a data point, by construction,
+    # regardless of how many wins there are or where they fall.
+    fig, (ax, axk) = plt.subplots(
+        1, 2, figsize=(7.4, 4.4), gridspec_kw={"width_ratios": [2.7, 1.15], "wspace": 0.06}
+    )
     for v in VERDICT_ORDER:
         if v not in pts:
             continue
@@ -289,16 +297,14 @@ def fig3_capability_cliff(data: dict[str, list[dict]], out: Path, csv_dir: Path)
         seen.add(key)
         win_pts.append((c, t, r.get("function_name", "?"), red))
 
-    # Stack every label in a fixed column, spaced evenly in LOG space so the
-    # spacing stays positive no matter how many wins there are. An earlier
-    # linear version (ymax * (1.9 - 0.32*i)) went negative past 6 wins, which
-    # on a log axis blows the figure's height up to ~200k points.
+    # Numbered markers + a single compact key, instead of text labels on long
+    # diagonal leader lines. The leader-line version crossed the whole plot
+    # once there were more than ~5 wins (it was built for one), producing an
+    # unreadable tangle: labels overlapped each other and the data cloud, and
+    # lines cut through the legend. A short local offset for the number plus
+    # one legend box in empty plot space scales to any win count without
+    # collisions, because it never has to route a line across the figure.
     win_pts.sort(key=lambda w: -w[3])
-    all_t = [t for _, t, _, _ in win_pts] or [1.0]
-    top, bot = max(all_t) * 2.6, min(all_t) * 0.34
-    label_x = 11.5  # just right of the triage-threshold line, clear of the cloud
-    n = len(win_pts)
-    label_ys = [top * (bot / top) ** (i / max(n - 1, 1)) for i in range(n)]
 
     for i, (c, t, name, red) in enumerate(win_pts):
         # Plot the point itself, not just the ring -- a win's own arm may not
@@ -308,10 +314,20 @@ def fig3_capability_cliff(data: dict[str, list[dict]], out: Path, csv_dir: Path)
                    label="Verified reduction" if i == 0 else None)
         ax.scatter([c], [t], s=210, facecolors="none", edgecolors=C_GREEN,
                    linewidths=1.8, zorder=5)
-        ax.annotate(f"{name}  −{red:.0f}%" if red >= 1 else f"{name}  −{red:.1f}%",
-                    xy=(c, t), xytext=(label_x, label_ys[i]), fontsize=7,
-                    color="#1a1a1a",
-                    arrowprops=dict(arrowstyle="->", color=C_GREEN, lw=1.1))
+        ax.annotate(str(i + 1), xy=(c, t), xytext=(6, 6),
+                    textcoords="offset points", fontsize=6.5, fontweight="bold",
+                    color="white", zorder=7,
+                    bbox=dict(boxstyle="circle,pad=0.15", fc=C_GREEN, ec="none"))
+
+    axk.axis("off")
+    axk.set_title("Verified\nreductions", fontsize=8, loc="left", pad=2)
+    if win_pts:
+        key_text = "\n\n".join(
+            (f"{i + 1}  −{red:.0f}%" if red >= 1 else f"{i + 1}  −{red:.1f}%") + f"\n   {name}"
+            for i, (_, _, name, red) in enumerate(win_pts)
+        )
+        axk.text(0.0, 0.94, key_text, transform=axk.transAxes, fontsize=6.5,
+                 va="top", ha="left", linespacing=1.35)
 
     ax.axvline(5, color=C_GREY, ls="--", lw=0.9)
     ax.text(5.25, ax.get_ylim()[1] * 0.97, "triage threshold", fontsize=6.5,
@@ -319,11 +335,10 @@ def fig3_capability_cliff(data: dict[str, list[dict]], out: Path, csv_dir: Path)
     ax.set_xlabel("Cyclomatic complexity")
     ax.set_ylabel("Token count")
     ax.set_yscale("log")
-    ax.legend(frameon=False, fontsize=7, loc="lower right")
-    ax.set_title(f"The capability cliff: verified optimisation is rare ({len(win_pts)} of "
+    ax.legend(frameon=False, fontsize=6.8, loc="lower right")
+    fig.suptitle(f"The capability cliff: verified optimisation is rare ({len(win_pts)} of "
                  f"{sum(len(v[0]) for v in pts.values())} completed attempts shown)",
-                 fontsize=9.5, pad=8)
-    fig.tight_layout()
+                 fontsize=9.5, y=0.99)
     fig.savefig(out / "fig3_capability_cliff.pdf", bbox_inches="tight")
     fig.savefig(out / "fig3_capability_cliff.png", bbox_inches="tight")
     plt.close(fig)

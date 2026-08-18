@@ -38,6 +38,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from scripts.categorize_syntax_failures import categorize
+from scripts.analyze_final_results import KNOWN_FILES, NON_ATTEMPT_VERDICTS, Summary, _f
 
 plt.rcParams.update({
     "font.family": "serif",
@@ -65,6 +66,11 @@ VERDICT_LABEL = {
     "unsupported": "Alive2\nunsupported", "rejected": "Rejected", "pending": "Pending",
 }
 
+SHORT_MODEL_LABEL = {
+    "qwen2.5-coder:3b": "3B", "qwen2.5-coder:7b": "7B",
+    "qwen2.5-coder:32b": "32B", "gemini-3.5-flash": "Gemini",
+}
+
 MODEL_COLOR = {
     "qwen2.5-coder:3b": C_BLUE,
     "qwen2.5-coder:7b": C_SKY,
@@ -72,6 +78,15 @@ MODEL_COLOR = {
     "gemini-3.5-flash": C_GREEN,
     "3b + instnamer": C_PINK,
 }
+
+# The four models Table III/V of the paper reports (real-corpus CSVs use the
+# provider-prefixed model string; the short form is what MODEL_COLOR keys on).
+MODEL_KEYS = [
+    ("ollama/qwen2.5-coder:3b", "qwen2.5-coder:3b"),
+    ("ollama/qwen2.5-coder:7b", "qwen2.5-coder:7b"),
+    ("ollama/qwen2.5-coder:32b", "qwen2.5-coder:32b"),
+    ("gemini/gemini-3.5-flash", "gemini-3.5-flash"),
+]
 
 BUCKET_ORDER = [
     "SSA_FORWARD_REF", "SSA_NUMBER_TOO_LOW", "SSA_TYPE_MISMATCH",
@@ -345,6 +360,154 @@ def fig3_capability_cliff(data: dict[str, list[dict]], out: Path, csv_dir: Path)
     print(f"  fig3: {sum(len(v[0]) for v in pts.values())} points")
 
 
+def _load_real_rows(csv_dir: Path) -> list[dict]:
+    """Every row from every registered non-synthetic CSV (Table III/V's source
+    of truth) -- the same file list and Summary class analyze_final_results.py
+    uses, so these figures can never quietly drift from the numbers in prose."""
+    rows = []
+    for fname, _label, synthetic in KNOWN_FILES:
+        if synthetic:
+            continue
+        s = Summary(csv_dir / fname, _label, synthetic)
+        if s.load():
+            rows.extend(s.rows)
+    return rows
+
+
+# ---------------------------------------------------------------------------
+def fig4_capability_gap_by_model(csv_dir: Path, out: Path):
+    """Syntax-fail% vs win% per model -- the paper's central dissociation: a
+    model can be syntactically fluent (low syntax-fail%) and still win 0%."""
+    rows = _load_real_rows(csv_dir)
+    stats = {}
+    for full_key, short in MODEL_KEYS:
+        crows = [r for r in rows if r.get("model") == full_key
+                 and r["verdict"] not in NON_ATTEMPT_VERDICTS]
+        n = len(crows)
+        if not n:
+            continue
+        sfail = sum(1 for r in crows if r["verdict"] == "syntax_fail")
+        wins = sum(1 for r in crows if r["verdict"] == "passed"
+                   and (_f(r, "reduction_pct") or 0) > 0)
+        stats[short] = (n, 100.0 * sfail / n, 100.0 * wins / n)
+    if not stats:
+        print("  fig4: no model rows found, skipped")
+        return
+
+    models = [m for _, m in MODEL_KEYS if m in stats]
+    x = np.arange(len(models))
+    w = 0.36
+    fig, ax = plt.subplots(figsize=(4.6, 2.3))
+    sfail_vals = [stats[m][1] for m in models]
+    win_vals = [stats[m][2] for m in models]
+    b1 = ax.bar(x - w / 2, sfail_vals, w, color=C_VERM, label="Syntax-fail rate",
+                edgecolor="white", linewidth=0.5)
+    b2 = ax.bar(x + w / 2, win_vals, w, color=C_GREEN, label="Win rate",
+                edgecolor="white", linewidth=0.5)
+    _bar_labels(ax, b1, "{:.0f}%")
+    _bar_labels(ax, b2, "{:.1f}%")
+    ax.set_xticks(x)
+    ax.set_xticklabels([f"{SHORT_MODEL_LABEL.get(m, m)}\n(n={stats[m][0]})" for m in models],
+                       fontsize=7.5)
+    ax.set_ylabel("Share of attempts (%)", fontsize=8.5)
+    ax.set_ylim(0, max(sfail_vals) * 1.28)
+    ax.legend(frameon=False, fontsize=7.5, loc="upper right")
+    fig.tight_layout()
+    fig.savefig(out / "fig4_capability_gap.pdf", bbox_inches="tight")
+    fig.savefig(out / "fig4_capability_gap.png", bbox_inches="tight")
+    plt.close(fig)
+    print(f"  fig4: {len(models)} models")
+
+
+# ---------------------------------------------------------------------------
+def fig5_latency_by_model(csv_dir: Path, out: Path):
+    """Mean inference vs verification latency per model, log scale -- the
+    cost-inversion finding: verification dominates once candidates are real."""
+    rows = _load_real_rows(csv_dir)
+    stats = {}
+    for full_key, short in MODEL_KEYS:
+        crows = [r for r in rows if r.get("model") == full_key
+                 and r["verdict"] not in NON_ATTEMPT_VERDICTS]
+        infer = [_f(r, "llm_latency_s") for r in crows]
+        infer = [v for v in infer if v is not None]
+        verif = [_f(r, "verification_latency_s") for r in crows]
+        verif = [v for v in verif if v is not None]
+        if infer and verif:
+            stats[short] = (sum(infer) / len(infer), sum(verif) / len(verif))
+    if not stats:
+        print("  fig5: no latency rows found, skipped")
+        return
+
+    models = [m for _, m in MODEL_KEYS if m in stats]
+    x = np.arange(len(models))
+    w = 0.36
+    fig, ax = plt.subplots(figsize=(4.6, 2.3))
+    infer_vals = [stats[m][0] for m in models]
+    verif_vals = [stats[m][1] for m in models]
+    b1 = ax.bar(x - w / 2, infer_vals, w, color=C_SKY, label="Inference (mean)",
+                edgecolor="white", linewidth=0.5)
+    b2 = ax.bar(x + w / 2, verif_vals, w, color=C_BLUE, label="Verification (mean)",
+                edgecolor="white", linewidth=0.5)
+    _bar_labels(ax, b1, "{:.0f}s")
+    _bar_labels(ax, b2, "{:.0f}s")
+    ax.set_yscale("log")
+    ax.set_ylim(top=max(infer_vals + verif_vals) * 6)
+    ax.set_xticks(x)
+    ax.set_xticklabels([SHORT_MODEL_LABEL.get(m, m) for m in models], fontsize=7.5)
+    ax.set_ylabel("Mean latency, s (log)", fontsize=8.5)
+    ax.legend(frameon=False, fontsize=7.5, loc="upper left")
+    fig.tight_layout()
+    fig.savefig(out / "fig5_latency.pdf", bbox_inches="tight")
+    fig.savefig(out / "fig5_latency.png", bbox_inches="tight")
+    plt.close(fig)
+    print(f"  fig5: {len(models)} models")
+
+
+# ---------------------------------------------------------------------------
+def fig6_instnamer_ablation(csv_dir: Path, out: Path):
+    """Syntax-fail rate, baseline vs instnamed, replicated across two
+    independently-composed corpora -- the SSA-numbering ablation result."""
+    pairs = [
+        ("40-fn subset", "syntax_diag_3b_results.csv", "syntax_diag_3b_instnamed_results.csv"),
+        ("114-fn corpus", "qwen3b_full_corpus_results.csv", "qwen3b_full_corpus_instnamed_results.csv"),
+    ]
+    corpora, baseline_vals, instnamed_vals = [], [], []
+    for corpus_label, base_fname, inst_fname in pairs:
+        base_rows = [r for r in load(csv_dir / base_fname) if r["verdict"] not in NON_ATTEMPT_VERDICTS]
+        inst_rows = [r for r in load(csv_dir / inst_fname) if r["verdict"] not in NON_ATTEMPT_VERDICTS]
+        if not base_rows or not inst_rows:
+            print(f"  fig6: {corpus_label}: missing arm, skipped")
+            continue
+        base_rate = 100.0 * sum(1 for r in base_rows if r["verdict"] == "syntax_fail") / len(base_rows)
+        inst_rate = 100.0 * sum(1 for r in inst_rows if r["verdict"] == "syntax_fail") / len(inst_rows)
+        corpora.append(f"{corpus_label}\n(n≈{len(base_rows)}/{len(inst_rows)})")
+        baseline_vals.append(base_rate)
+        instnamed_vals.append(inst_rate)
+    if not corpora:
+        print("  fig6: no ablation arms found, skipped")
+        return
+
+    x = np.arange(len(corpora))
+    w = 0.32
+    fig, ax = plt.subplots(figsize=(4.0, 2.3))
+    b1 = ax.bar(x - w / 2, baseline_vals, w, color=C_VERM, label="Baseline (raw -O0)",
+                edgecolor="white", linewidth=0.5)
+    b2 = ax.bar(x + w / 2, instnamed_vals, w, color=C_PINK, label="Instnamed",
+                edgecolor="white", linewidth=0.5)
+    _bar_labels(ax, b1, "{:.1f}%")
+    _bar_labels(ax, b2, "{:.1f}%")
+    ax.set_xticks(x)
+    ax.set_xticklabels(corpora, fontsize=7.5)
+    ax.set_ylabel("Syntax-fail rate (%)", fontsize=8.5)
+    ax.set_ylim(0, max(baseline_vals) * 1.28)
+    ax.legend(frameon=False, fontsize=7.5, loc="upper right")
+    fig.tight_layout()
+    fig.savefig(out / "fig6_instnamer_ablation.pdf", bbox_inches="tight")
+    fig.savefig(out / "fig6_instnamer_ablation.png", bbox_inches="tight")
+    plt.close(fig)
+    print(f"  fig6: {len(corpora)} corpora")
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -370,6 +533,9 @@ def main():
     fig1_syntax_taxonomy(data, args.out_dir)
     fig2_verdicts_by_model(data, args.out_dir)
     fig3_capability_cliff(data, args.out_dir, args.csv_dir)
+    fig4_capability_gap_by_model(args.csv_dir, args.out_dir)
+    fig5_latency_by_model(args.csv_dir, args.out_dir)
+    fig6_instnamer_ablation(args.csv_dir, args.out_dir)
     print(f"\nwritten to {args.out_dir}/ (pdf + png)")
 
 

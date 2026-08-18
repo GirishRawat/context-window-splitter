@@ -244,10 +244,12 @@ Design decisions made building M1 (do not re-litigate without cause):
 Regenerate every number below with `python3 -m scripts.analyze_final_results`.
 
 **Read the denominators carefully.** Across all real-corpus result CSVs there are
-7,999 rows, but **88.9% are `pending`/`error`** — functions a run never reached
+8,046 rows, but **88.4% are `pending`/`error`** — functions a run never reached
 (rate-limit exhaustion) or that timed out client-side. `pending` is a *harness
-artifact, not a model result*, so the honest sample size is **888 completed
-attempts**. Never quote row counts as N.
+artifact, not a model result*, so the honest sample size is **931 completed
+attempts**. Never quote row counts as N. (This reflects the full 114-function
+primary corpus now that all 7 Gemini batches have completed — see
+`NEXT_SESSION_HANDOFF.md`.)
 
 Note also that `spec_results_prefix.csv` and `new_spec_results.csv` are two runs
 over the *same* llvm-test-suite functions, so corpus-wide totals double-count
@@ -256,7 +258,7 @@ them. Per-model rates are unaffected and are the numbers to quote.
 ![LLM Capability Ceiling Plot](analysis_plot.png)
 
 * **The safety gate works — this is the load-bearing, fully-supported claim.**
-  651 candidates were rejected by the gate (`syntax_fail` + `rejected` +
+  684 candidates were rejected by the gate (`syntax_fail` + `rejected` +
   `unsupported`) and **zero** invalid candidates ever reached the final module.
   Every non-`PASSED` function fell back to its original `-O0` body by construction.
   This has never once failed, across every model, corpus, and run.
@@ -283,17 +285,20 @@ them. Per-model rates are unaffected and are the numbers to quote.
   identity transform separates them for nearly free — run it on any `unsupported`
   function before concluding anything about the model.
 
-* **Verified optimisation on real code: 14 wins, plus 6 of unknown magnitude.**
-  Of 888 completed attempts, **237** were proven correct by Alive2 and **14 reduced
-  instruction count**. Ten are `gemini-3.5-flash` (mean **64.8%**, median 61.6%,
-  max 81.2% on `nussinov.bc::kernel_nussinov`); four are `qwen2.5-coder:3b`, all
-  under 6%, and **all four on instnamed input, none on raw `-O0`**.
+* **Verified optimisation on real code: 24 wins, plus 6 of unknown magnitude.**
+  Of 931 completed attempts, **247** were proven correct by Alive2 and **24 reduced
+  instruction count** (23 distinct functions — `fannkuch.bc::fannkuch` at 0.34%
+  appears identically in two independent instnamed runs, cross-validating
+  determinism rather than a second discovery). Twenty are `gemini-3.5-flash`
+  (mean and median coincide at **62.1%**, max 81.2% on
+  `nussinov.bc::kernel_nussinov`); four are `qwen2.5-coder:3b`, all under 6%, and
+  **all four on instnamed input, none on raw `-O0`**.
 
-* **⚠️ A `passed` verdict is NOT an optimisation.** 223 of the 237 passes are
+* **⚠️ A `passed` verdict is NOT an optimisation.** 223 of the 247 passes are
   0.00% no-ops that Alive2 duly proved correct. Signature-anchored prefill fixes
   the invented-signature problem but induces verbatim echo when a small model can't
   optimise, and an echo trivially passes a refinement proof. Quoting the pass count
-  as a win count overstates the result **17x**. Always report them separately.
+  as a win count overstates the result **~10x**. Always report them separately.
 
 * **⚠️ 6 further Gemini wins have no recoverable magnitude.** A Phase 6 whole-module
   re-parse bug blanked `reduction_pct` on genuine `passed` rows before it was fixed
@@ -315,16 +320,16 @@ them. Per-model rates are unaffected and are the numbers to quote.
   | `qwen2.5-coder:3b` | 431 | 51% | 139 | 4 | 0.9% |
   | `qwen2.5-coder:7b` | 217 | 68% | 29 | 0 | 0.0% |
   | `qwen2.5-coder:32b` | 124 | **21%** | 53 | 0 | **0.0%** |
-  | `gemini-3.5-flash` | 73 | 22% | 16 | 10 | **13.7%** |
+  | `gemini-3.5-flash` | 116 | **17%** | 26 | 20 | **17.2%** |
 
-  The 32b model has the *lowest* syntax-failure rate of any arm, one point below
-  Gemini, and still never won. Scale fixes IR fluency; it does not confer the
-  ability to find an optimisation worth proving.
+  Gemini now has the *lowest* syntax-failure rate of any arm — 32b is close behind
+  at 21%, within a few points — and 32b still never won. Scale fixes IR fluency; it
+  does not confer the ability to find an optimisation worth proving.
 
-* **The failures are not truncation.** Of 888 completed attempts, 501 come from
-  instrumented runs recording `finish_reason`: **501 `stop`, 0 `length`** — on a
-  corpus whose median function is ~12,000 tokens. And only **18 candidates in
-  project history were ever Alive2-`rejected`**, against 448 `syntax_fail` —
+* **The failures are not truncation.** Of 931 completed attempts, 544 come from
+  instrumented runs recording `finish_reason`: **544 `stop`, 0 `length`** — on a
+  corpus whose median function is ~12,000 tokens. And only **25 candidates in
+  project history were ever Alive2-`rejected`**, against 452 `syntax_fail` —
   models almost never produce subtly-wrong-but-valid IR, they produce *unparseable*
   IR. Across 65 classified failures, the 54 from local models are ~70%
   SSA identifier bookkeeping (`SSA_FORWARD_REF` dominant), e.g.
@@ -341,7 +346,7 @@ them. Per-model rates are unaffected and are the numbers to quote.
   `INSTNAMER_EXPERIMENT.md`.
 
 * **Verification is now the dominant cost for the frontier arm**, inverting the
-  earlier "safety is nearly free" claim. Mean verification 346s vs 96s inference for
+  earlier "safety is nearly free" claim. Mean verification 388s vs 82s inference for
   Gemini (max 3,600s, the outer ceiling); local arms stay at 3-4s because malformed
   candidates die at `llvm-as` and never reach the solver. Proof cost scales with how
   much the candidate actually changed, so the most valuable candidates are the most
